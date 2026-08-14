@@ -14,7 +14,7 @@ import { AISuggestionsModal } from './modals/AISuggestionsModal';
 const MOCK_CANDIDATES: CandidateData[] = [
   {
     id: 'c1',
-    name: 'LÃª HoÃ ng PhÃºc',
+    name: 'Lê Hoàng Phúc',
     email: 'phuc.le@gmail.com',
     phone: '0901 234 567',
     avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=120&h=120',
@@ -30,7 +30,7 @@ const MOCK_CANDIDATES: CandidateData[] = [
   },
   {
     id: 'c2',
-    name: 'Pháº¡m Thu HÃ ',
+    name: 'Phạm Thu Hà',
     email: 'ha.pham@outlook.com',
     phone: '0912 345 678',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120&h=120',
@@ -46,7 +46,7 @@ const MOCK_CANDIDATES: CandidateData[] = [
   },
   {
     id: 'c3',
-    name: 'Há»“ Quá»‘c Viá»‡t',
+    name: 'Hồ Quốc Việt',
     email: 'viet.ho@company.vn',
     phone: '0933 456 789',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120&h=120',
@@ -62,7 +62,7 @@ const MOCK_CANDIDATES: CandidateData[] = [
   },
   {
     id: 'c4',
-    name: 'VÅ© Äá»©c Báº£o',
+    name: 'Vũ Đức Bảo',
     email: 'bao.vu@techcorp.vn',
     phone: '0908 567 890',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120&h=120',
@@ -79,7 +79,7 @@ const MOCK_CANDIDATES: CandidateData[] = [
   },
   {
     id: 'c5',
-    name: 'Äáº·ng KhÃ¡nh Linh',
+    name: 'Đặng Khánh Linh',
     email: 'linh.dang@dev.io',
     phone: '0945 678 901',
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=120&h=120',
@@ -92,12 +92,12 @@ const MOCK_CANDIDATES: CandidateData[] = [
     roundHistory: [
       { roundIndex: 0, roundName: 'CV Screening', result: 'PASSED', date: '2026-07-29' },
       { roundIndex: 1, roundName: 'Coding Test', result: 'PASSED', date: '2026-07-31' },
-      { roundIndex: 2, roundName: 'Phá»ng váº¥n ká»¹ thuáº­t', result: 'PENDING' },
+      { roundIndex: 2, roundName: 'Phỏng vấn kỹ thuật', result: 'PENDING' },
     ],
   },
   {
     id: 'c6',
-    name: 'Trá»‹nh NhÆ° Quá»³nh',
+    name: 'Trịnh Như Quỳnh',
     email: 'quynh.trinh@hire.vn',
     phone: '0971 234 567',
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120&h=120',
@@ -114,7 +114,7 @@ const MOCK_CANDIDATES: CandidateData[] = [
   },
   {
     id: 'c7',
-    name: 'Nguyá»…n Anh Khoa',
+    name: 'Nguyễn Anh Khoa',
     email: 'khoa.nguyen@talent.io',
     phone: '0988 111 222',
     avatar: 'https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&q=80&w=120&h=120',
@@ -127,12 +127,12 @@ const MOCK_CANDIDATES: CandidateData[] = [
     roundHistory: [
       { roundIndex: 0, roundName: 'CV Screening', result: 'PASSED', date: '2026-07-21' },
       { roundIndex: 1, roundName: 'Online Test', result: 'PASSED', date: '2026-07-24' },
-      { roundIndex: 2, roundName: 'Phá»ng váº¥n & Offer', result: 'PASSED', date: '2026-07-28' },
+      { roundIndex: 2, roundName: 'Phỏng vấn & Offer', result: 'PASSED', date: '2026-07-28' },
     ],
   },
   {
     id: 'c8',
-    name: 'BÃ¹i Minh TÃ¢m',
+    name: 'Bùi Minh Tâm',
     email: 'tam.bui@work.vn',
     phone: '0966 333 444',
     avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=120&h=120',
@@ -307,7 +307,7 @@ export const Kanban: React.FC = () => {
           <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
             <span>Dashboard</span>
             <span className="text-[10px]">&gt;</span>
-            <span>á»¨ng viÃªn</span>
+            <span>Ứng viên</span>
             <span className="text-[10px]">&gt;</span>
             <span className="text-slate-500">Kanban</span>
           </div>
@@ -315,7 +315,7 @@ export const Kanban: React.FC = () => {
             <div>
               <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Kanban Pipeline</h1>
               <p className="text-sm font-medium text-slate-500 mt-1">
-                {filtered.length} á»©ng viÃªn trong {COLUMN_CONFIG.length} giai Ä‘oáº¡n
+                {filtered.length} ứng viên trong {COLUMN_CONFIG.length} giai đoạn
               </p>
             </div>
             {/* View toggle */}
@@ -329,7 +329,7 @@ export const Kanban: React.FC = () => {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-500 hover:bg-slate-50 text-xs font-bold transition-colors cursor-pointer"
               >
                 <List className="h-3.5 w-3.5" />
-                Danh sÃ¡ch
+                Danh sách
               </button>
             </div>
           </div>
@@ -344,7 +344,7 @@ export const Kanban: React.FC = () => {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="TÃ¬m á»©ng viÃªn, email, job..."
+              placeholder="Tìm ứng viên, email, vị trí..."
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm font-medium transition-colors"
             />
           </div>
@@ -356,7 +356,7 @@ export const Kanban: React.FC = () => {
               onChange={(e) => setFilterJob(e.target.value)}
               className="appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm font-semibold text-slate-700 transition-colors cursor-pointer"
             >
-              <option value="all">Táº¥t cáº£ vá»‹ trÃ­</option>
+              <option value="all">Tất cả vị trí</option>
               {uniqueJobs.map((job) => (
                 <option key={job} value={job}>{job}</option>
               ))}
@@ -370,11 +370,11 @@ export const Kanban: React.FC = () => {
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold shadow-sm shadow-primary-500/20 transition-all cursor-pointer"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            LÃ m má»›i
+            Làm mới
           </button>
         </div>
 
-        {/* Kanban Board â€” 4 columns */}
+        {/* Kanban Board - 4 columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-start">
           {COLUMN_CONFIG.map((col) => {
             const colCandidates = getCandidatesByStatus(col.key);
@@ -397,7 +397,7 @@ export const Kanban: React.FC = () => {
                 <div className="space-y-3 min-h-[120px]">
                   {colCandidates.length === 0 ? (
                     <div className="flex items-center justify-center h-24 border-2 border-dashed border-slate-200 rounded-2xl">
-                      <p className="text-xs font-semibold text-slate-300">KhÃ´ng cÃ³ á»©ng viÃªn</p>
+                      <p className="text-xs font-semibold text-slate-300">Không có ứng viên</p>
                     </div>
                   ) : (
                     colCandidates.map((c) => renderCard(c))

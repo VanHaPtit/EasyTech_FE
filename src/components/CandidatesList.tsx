@@ -14,7 +14,7 @@ import { AISuggestionsModal } from './modals/AISuggestionsModal';
 const CANDIDATES: CandidateData[] = [
   {
     id: 'c1',
-    name: 'LÃª HoÃ ng PhÃºc',
+    name: 'Lê Hoàng Phúc',
     email: 'phuc.le@gmail.com',
     phone: '0901 234 567',
     avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=120&h=120',
@@ -28,7 +28,7 @@ const CANDIDATES: CandidateData[] = [
   },
   {
     id: 'c2',
-    name: 'Pháº¡m Thu HÃ ',
+    name: 'Phạm Thu Hà',
     email: 'ha.pham@outlook.com',
     phone: '0912 345 678',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120&h=120',
@@ -42,7 +42,7 @@ const CANDIDATES: CandidateData[] = [
   },
   {
     id: 'c3',
-    name: 'VÅ© Äá»©c Báº£o',
+    name: 'Vũ Đức Bảo',
     email: 'bao.vu@techcorp.vn',
     phone: '0908 567 890',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120&h=120',
@@ -59,7 +59,7 @@ const CANDIDATES: CandidateData[] = [
   },
   {
     id: 'c4',
-    name: 'Äáº·ng KhÃ¡nh Linh',
+    name: 'Đặng Khánh Linh',
     email: 'linh.dang@dev.io',
     phone: '0945 678 901',
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=120&h=120',
@@ -72,12 +72,12 @@ const CANDIDATES: CandidateData[] = [
     roundHistory: [
       { roundIndex: 0, roundName: 'CV Screening', result: 'PASSED', date: '2026-07-29' },
       { roundIndex: 1, roundName: 'Coding Test', result: 'PASSED', date: '2026-07-31' },
-      { roundIndex: 2, roundName: 'Phá»ng váº¥n ká»¹ thuáº­t', result: 'PENDING' },
+      { roundIndex: 2, roundName: 'Phỏng vấn kỹ thuật', result: 'PENDING' },
     ],
   },
   {
     id: 'c5',
-    name: 'Nguyá»…n Anh Khoa',
+    name: 'Nguyễn Anh Khoa',
     email: 'khoa.nguyen@talent.io',
     phone: '0988 111 222',
     avatar: 'https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&q=80&w=120&h=120',
@@ -90,12 +90,12 @@ const CANDIDATES: CandidateData[] = [
     roundHistory: [
       { roundIndex: 0, roundName: 'CV Screening', result: 'PASSED', date: '2026-07-21' },
       { roundIndex: 1, roundName: 'Online Test', result: 'PASSED', date: '2026-07-24' },
-      { roundIndex: 2, roundName: 'Phá»ng váº¥n & Offer', result: 'PASSED', date: '2026-07-28' },
+      { roundIndex: 2, roundName: 'Phỏng vấn & Offer', result: 'PASSED', date: '2026-07-28' },
     ],
   },
   {
     id: 'c6',
-    name: 'BÃ¹i Minh TÃ¢m',
+    name: 'Bùi Minh Tâm',
     email: 'tam.bui@work.vn',
     phone: '0966 333 444',
     avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=120&h=120',
@@ -113,10 +113,10 @@ const CANDIDATES: CandidateData[] = [
 ];
 
 const STATUS_CONFIG: Record<string, { label: string; cls: string; dot: string }> = {
-  NEW: { label: 'Má»›i', cls: 'bg-blue-50 text-blue-600 border-blue-100', dot: 'bg-blue-500' },
-  IN_PROGRESS: { label: 'Äang xá»­ lÃ½', cls: 'bg-amber-50 text-amber-600 border-amber-100', dot: 'bg-amber-500' },
-  PASSED: { label: 'Äáº¡t', cls: 'bg-emerald-50 text-emerald-600 border-emerald-100', dot: 'bg-emerald-500' },
-  REJECTED: { label: 'KhÃ´ng Ä‘áº¡t', cls: 'bg-red-50 text-red-500 border-red-100', dot: 'bg-red-500' },
+  NEW: { label: 'Mới', cls: 'bg-blue-50 text-blue-600 border-blue-100', dot: 'bg-blue-500' },
+  IN_PROGRESS: { label: 'Đang xử lý', cls: 'bg-amber-50 text-amber-600 border-amber-100', dot: 'bg-amber-500' },
+  PASSED: { label: 'Đạt', cls: 'bg-emerald-50 text-emerald-600 border-emerald-100', dot: 'bg-emerald-500' },
+  REJECTED: { label: 'Không đạt', cls: 'bg-red-50 text-red-500 border-red-100', dot: 'bg-red-500' },
 };
 
 export const CandidatesList: React.FC = () => {
@@ -156,15 +156,15 @@ export const CandidatesList: React.FC = () => {
             <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
               <span>Dashboard</span>
               <span className="text-[10px]">&gt;</span>
-              <span>á»¨ng viÃªn</span>
+              <span>Ứng viên</span>
               <span className="text-[10px]">&gt;</span>
-              <span className="text-slate-500">Danh sÃ¡ch</span>
+              <span className="text-slate-500">Danh sách</span>
             </div>
             <div className="flex items-center gap-4">
               <div>
-                <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Danh sÃ¡ch á»©ng viÃªn</h1>
+                <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Danh sách ứng viên</h1>
                 <p className="text-sm font-medium text-slate-500 mt-0.5">
-                  {filtered.length} á»©ng viÃªn phÃ¹ há»£p
+                  {filtered.length} ứng viên phù hợp
                 </p>
               </div>
             </div>
@@ -182,12 +182,12 @@ export const CandidatesList: React.FC = () => {
               </button>
               <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 text-white text-xs font-bold">
                 <List className="h-3.5 w-3.5" />
-                Danh sÃ¡ch
+                Danh sách
               </button>
             </div>
             <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-bold shadow-sm transition-all cursor-pointer">
               <Download className="h-4 w-4" />
-              Xuáº¥t CSV
+              Xuất CSV
             </button>
           </div>
         </div>
@@ -200,7 +200,7 @@ export const CandidatesList: React.FC = () => {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="TÃ¬m theo tÃªn, email, vá»‹ trÃ­..."
+              placeholder="Tìm theo tên, email, vị trí..."
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm font-medium transition-colors"
             />
           </div>
@@ -210,11 +210,11 @@ export const CandidatesList: React.FC = () => {
               onChange={(e) => setFilterStatus(e.target.value)}
               className="appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm font-semibold text-slate-700 transition-colors cursor-pointer"
             >
-              <option value="all">Táº¥t cáº£ tráº¡ng thÃ¡i</option>
-              <option value="NEW">Má»›i</option>
-              <option value="IN_PROGRESS">Äang xá»­ lÃ½</option>
-              <option value="PASSED">Äáº¡t</option>
-              <option value="REJECTED">KhÃ´ng Ä‘áº¡t</option>
+              <option value="all">Tất cả trạng thái</option>
+              <option value="NEW">Mới</option>
+              <option value="IN_PROGRESS">Đang xử lý</option>
+              <option value="PASSED">Đạt</option>
+              <option value="REJECTED">Không đạt</option>
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
           </div>
@@ -226,12 +226,12 @@ export const CandidatesList: React.FC = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider select-none">
-                  <th className="px-6 py-4">á»¨ng viÃªn</th>
-                  <th className="px-6 py-4">Vá»‹ trÃ­ á»©ng tuyá»ƒn</th>
-                  <th className="px-6 py-4">Tráº¡ng thÃ¡i</th>
-                  <th className="px-6 py-4">Tiáº¿n trÃ¬nh vÃ²ng</th>
+                  <th className="px-6 py-4">Ứng viên</th>
+                  <th className="px-6 py-4">Vị trí ứng tuyển</th>
+                  <th className="px-6 py-4">Trạng thái</th>
+                  <th className="px-6 py-4">Tiến trình vòng</th>
                   <th className="px-6 py-4">AI Matching</th>
-                  <th className="px-6 py-4">NgÃ y ná»™p</th>
+                  <th className="px-6 py-4">Ngày nộp</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -293,7 +293,7 @@ export const CandidatesList: React.FC = () => {
                           isHighMatch ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-primary-50 text-primary-600 border-primary-100'
                         }`}>
                           <span className={`h-1.5 w-1.5 rounded-full ${isHighMatch ? 'bg-emerald-500' : 'bg-primary-500'}`} />
-                          {c.matchScore}% khá»›p
+                          {c.matchScore}% khớp
                         </span>
                       </td>
 
@@ -307,7 +307,7 @@ export const CandidatesList: React.FC = () => {
 
             {filtered.length === 0 && (
               <div className="py-16 text-center">
-                <p className="text-slate-400 font-semibold text-sm">KhÃ´ng tÃ¬m tháº¥y á»©ng viÃªn phÃ¹ há»£p</p>
+                <p className="text-slate-400 font-semibold text-sm">Không tìm thấy ứng viên phù hợp</p>
               </div>
             )}
           </div>
