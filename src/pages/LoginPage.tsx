@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Rocket, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
+import { Rocket, ShieldCheck, AlertCircle, Loader2, Briefcase } from 'lucide-react';
 import { PublicHeader } from '../components/PublicHeader';
 import { PublicFooter } from '../components/PublicFooter';
 
@@ -45,10 +45,22 @@ export const LoginPage: React.FC = () => {
 
               {/* Headings */}
               <div className="space-y-2">
-                <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Welcome Back</h1>
+                <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Đăng nhập hệ thống</h1>
                 <p className="text-sm font-semibold text-slate-400">
-                  Enter your credentials to access your career cockpit.
+                  Khu vực quản trị dành cho HR và Admin của nền tảng EasyTech.
                 </p>
+              </div>
+
+              <div className="rounded-2xl border border-primary-100 bg-primary-50/70 p-4">
+                <div className="flex items-start gap-3">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary-500" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-extrabold text-slate-800">Trang đăng nhập dành cho HR/Admin</p>
+                    <p className="text-xs font-semibold leading-relaxed text-slate-500">
+                      Ứng viên không cần đăng nhập để tìm việc hoặc nộp CV. Nếu bạn là ứng viên, hãy vào Career Site để xem các vị trí đang tuyển.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Error Alert (Demo toggle) */}
@@ -96,6 +108,14 @@ export const LoginPage: React.FC = () => {
                         />
                       </svg>
                       <span>Đăng nhập với Google (Vai trò Admin)</span>
+                    </button>
+
+                    <button
+                      onClick={() => navigate('/careers')}
+                      className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-sm font-bold text-white transition-all shadow-sm cursor-pointer select-none"
+                    >
+                      <Briefcase className="h-5 w-5" />
+                      <span>Tìm việc ngay</span>
                     </button>
                   </div>
                 )}
