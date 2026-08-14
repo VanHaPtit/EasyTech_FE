@@ -89,16 +89,26 @@ export const CareerApplyForm: React.FC = () => {
             <p className="text-sm font-bold text-slate-700">👤 {name}</p>
             <p className="text-sm text-slate-500 font-semibold">✉️ {email}</p>
             <p className="text-sm text-slate-500 font-semibold">📄 {cvFile?.name}</p>
+            <p className="text-sm font-extrabold text-primary-600">Mã hồ sơ: APP-2026-0001</p>
           </div>
         </div>
 
-        <Link
-          to="/careers"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold text-sm transition-all shadow-lg shadow-primary-500/20"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Xem thêm vị trí khác
-        </Link>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            to="/careers/applications/track"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold text-sm transition-all shadow-lg shadow-primary-500/20"
+          >
+            Tra cứu hồ sơ
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+          <Link
+            to="/careers"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-bold text-sm transition-all"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Xem thêm vị trí khác
+          </Link>
+        </div>
       </div>
     );
   }

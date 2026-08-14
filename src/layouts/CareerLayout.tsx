@@ -27,6 +27,9 @@ const CareerHeader: React.FC = () => (
         <Link to="/careers" className="text-sm font-semibold text-slate-600 hover:text-primary-500 transition-colors">
           Về chúng tôi
         </Link>
+        <Link to="/careers/applications/track" className="text-sm font-semibold text-slate-600 hover:text-primary-500 transition-colors">
+          Theo dõi hồ sơ
+        </Link>
       </nav>
 
       {/* CTA */}
@@ -73,10 +76,13 @@ const CareerFooter: React.FC = () => (
           <h4 className="text-xs font-bold text-white uppercase tracking-widest">Liên kết</h4>
           <div className="space-y-2.5">
             {['Trang chủ', 'Cơ hội nghề nghiệp', 'Về chúng tôi', 'Chính sách bảo mật'].map((l) => (
-              <Link key={l} to="/careers" className="block text-xs font-semibold hover:text-primary-400 transition-colors">
+              <Link key={l} to={l === 'Cơ hội nghề nghiệp' ? '/careers' : '/careers'} className="block text-xs font-semibold hover:text-primary-400 transition-colors">
                 {l}
               </Link>
             ))}
+            <Link to="/careers/applications/track" className="block text-xs font-semibold hover:text-primary-400 transition-colors">
+              Theo dõi hồ sơ
+            </Link>
           </div>
         </div>
 

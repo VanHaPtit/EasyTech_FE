@@ -17,6 +17,9 @@ import { CareerLayout } from './layouts/CareerLayout';
 import { CareerHome } from './pages/career/CareerHome';
 import { CareerJobDetail } from './pages/career/CareerJobDetail';
 import { CareerApplyForm } from './pages/career/CareerApplyForm';
+import { CandidateStatusPage } from './pages/career/CandidateStatusPage';
+import { CandidateTrackPage } from './pages/career/CandidateTrackPage';
+import { InterviewResponsePage } from './pages/career/InterviewResponsePage';
 
 // ─── HR Dashboard Shell ───────────────────────────────────
 const HRDashboardShell: React.FC = () => {
@@ -104,6 +107,9 @@ export const router = createBrowserRouter([
     element: <CareerLayout />,
     children: [
       { path: '', element: <CareerHome /> },
+      { path: 'applications/track', element: <CandidateTrackPage /> },
+      { path: 'applications/status', element: <CandidateStatusPage /> },
+      { path: 'interviews/respond', element: <InterviewResponsePage /> },
       { path: 'jobs/:slug', element: <CareerJobDetail /> },
       { path: 'jobs/:slug/apply', element: <CareerApplyForm /> },
     ],
