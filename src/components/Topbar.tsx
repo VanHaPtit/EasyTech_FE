@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Bell, ChevronDown } from 'lucide-react';
+import { Bell, ChevronDown } from 'lucide-react';
 
 export const Topbar: React.FC = () => {
   return (

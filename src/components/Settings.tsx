@@ -2,22 +2,12 @@ import React, { useState } from 'react';
 import {
   Building2,
   Mail,
-  Sparkles,
-  Shield,
-  FileText,
   Plus,
   Trash2,
   Edit3,
-  Eye,
-  EyeOff,
   X,
-  Key,
   Check,
   RefreshCw,
-  AlertTriangle,
-  CheckCircle2,
-  Activity,
-  Zap,
   Save
 } from 'lucide-react';
 
@@ -30,24 +20,6 @@ interface EmailTemplate {
   type: 'APPLICATION_RECEIVED' | 'PASS' | 'FAIL' | 'INTERVIEW_INVITE' | 'OFFER';
 }
 
-interface AIProvider {
-  id: string;
-  name: string;
-  code: string;
-  status: 'ACTIVE' | 'INACTIVE';
-  keyMasked: string;
-  mode: string;
-}
-
-interface AgentHealth {
-  id: string;
-  name: string;
-  status: 'ONLINE' | 'DEGRADED' | 'OFFLINE';
-  uptime: number;
-  lastError?: string;
-  lastHealed?: string;
-}
-
 // ─── Mock Data ────────────────────────────────────────────
 const EMAIL_TEMPLATES: EmailTemplate[] = [
   { id: 't0', title: 'Xác nhận nộp đơn thành công', subject: 'Xác nhận ứng tuyển vị trí {{job_title}}', tag: 'APPLICATION_RECEIVED', type: 'APPLICATION_RECEIVED' },
@@ -57,25 +29,6 @@ const EMAIL_TEMPLATES: EmailTemplate[] = [
   { id: 't4', title: 'Offer Letter', subject: 'Thư mời nhận việc chính thức — {{candidate_name}}', tag: 'OFFER', type: 'OFFER' },
   { id: 't5', title: 'Cảm ơn ứng viên', subject: 'Cảm ơn {{candidate_name}} đã ứng tuyển', tag: 'FAIL', type: 'FAIL' },
   { id: 't6', title: 'Qua vòng Online Test', subject: 'Chúc mừng {{candidate_name}} qua vòng Test', tag: 'PASS', type: 'PASS' },
-];
-
-const AI_PROVIDERS: AIProvider[] = [
-  { id: 'p1', name: 'Google Gemini', code: 'GOOGLE_GEMINI', status: 'ACTIVE', keyMasked: 'AIza...****', mode: 'JD Writer + Scoring' },
-  { id: 'p2', name: 'OpenAI GPT-4o', code: 'OPENAI', status: 'INACTIVE', keyMasked: 'sk-...****', mode: 'Fallback' },
-  { id: 'p3', name: 'Anthropic Claude', code: 'ANTHROPIC', status: 'INACTIVE', keyMasked: '—', mode: 'Not configured' },
-];
-
-const AGENT_HEALTH: AgentHealth[] = [
-  { id: 'a1', name: 'JD Writer Agent', status: 'ONLINE', uptime: 99.2, lastHealed: '2026-08-05 09:12' },
-  { id: 'a2', name: 'Interview Scheduler', status: 'DEGRADED', uptime: 94.7, lastError: '2026-08-07 14:30 — Timeout lấy slot lịch', lastHealed: '2026-08-07 14:31' },
-  { id: 'a3', name: 'CV Scoring Engine', status: 'ONLINE', uptime: 98.5 },
-];
-
-const VAULT_LOGS = [
-  { time: '2026-08-08 22:45', event: 'JD Writer gặp rate limit', action: 'Tự động retry sau 30s — Thành công', status: 'ok' },
-  { time: '2026-08-07 14:30', event: 'Interview Scheduler timeout', action: 'Fallback sang queue bất đồng bộ', status: 'warn' },
-  { time: '2026-08-06 08:00', event: 'Health check định kỳ', action: 'Tất cả agents hoạt động bình thường', status: 'ok' },
-  { time: '2026-08-05 09:12', event: 'JD Writer API key hết hạn', action: 'Tự động refresh token — Thành công', status: 'ok' },
 ];
 
 const EmailTemplateModal: React.FC<{
@@ -181,8 +134,6 @@ export const Settings: React.FC = () => {
   const [phone, setPhone] = useState('+84 900 100 200');
   const [address, setAddress] = useState('Tầng 12, Tòa Lotus, 68 Nguyễn Huệ, Q.1, TP. HCM');
   const [website, setWebsite] = useState('www.techa.vn');
-  const [apiKeyProvider, setApiKeyProvider] = useState<AIProvider | null>(null);
-  
   // Email Template states
   const [emails, setEmails] = useState<EmailTemplate[]>(EMAIL_TEMPLATES);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
@@ -203,12 +154,6 @@ export const Settings: React.FC = () => {
     if (tag === 'OFFER') return 'bg-purple-50 text-purple-600 border-purple-100';
     if (tag === 'INTERVIEW_INVITE') return 'bg-amber-50 text-amber-600 border-amber-100';
     return 'bg-slate-50 text-slate-600 border-slate-100';
-  };
-
-  const agentStatusCfg = (s: AgentHealth['status']) => {
-    if (s === 'ONLINE') return { cls: 'bg-emerald-50 text-emerald-600 border-emerald-100', dot: 'bg-emerald-500', label: 'Online' };
-    if (s === 'DEGRADED') return { cls: 'bg-amber-50 text-amber-600 border-amber-100', dot: 'bg-amber-500', label: 'Degraded' };
-    return { cls: 'bg-red-50 text-red-500 border-red-100', dot: 'bg-red-500', label: 'Offline' };
   };
 
   return (

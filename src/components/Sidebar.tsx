@@ -7,7 +7,7 @@ interface SidebarProps {
   onTabChange: (tab: string) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onTabChange }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentTab: _currentTab, onTabChange }) => {
   const location = useLocation();
   const pathname = location.pathname;
 

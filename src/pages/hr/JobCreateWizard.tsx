@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Send, Save, Bot, User, Loader2 } from 'lucide-react';
+import { Sparkles, Save, Bot, Loader2 } from 'lucide-react';
 
 
 
