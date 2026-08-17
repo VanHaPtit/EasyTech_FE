@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Save, Bot, Loader2 } from 'lucide-react';
+import { Sparkles, Save, Bot, Loader2, FileText, Link2 } from 'lucide-react';
 
 
 
@@ -17,6 +17,9 @@ export const JobCreateWizard: React.FC = () => {
   const [employmentType, setEmploymentType] = useState('FULL_TIME');
   const [experienceLevel, setExperienceLevel] = useState('MID_LEVEL');
   const [roundCount, setRoundCount] = useState(3);
+  const [applyMode, setApplyMode] = useState<'REQUIRE_CV' | 'NO_CV' | 'EXTERNAL_LINK'>('REQUIRE_CV');
+  const [externalApplyUrl, setExternalApplyUrl] = useState('https://forms.gle/company-apply');
+  const [screeningQuestion, setScreeningQuestion] = useState('Bạn có thể bắt đầu làm việc từ khi nào?');
   const [categoryName, setCategoryName] = useState('Technology');
   const [description, setDescription] = useState(
     `### Vị trí: Senior AI Engineer\n\n**Mô tả công việc:**\nChúng tôi đang tìm kiếm một Senior AI Engineer xuất sắc để dẫn dắt việc nghiên cứu và triển khai các mô hình ngôn ngữ lớn (LLM), tích hợp các kỹ thuật Vector Embedding và phát triển các kịch bản AI Agent thông minh.\n\n**Yêu cầu:**\n- Có trên 5 năm kinh nghiệm lập trình Python/C++.\n- Kinh nghiệm thực chiến với các Framework AI: PyTorch, TensorFlow.\n- Kinh nghiệm về Vector Database (Pinecone, Milvus).\n\n**Quyền lợi:**\n- Lương hấp dẫn: $140,000 - $210,000 / năm.\n- Bảo hiểm sức khỏe cao cấp.\n- Làm việc Hybrid linh hoạt.`
@@ -201,6 +204,68 @@ export const JobCreateWizard: React.FC = () => {
                 />
               </div>
             </div>
+
+            <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+              <div className="flex items-start gap-2">
+                <FileText className="h-4 w-4 text-primary-500 mt-0.5" />
+                <div>
+                  <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Cách ứng viên ứng tuyển</h4>
+                  <p className="text-[10px] font-semibold text-slate-400 mt-0.5">
+                    Mỗi JD có thể yêu cầu CV, chỉ nhận thông tin cơ bản hoặc chuyển sang form ngoài.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-2">
+                {[
+                  { value: 'REQUIRE_CV', title: 'Bắt buộc nộp CV', desc: 'Ứng viên phải upload PDF/DOCX, hệ thống có thể chạy AI scoring.' },
+                  { value: 'NO_CV', title: 'Không yêu cầu CV', desc: 'Phù hợp với intern, cộng tác viên hoặc JD chỉ cần form thông tin nhanh.' },
+                  { value: 'EXTERNAL_LINK', title: 'Dùng link ứng tuyển ngoài', desc: 'Career Site hiển thị nút chuyển sang Google Form/ATS khác.' },
+                ].map((mode) => (
+                  <label key={mode.value} className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${
+                    applyMode === mode.value ? 'bg-white border-primary-200 ring-2 ring-primary-100' : 'bg-white/70 border-slate-200 hover:bg-white'
+                  }`}>
+                    <input
+                      type="radio"
+                      name="applyMode"
+                      value={mode.value}
+                      checked={applyMode === mode.value}
+                      onChange={() => setApplyMode(mode.value as typeof applyMode)}
+                      className="mt-1 accent-primary-500"
+                    />
+                    <span>
+                      <span className="block text-xs font-extrabold text-slate-800">{mode.title}</span>
+                      <span className="block text-[10px] font-semibold text-slate-400 mt-0.5 leading-relaxed">{mode.desc}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+
+              {applyMode === 'EXTERNAL_LINK' && (
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Link ứng tuyển ngoài</label>
+                  <div className="relative">
+                    <Link2 className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <input
+                      value={externalApplyUrl}
+                      onChange={(e) => setExternalApplyUrl(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-primary-500"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {applyMode === 'NO_CV' && (
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Câu hỏi sàng lọc thay CV</label>
+                  <input
+                    value={screeningQuestion}
+                    onChange={(e) => setScreeningQuestion(e.target.value)}
+                    className="w-full px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Generate Button */}
@@ -229,6 +294,33 @@ export const JobCreateWizard: React.FC = () => {
               <div>
                 <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Live Preview</h3>
                 <p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">Hiển thị Career Site trước khi đăng tuyển</p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Trạng thái form ứng tuyển</p>
+                  <p className="text-sm font-extrabold text-slate-800 mt-1">
+                    {applyMode === 'REQUIRE_CV' && 'Ứng viên phải nộp CV'}
+                    {applyMode === 'NO_CV' && 'Ứng viên chỉ cần gửi thông tin cơ bản'}
+                    {applyMode === 'EXTERNAL_LINK' && 'Ứng viên được chuyển sang form ngoài'}
+                  </p>
+                  <p className="text-[11px] font-semibold text-slate-400 mt-1">
+                    {applyMode === 'REQUIRE_CV' && 'Sau khi nộp, hệ thống tạo Application, chạy AI scoring và gửi thông báo cho HR.'}
+                    {applyMode === 'NO_CV' && `Career Site sẽ hỏi: "${screeningQuestion}"`}
+                    {applyMode === 'EXTERNAL_LINK' && externalApplyUrl}
+                  </p>
+                </div>
+                <span className={`text-[10px] font-bold px-3 py-1 rounded-full border ${
+                  applyMode === 'REQUIRE_CV'
+                    ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                    : applyMode === 'NO_CV'
+                      ? 'bg-amber-50 text-amber-600 border-amber-100'
+                      : 'bg-blue-50 text-blue-600 border-blue-100'
+                }`}>
+                  {applyMode === 'REQUIRE_CV' ? 'CV required' : applyMode === 'NO_CV' ? 'No CV' : 'External'}
+                </span>
               </div>
             </div>
 
