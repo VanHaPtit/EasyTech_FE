@@ -12,9 +12,12 @@ import { OnboardingPage } from './pages/OnboardingPage';
 import { JobCreateWizard } from './pages/hr/JobCreateWizard';
 import { JobDetail } from './pages/hr/JobDetail';
 import { RoundsConfig } from './pages/hr/RoundsConfig';
+import { CareerSiteSettings } from './pages/hr/CareerSiteSettings';
+import { NotificationsPage } from './pages/hr/NotificationsPage';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { CareerLayout } from './layouts/CareerLayout';
 import { CareerHome } from './pages/career/CareerHome';
+import { CompanyCareerSitePage } from './pages/career/CompanyCareerSitePage';
 import { CareerJobDetail } from './pages/career/CareerJobDetail';
 import { CareerApplyForm } from './pages/career/CareerApplyForm';
 import { CandidateStatusPage } from './pages/career/CandidateStatusPage';
@@ -33,6 +36,10 @@ const HRDashboardShell: React.FC = () => {
     currentTab = 'kanban';
   } else if (location.pathname.startsWith('/dashboard/applications/list')) {
     currentTab = 'list';
+  } else if (location.pathname.startsWith('/dashboard/career-site')) {
+    currentTab = 'career-site';
+  } else if (location.pathname.startsWith('/dashboard/notifications')) {
+    currentTab = 'notifications';
   } else if (location.pathname.startsWith('/dashboard/settings')) {
     currentTab = 'settings';
   }
@@ -43,6 +50,8 @@ const HRDashboardShell: React.FC = () => {
       case 'jobs': navigate('/dashboard/jobs'); break;
       case 'kanban': navigate('/dashboard/applications/kanban'); break;
       case 'list': navigate('/dashboard/applications/list'); break;
+      case 'career-site': navigate('/dashboard/career-site'); break;
+      case 'notifications': navigate('/dashboard/notifications'); break;
       case 'settings': navigate('/dashboard/settings'); break;
       default: navigate('/dashboard');
     }
@@ -91,6 +100,8 @@ export const router = createBrowserRouter([
       { path: 'jobs/:id/rounds', element: <RoundsConfig /> },
       { path: 'applications/kanban', element: <Kanban /> },
       { path: 'applications/list', element: <CandidatesList /> },
+      { path: 'notifications', element: <NotificationsPage /> },
+      { path: 'career-site', element: <CareerSiteSettings /> },
       { path: 'settings', element: <Settings /> },
     ],
   },
@@ -113,6 +124,11 @@ export const router = createBrowserRouter([
       { path: 'jobs/:slug', element: <CareerJobDetail /> },
       { path: 'jobs/:slug/apply', element: <CareerApplyForm /> },
     ],
+  },
+
+  {
+    path: '/company/:companySlug',
+    element: <CompanyCareerSitePage />,
   },
 
   // ── Catch-all ──
