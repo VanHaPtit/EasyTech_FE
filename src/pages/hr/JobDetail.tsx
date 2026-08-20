@@ -6,13 +6,34 @@ import {
   Briefcase, 
   Calendar, 
   DollarSign, 
-  Settings, 
-  Users, 
-  Globe, 
   CheckCircle
 } from 'lucide-react';
 import { EditJobModal } from '../../components/modals/EditJobModal';
 import { PublishJobModal } from '../../components/modals/PublishJobModal';
+
+const renderMarkdown = (text: string) => {
+  const lines = text.split('\n');
+  return lines.map((line, idx) => {
+    if (!line.trim()) return <div key={idx} className="h-1"></div>;
+    
+    if (line.startsWith('### ')) {
+      return <h3 key={idx} className="text-base font-bold text-slate-800 mt-3 mb-2">{line.replace('### ', '')}</h3>;
+    }
+    
+    if (line.startsWith('- ')) {
+      return (
+        <div key={idx} className="flex items-start gap-2 ml-2 mb-1.5 text-sm">
+          <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0"></div>
+          <div className="text-slate-600" dangerouslySetInnerHTML={{ __html: line.substring(2).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+        </div>
+      );
+    }
+    
+    return (
+      <div key={idx} className="text-sm text-slate-600 mb-1.5" dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+    );
+  });
+};
 
 export const JobDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -151,8 +172,8 @@ export const JobDetail: React.FC = () => {
               Mô tả chi tiết công việc
             </h3>
             
-            <div className="text-xs font-semibold text-slate-600 leading-relaxed space-y-4 whitespace-pre-wrap select-text">
-              {job.description}
+            <div className="text-xs font-semibold text-slate-600 leading-relaxed select-text">
+              {renderMarkdown(job.description)}
             </div>
           </div>
         </div>
@@ -161,21 +182,31 @@ export const JobDetail: React.FC = () => {
         <div className="lg:col-span-1 space-y-6">
           
           {/* Widget 1: Publish Now */}
-          {job.status === 'INACTIVE' && (
-            <div className="premium-card bg-primary-500/5 border border-primary-500/10 p-6 space-y-4 text-left">
+          {(job.status === 'INACTIVE' || job.status === 'ACTIVE') && (
+            <div className={`premium-card p-6 space-y-4 text-left ${job.status === 'INACTIVE' ? 'bg-primary-500/5 border border-primary-500/10' : 'bg-red-500/5 border border-red-500/10'}`}>
               <div className="space-y-1.5 select-none">
-                <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Đăng tuyển ngay</h3>
+                <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                  {job.status === 'INACTIVE' ? 'Đăng tuyển ngay' : 'Ngừng tuyển ngay'}
+                </h3>
                 <p className="text-[11px] font-semibold text-slate-400 leading-relaxed">
-                  Tin tuyển dụng hiện ở trạng thái **Bản nháp**. Xuất bản để thu hút hồ sơ ứng viên ngay lập tức.
+                  {job.status === 'INACTIVE' 
+                    ? <span dangerouslySetInnerHTML={{ __html: 'Tin tuyển dụng hiện ở trạng thái <strong>Bản nháp</strong>. Xuất bản để thu hút hồ sơ ứng viên ngay lập tức.' }} />
+                    : <span dangerouslySetInnerHTML={{ __html: 'Tin tuyển dụng đang được <strong>Công khai</strong>. Ngừng tuyển để ẩn tin tuyển dụng khỏi trang Career Site.' }} />
+                  }
                 </p>
               </div>
 
               <button
-                onClick={() => setPublishModalOpen(true)}
-                className="w-full py-3 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-xs font-bold transition-all shadow-md shadow-primary-500/15 cursor-pointer select-none flex items-center justify-center gap-1.5"
+                onClick={() => {
+                  if (job.status === 'INACTIVE') {
+                    setPublishModalOpen(true);
+                  } else {
+                    setJob((prev) => ({ ...prev, status: 'CLOSED' }));
+                  }
+                }}
+                className={`w-full py-3 rounded-xl text-white text-xs font-bold transition-all shadow-md cursor-pointer select-none flex items-center justify-center gap-1.5 ${job.status === 'INACTIVE' ? 'bg-primary-500 hover:bg-primary-600 shadow-primary-500/15' : 'bg-red-500 hover:bg-red-600 shadow-red-500/15'}`}
               >
-                <Globe className="h-4.5 w-4.5" />
-                <span>Publish Job</span>
+                <span>{job.status === 'INACTIVE' ? 'Đăng Tuyển' : 'Ngừng tuyển'}</span>
               </button>
             </div>
           )}
@@ -189,14 +220,12 @@ export const JobDetail: React.FC = () => {
                   Thiết lập kịch bản tự động hóa cho {job.roundCount} vòng đã cấu hình.
                 </p>
               </div>
-              <Settings className="h-5 w-5 text-slate-400" />
             </div>
 
             <button
               onClick={() => navigate(`/dashboard/jobs/${id}/rounds`)}
               className="w-full py-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-bold transition-all cursor-pointer select-none flex items-center justify-center gap-1.5"
             >
-              <Settings className="h-4.5 w-4.5" />
               <span>Cấu hình vòng</span>
             </button>
           </div>
@@ -207,18 +236,16 @@ export const JobDetail: React.FC = () => {
               <div className="space-y-1">
                 <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Ứng viên nộp hồ sơ</h3>
                 <p className="text-[11px] font-semibold text-slate-400 leading-relaxed">
-                  Có **18 ứng viên** nộp hồ sơ ứng tuyển vị trí này.
+                  <span dangerouslySetInnerHTML={{ __html: 'Có <strong>18 ứng viên</strong> nộp hồ sơ ứng tuyển vị trí này.' }} />
                 </p>
               </div>
-              <Users className="h-5 w-5 text-slate-400" />
             </div>
 
             <button
               onClick={() => navigate('/dashboard/applications/kanban')}
               className="w-full py-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-bold transition-all cursor-pointer select-none flex items-center justify-center gap-1.5"
             >
-              <Users className="h-4.5 w-4.5" />
-              <span>Xem phễu ứng viên</span>
+              <span>Xem danh sách</span>
             </button>
           </div>
         </div>
