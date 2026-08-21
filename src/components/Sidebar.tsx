@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Briefcase, FileText, Settings, Rocket, Globe2, Bell } from 'lucide-react';
+import { LayoutDashboard, Briefcase, FileText, Settings, Rocket, Globe2 } from 'lucide-react';
 
 interface SidebarProps {
   currentTab: string;
@@ -24,7 +24,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab: _currentTab, onTab
         { id: 'list', href: '/dashboard/applications/list', label: 'Danh sách' },
       ],
     },
-    { id: 'notifications', href: '/dashboard/notifications', label: 'Thông báo', icon: Bell },
     { id: 'career-site', href: '/dashboard/career-site', label: 'Career Site', icon: Globe2 },
     { id: 'settings', href: '/dashboard/settings', label: 'Cài đặt', icon: Settings },
   ];

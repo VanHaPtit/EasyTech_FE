@@ -24,12 +24,7 @@ import {
 } from 'lucide-react';
 
 // ─── Types ───────────────────────────────────────────────
-export interface WhyJoinCard {
-  id: string;
-  icon: string;
-  title: string;
-  desc: string;
-}
+
 interface EmailTemplate {
   id: string;
   title: string;
@@ -149,17 +144,14 @@ const TABS = [
 export const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('general');
   const [companyName, setCompanyName] = useState('TechA JSC');
-  const [employeeSize, setEmployeeSize] = useState('');
+  const [employeeSize, setEmployeeSize] = useState('120+');
+  const [founded, setFounded] = useState('2019');
   const [slogan, setSlogan] = useState('Đổi mới để dẫn đầu');
   const [tagline, setTagline] = useState('Chúng tôi xây dựng tương lai bằng công nghệ và sự sáng tạo không ngừng nghỉ.');
   const [phone, setPhone] = useState('+84 900 100 200');
   const [address, setAddress] = useState('Tầng 12, Tòa Lotus, 68 Nguyễn Huệ, Q.1, TP. HCM');
   const [website, setWebsite] = useState('www.techa.vn');
-  const [whyChooseUs, setWhyChooseUs] = useState<WhyJoinCard[]>([
-    { id: 'wj1', icon: 'Zap', title: 'AI-First Culture', desc: 'Làm việc với các công nghệ AI mới nhất, từ LLM đến Vector Embedding trong môi trường thực tế.' },
-    { id: 'wj2', icon: 'DollarSign', title: 'Lương & Phúc lợi hấp dẫn', desc: 'Mức lương cạnh tranh + equity + review 2 lần/năm + 13th month + bảo hiểm sức khỏe cao cấp.' },
-    { id: 'wj3', icon: 'Trophy', title: 'Phát triển không giới hạn', desc: 'Budget học hỏi hàng năm, mentorship từ senior engineers, cơ hội làm việc với khách hàng quốc tế.' },
-  ]);
+  const [services, setServices] = useState('AI Product Development, Data Platform, Cloud Engineering');
   // Email Template states
   const [emails, setEmails] = useState<EmailTemplate[]>(EMAIL_TEMPLATES);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
@@ -244,7 +236,7 @@ export const Settings: React.FC = () => {
 
                 <div className="space-y-6 max-w-4xl text-left">
                   {/* Row 1 */}
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Tên công ty <span className="text-red-500">*</span></label>
                       <input
@@ -255,11 +247,20 @@ export const Settings: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Quy mô nhân viên</label>
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Quy mô nhân sự</label>
                       <input
                         type="text"
                         value={employeeSize}
                         onChange={(e) => setEmployeeSize(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm text-slate-800 transition-colors"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Năm thành lập</label>
+                      <input
+                        type="text"
+                        value={founded}
+                        onChange={(e) => setFounded(e.target.value)}
                         className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm text-slate-800 transition-colors"
                       />
                     </div>
@@ -320,100 +321,15 @@ export const Settings: React.FC = () => {
                     />
                   </div>
 
-                  {/* Row 6: Subdomain */}
+                  {/* Row 6: Services */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Subdomain (Career Site)</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Dịch vụ cung cấp</label>
                     <input
                       type="text"
-                      value="techa.easytech.vn"
-                      readOnly
-                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm text-slate-400 cursor-not-allowed"
+                      value={services}
+                      onChange={(e) => setServices(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm text-slate-800 transition-colors"
                     />
-                    <p className="text-[10px] text-slate-400">Subdomain do Admin cấp phát, không thể thay đổi.</p>
-                  </div>
-
-                  {/* Row 7: Why Choose Us (Dynamic Cards) */}
-                  <div className="space-y-3 pt-2">
-                    <div>
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Lý do nên chọn công ty (Why Choose Us)</label>
-                      <p className="text-[10px] text-slate-400">Các thẻ nổi bật về văn hóa, cơ hội phát triển hiển thị trên trang Career Site.</p>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      {whyChooseUs.map((card, index) => (
-                        <div key={card.id} className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4 relative group">
-                          <button 
-                            onClick={() => setWhyChooseUs(prev => prev.filter(c => c.id !== card.id))}
-                            className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="space-y-1.5 md:col-span-1">
-                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Icon & Tiêu đề</label>
-                              <div className="flex gap-2">
-                                <select 
-                                  value={card.icon}
-                                  onChange={(e) => {
-                                    const newCards = [...whyChooseUs];
-                                    newCards[index].icon = e.target.value;
-                                    setWhyChooseUs(newCards);
-                                  }}
-                                  className="w-14 px-1 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 focus:outline-none focus:border-primary-500 text-center"
-                                >
-                                  <option value="Zap">⚡️</option>
-                                  <option value="DollarSign">💰</option>
-                                  <option value="Trophy">🏆</option>
-                                  <option value="Heart">❤️</option>
-                                  <option value="Star">⭐️</option>
-                                  <option value="Users">👥</option>
-                                  <option value="Briefcase">💼</option>
-                                </select>
-                                <input
-                                  type="text"
-                                  value={card.title}
-                                  onChange={(e) => {
-                                    const newCards = [...whyChooseUs];
-                                    newCards[index].title = e.target.value;
-                                    setWhyChooseUs(newCards);
-                                  }}
-                                  className="flex-1 px-3 py-2.5 rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm text-slate-800 transition-colors font-bold"
-                                  placeholder="Tiêu đề thẻ..."
-                                />
-                              </div>
-                            </div>
-                            <div className="space-y-1.5 md:col-span-2">
-                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Mô tả chi tiết</label>
-                              <textarea
-                                value={card.desc}
-                                onChange={(e) => {
-                                  const newCards = [...whyChooseUs];
-                                  newCards[index].desc = e.target.value;
-                                  setWhyChooseUs(newCards);
-                                }}
-                                rows={2}
-                                className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm text-slate-600 transition-colors resize-none"
-                                placeholder="Nhập nội dung mô tả chi tiết..."
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      
-                      <button 
-                        onClick={() => {
-                          setWhyChooseUs(prev => [
-                            ...prev, 
-                            { id: `wj${Date.now()}`, icon: 'Star', title: '', desc: '' }
-                          ]);
-                        }}
-                        className="w-full py-3 rounded-xl border border-dashed border-slate-300 hover:border-primary-500 hover:bg-primary-50 text-slate-500 hover:text-primary-600 text-xs font-bold transition-colors flex items-center justify-center gap-2"
-                      >
-                        <Plus className="h-4 w-4" />
-                        Thêm lý do mới
-                      </button>
-                    </div>
                   </div>
 
                   {/* Submit Button */}

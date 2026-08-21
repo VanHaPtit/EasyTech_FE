@@ -1,21 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Users, 
-  Hourglass, 
-  CheckCircle2, 
-  XCircle, 
-  ArrowRight, 
-  TrendingUp, 
-  Download, 
-  Calendar, 
-  Filter, 
-  Clock, 
-  Globe, 
-  UserCheck,
-  ChevronDown,
-  Briefcase
-} from 'lucide-react';
+
 
 export const Dashboard: React.FC = () => {
   return (
@@ -28,12 +13,9 @@ export const Dashboard: React.FC = () => {
         </div>
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-600 shadow-sm hover:bg-slate-50 transition-colors cursor-pointer">
-            <Calendar className="w-4 h-4 text-slate-400" />
             6 tháng qua
-            <ChevronDown className="w-4 h-4 text-slate-400" />
           </button>
           <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-primary-600 shadow-sm hover:bg-slate-50 transition-colors cursor-pointer">
-            <Download className="w-4 h-4" />
             Xuất báo cáo
           </button>
         </div>
@@ -46,14 +28,10 @@ export const Dashboard: React.FC = () => {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
             <div className="flex justify-between items-start">
               <span className="text-slate-500 text-[13px] font-bold">Tổng số ứng viên</span>
-              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
-                <Users className="w-5 h-5" />
-              </div>
             </div>
             <div className="mt-4">
               <div className="text-3xl font-extrabold text-slate-900 leading-none mb-3">1.284</div>
               <div className="flex items-center text-emerald-500 text-[11px] font-bold">
-                <TrendingUp className="w-3.5 h-3.5 mr-1" />
                 18% <span className="text-slate-400 ml-1 font-semibold">so với 6 tháng trước</span>
               </div>
             </div>
@@ -61,11 +39,7 @@ export const Dashboard: React.FC = () => {
 
           {/* Card 2 */}
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between relative">
-            <div className="absolute top-6 right-6">
-               <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
-                 <Hourglass className="w-4 h-4 text-blue-500" />
-               </div>
-            </div>
+
             <div className="flex justify-between items-start">
               <span className="text-slate-800 text-[13px] font-bold">Đang xử lý</span>
             </div>
@@ -80,11 +54,7 @@ export const Dashboard: React.FC = () => {
 
           {/* Card 3 */}
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between relative">
-            <div className="absolute top-6 right-6">
-               <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100">
-                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-               </div>
-            </div>
+
             <div className="flex justify-between items-start">
               <span className="text-slate-800 text-[13px] font-bold">Đạt</span>
             </div>
@@ -99,11 +69,7 @@ export const Dashboard: React.FC = () => {
 
           {/* Card 4 */}
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between relative">
-            <div className="absolute top-6 right-6">
-               <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
-                 <XCircle className="w-4 h-4 text-slate-500" />
-               </div>
-            </div>
+
             <div className="flex justify-between items-start">
               <span className="text-slate-800 text-[13px] font-bold">Không đạt</span>
             </div>
@@ -127,7 +93,6 @@ export const Dashboard: React.FC = () => {
                 <p className="text-slate-400 text-xs font-semibold mt-1">Số lượng ứng tuyển trong 6 tháng gần nhất</p>
               </div>
               <div className="px-2.5 py-1 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-lg flex items-center border border-emerald-100">
-                <TrendingUp className="w-3.5 h-3.5 mr-1" />
                 18%
               </div>
             </div>
@@ -198,16 +163,13 @@ export const Dashboard: React.FC = () => {
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-[15px] font-extrabold text-slate-800">Hiệu quả tuyển dụng</h3>
               <Link to="/dashboard" className="text-blue-500 text-xs font-bold flex items-center hover:underline">
-                Xem chi tiết <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                Xem chi tiết
               </Link>
             </div>
 
             <div className="grid grid-cols-2 gap-4 flex-1">
               {/* Card 1 */}
               <div className="border border-slate-100 rounded-2xl p-5 flex flex-col justify-center bg-white shadow-sm relative">
-                <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                   <Filter className="w-3.5 h-3.5 text-blue-600" />
-                </div>
                 <div className="text-[11px] font-semibold text-slate-500 mb-2">Tỷ lệ chuyển đổi</div>
                 <div className="text-2xl font-extrabold text-slate-900 mb-1">38%</div>
                 <div className="text-[10px] text-slate-400 font-semibold">Ứng viên → Phỏng vấn</div>
@@ -215,9 +177,6 @@ export const Dashboard: React.FC = () => {
               
               {/* Card 2 */}
               <div className="border border-slate-100 rounded-2xl p-5 flex flex-col justify-center bg-white shadow-sm relative">
-                <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                   <Clock className="w-3.5 h-3.5 text-blue-600" />
-                </div>
                 <div className="text-[11px] font-semibold text-slate-500 mb-2">Thời gian tuyển dụng TB</div>
                 <div className="text-2xl font-extrabold text-slate-900 mb-1">21 ngày</div>
                 <div className="text-[10px] text-slate-400 font-semibold">Giảm 15% so với kỳ trước</div>
@@ -225,9 +184,6 @@ export const Dashboard: React.FC = () => {
 
               {/* Card 3 */}
               <div className="border border-slate-100 rounded-2xl p-5 flex flex-col justify-center bg-white shadow-sm relative">
-                <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-emerald-50 flex items-center justify-center">
-                   <Globe className="w-3.5 h-3.5 text-emerald-600" />
-                </div>
                 <div className="text-[11px] font-semibold text-slate-500 mb-2">Nguồn ứng viên hiệu quả</div>
                 <div className="text-lg font-extrabold text-slate-900 mb-1 leading-tight mt-1">Website</div>
                 <div className="text-[10px] text-slate-400 font-semibold mt-1">42% tổng ứng viên</div>
@@ -235,9 +191,6 @@ export const Dashboard: React.FC = () => {
 
               {/* Card 4 */}
               <div className="border border-slate-100 rounded-2xl p-5 flex flex-col justify-center bg-white shadow-sm relative">
-                <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-emerald-50 flex items-center justify-center">
-                   <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-                </div>
                 <div className="text-[11px] font-semibold text-slate-500 mb-2">Tỷ lệ chấp nhận offer</div>
                 <div className="text-2xl font-extrabold text-slate-900 mb-1">92%</div>
                 <div className="text-[10px] text-slate-400 font-semibold">Tăng 8% so với kỳ trước</div>
@@ -253,7 +206,7 @@ export const Dashboard: React.FC = () => {
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-[15px] font-extrabold text-slate-800">Tin tuyển dụng nổi bật</h3>
               <Link to="/dashboard/jobs" className="text-blue-500 text-xs font-bold flex items-center hover:underline">
-                Xem tất cả <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                Xem tất cả
               </Link>
             </div>
 
@@ -278,9 +231,6 @@ export const Dashboard: React.FC = () => {
                     <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
                       <td className="py-4">
                          <div className="flex items-center gap-3">
-                           <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center border border-blue-100">
-                             <Briefcase className="w-4 h-4" />
-                           </div>
                            <div className="font-extrabold text-sm text-slate-800 flex items-center gap-2">
                              {row.title}
                              {row.featured && <span className="px-1.5 py-0.5 rounded-md text-[9px] bg-blue-50 border border-blue-100 text-blue-600 font-extrabold tracking-widest">Featured</span>}

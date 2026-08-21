@@ -11,8 +11,14 @@ import {
   MapPin,
   Search,
   Send,
-  Users,
+  Users
 } from 'lucide-react';
+
+const WHY_CHOOSE_US = [
+  'Làm việc với các công nghệ AI mới nhất, từ LLM đến Vector Embedding trong môi trường thực tế.',
+  'Mức lương cạnh tranh + equity + review 2 lần/năm + 13th month + bảo hiểm sức khỏe cao cấp.',
+  'Budget học hỏi hàng năm, mentorship từ senior engineers, cơ hội làm việc với khách hàng quốc tế.'
+];
 
 const COMPANY = {
   name: 'TechA Solutions JSC',
@@ -21,9 +27,16 @@ const COMPANY = {
   location: 'TP. Hồ Chí Minh, Việt Nam',
   size: '120+ nhân viên',
   founded: '2019',
+  email: 'hr@techa.vn',
   services: ['AI Product Development', 'Data Platform', 'Cloud Engineering', 'Business Automation'],
   description:
     'TechA Solutions phát triển các sản phẩm AI ứng dụng, nền tảng dữ liệu và giải pháp tự động hóa cho doanh nghiệp. Career Site này được cấp phát riêng bởi EasyTech cho từng công ty đã được duyệt.',
+  footer: {
+    description: 'Chúng tôi xây dựng những sản phẩm AI/tech hàng đầu, tìm kiếm những tài năng đam mê đổi mới và công nghệ.',
+    facebook: 'https://facebook.com/techa',
+    linkedin: 'https://linkedin.com/company/techa',
+    copyright: '© 2026 TechA Solutions JSC. All rights reserved.',
+  }
 };
 
 const JOBS = [
@@ -89,7 +102,6 @@ export const CompanyCareerSitePage: React.FC = () => {
           <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-slate-500">
             <a href="#company" className="hover:text-primary-600">Công ty</a>
             <a href="#jobs" className="hover:text-primary-600">Việc làm</a>
-            <a href="#apply" className="hover:text-primary-600">Ứng tuyển chung</a>
           </nav>
         </div>
       </header>
@@ -143,11 +155,7 @@ export const CompanyCareerSitePage: React.FC = () => {
 
         <section id="company" className="max-w-6xl mx-auto px-6 py-14">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              'Sản phẩm AI có người dùng thật và bài toán rõ ràng.',
-              'Quy trình tuyển dụng minh bạch, email thông báo tự động theo từng vòng.',
-              'Môi trường kỹ thuật có mentoring, review định kỳ và ngân sách học tập.',
-            ].map((text) => (
+            {WHY_CHOOSE_US.map((text) => (
               <div key={text} className="premium-card bg-white p-6 flex items-start gap-3">
                 <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
                 <p className="text-sm font-semibold text-slate-600 leading-relaxed">{text}</p>
@@ -222,24 +230,66 @@ export const CompanyCareerSitePage: React.FC = () => {
           </div>
         </section>
 
-        <section id="apply" className="bg-white border-t border-slate-200">
-          <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row md:items-center justify-between gap-5">
-            <div>
-              <h2 className="text-2xl font-extrabold text-slate-800">Chưa thấy vị trí phù hợp?</h2>
-              <p className="text-sm font-semibold text-slate-500 mt-1">
-                Gửi hồ sơ ứng tuyển chung, HR sẽ nhận thông báo trong dashboard.
-              </p>
-            </div>
-            <a
-              href="mailto:hr@techa.vn"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold"
-            >
-              <Send className="h-4 w-4" />
-              Gửi hồ sơ chung
-            </a>
-          </div>
-        </section>
+
       </main>
+
+      <footer className="bg-slate-900 text-slate-400 mt-0">
+        <div className="max-w-6xl mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-xl bg-primary-500 flex items-center justify-center">
+                  <Zap className="h-4 w-4 text-white" />
+                </div>
+                <p className="text-sm font-extrabold text-white">{COMPANY.name}</p>
+              </div>
+              <p className="text-xs font-semibold leading-relaxed">
+                {COMPANY.footer.description}
+              </p>
+              <div className="flex gap-3">
+                <a href={COMPANY.footer.facebook} target="_blank" rel="noopener noreferrer" className="h-8 w-8 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-primary-500 transition-colors cursor-pointer">
+                  <Globe2 className="h-4 w-4 text-slate-400 hover:text-white" />
+                </a>
+                <a href={COMPANY.footer.linkedin} target="_blank" rel="noopener noreferrer" className="h-8 w-8 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-primary-500 transition-colors cursor-pointer">
+                  <Users className="h-4 w-4 text-slate-400 hover:text-white" />
+                </a>
+                <a href={`mailto:${COMPANY.email}`} className="h-8 w-8 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-primary-500 transition-colors cursor-pointer">
+                  <Send className="h-4 w-4 text-slate-400 hover:text-white" />
+                </a>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold text-white uppercase tracking-widest">Liên kết</h4>
+              <div className="space-y-2.5">
+                <a href="#company" className="block text-xs font-semibold hover:text-primary-400 transition-colors">Về chúng tôi</a>
+                <a href="#jobs" className="block text-xs font-semibold hover:text-primary-400 transition-colors">Vị trí đang tuyển</a>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold text-white uppercase tracking-widest">Liên hệ</h4>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <MapPin className="h-3.5 w-3.5 text-primary-500 shrink-0" />
+                  <p className="text-xs font-semibold">{COMPANY.location}</p>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Globe2 className="h-3.5 w-3.5 text-primary-500 shrink-0" />
+                  <p className="text-xs font-semibold">{COMPANY.website}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-10 pt-6 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p className="text-xs font-semibold">{COMPANY.footer.copyright}</p>
+            <p className="text-xs font-semibold text-slate-600">
+              Tuyển dụng trực tuyến qua <span className="text-primary-500 font-bold">EasyTech Platform</span>
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
