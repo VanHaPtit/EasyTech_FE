@@ -9,17 +9,13 @@ export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSimulatedGoogleLogin = (role: 'hr' | 'admin') => {
+  const handleSimulatedGoogleLogin = () => {
     setLoading(true);
     setError(null);
     setTimeout(() => {
       setLoading(false);
-      if (role === 'hr') {
-        // Redirect directly to dashboard so the user can see the new HR interface
-        navigate('/dashboard');
-      } else {
-        navigate('/admin');
-      }
+      // Redirect directly to dashboard so the user can see the new HR interface
+      navigate('/dashboard');
     }, 1500);
   };
 
@@ -45,9 +41,9 @@ export const LoginPage: React.FC = () => {
 
               {/* Headings */}
               <div className="space-y-2">
-                <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Đăng nhập hệ thống</h1>
+                <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Đăng nhập Doanh nghiệp</h1>
                 <p className="text-sm font-semibold text-slate-400">
-                  Khu vực quản trị dành cho HR và Admin của nền tảng EasyTech.
+                  Khu vực quản lý tuyển dụng dành cho HR trên nền tảng EasyTech.
                 </p>
               </div>
 
@@ -55,9 +51,9 @@ export const LoginPage: React.FC = () => {
                 <div className="flex items-start gap-3">
                   <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary-500" />
                   <div className="space-y-1">
-                    <p className="text-sm font-extrabold text-slate-800">Trang đăng nhập dành cho HR/Admin</p>
+                    <p className="text-sm font-extrabold text-slate-800">Dành riêng cho Nhà tuyển dụng</p>
                     <p className="text-xs font-semibold leading-relaxed text-slate-500">
-                      Ứng viên không cần đăng nhập để tìm việc hoặc nộp CV. Nếu bạn là ứng viên, hãy vào Career Site để xem các vị trí đang tuyển.
+                      Ứng viên không cần đăng nhập tại đây. Nếu bạn là ứng viên đang tìm việc, hãy truy cập Career Site của doanh nghiệp để xem các vị trí đang tuyển.
                     </p>
                   </div>
                 </div>
@@ -84,7 +80,7 @@ export const LoginPage: React.FC = () => {
                   <div className="space-y-3">
                     {/* Simulated Google Button for HR */}
                     <button
-                      onClick={() => handleSimulatedGoogleLogin('hr')}
+                      onClick={handleSimulatedGoogleLogin}
                       className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-bold text-slate-700 hover:text-slate-800 transition-all shadow-sm cursor-pointer select-none"
                     >
                       <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
@@ -93,21 +89,7 @@ export const LoginPage: React.FC = () => {
                           d="M12.24 10.285V14.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l3.227-3.104C18.423 1.95 15.608 1 12.24 1 5.922 1 1 5.922 1 12.24s4.922 11.24 11.24 11.24c6.6 0 11-4.606 11-11.24 0-.756-.08-1.334-.18-1.955H12.24z"
                         />
                       </svg>
-                      <span>Đăng nhập với Google (Vai trò HR)</span>
-                    </button>
-
-                    {/* Simulated Google Button for Admin */}
-                    <button
-                      onClick={() => handleSimulatedGoogleLogin('admin')}
-                      className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-bold text-slate-700 hover:text-slate-800 transition-all shadow-sm cursor-pointer select-none"
-                    >
-                      <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
-                        <path
-                          fill="#4285F4"
-                          d="M12.24 10.285V14.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l3.227-3.104C18.423 1.95 15.608 1 12.24 1 5.922 1 12.24 5.922 12.24 12.24s4.922 11.24 11.24 11.24c6.6 0 11-4.606 11-11.24 0-.756-.08-1.334-.18-1.955H12.24z"
-                        />
-                      </svg>
-                      <span>Đăng nhập với Google (Vai trò Admin)</span>
+                      <span>Đăng nhập tài khoản Google</span>
                     </button>
 
                     <button
@@ -122,9 +104,17 @@ export const LoginPage: React.FC = () => {
               </div>
 
               {/* Warning Alert if Client ID is missing */}
-              <div className="pt-6 border-t border-slate-100 flex gap-2 items-center text-[10px] font-semibold text-slate-400 select-none">
-                <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
-                <span>Google Client ID configured. One-tap signup enabled.</span>
+              <div className="pt-6 border-t border-slate-100 flex justify-between items-center text-[10px] font-semibold text-slate-400 select-none">
+                <div className="flex gap-2 items-center">
+                  <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <span>Google Client ID configured. One-tap signup enabled.</span>
+                </div>
+                <button 
+                  onClick={() => navigate('/admin/login')}
+                  className="hover:text-primary-500 transition-colors cursor-pointer"
+                >
+                  Admin Portal &rarr;
+                </button>
               </div>
             </div>
           </div>

@@ -15,6 +15,7 @@ import { RoundsConfig } from './pages/hr/RoundsConfig';
 import { CareerSiteSettings } from './pages/hr/CareerSiteSettings';
 import { NotificationsPage } from './pages/hr/NotificationsPage';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { AdminLogin } from './pages/admin/AdminLogin';
 import { CareerLayout } from './layouts/CareerLayout';
 import { CareerHome } from './pages/career/CareerHome';
 import { CompanyCareerSitePage } from './pages/career/CompanyCareerSitePage';
@@ -107,6 +108,10 @@ export const router = createBrowserRouter([
   },
 
   // ── Admin ──
+  {
+    path: '/admin/login',
+    element: <AdminLogin />,
+  },
   {
     path: '/admin',
     element: <AdminDashboard />,

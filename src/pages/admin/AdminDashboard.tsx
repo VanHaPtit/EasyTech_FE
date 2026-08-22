@@ -334,7 +334,7 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/admin/login')}
               className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 border border-slate-800 transition-all cursor-pointer"
             >
               <LogOut className="h-3.5 w-3.5" />
