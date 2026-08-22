@@ -2,46 +2,6 @@ import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { Zap, MapPin, Mail, Phone, Globe, ExternalLink } from 'lucide-react';
 
-const CareerHeader: React.FC = () => (
-  <header className="bg-white border-b border-slate-100 sticky top-0 z-30">
-    <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-      {/* Logo */}
-      <Link to="/careers" className="flex items-center gap-2.5">
-        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary-500 to-amber-400 flex items-center justify-center shadow-md shadow-primary-500/20">
-          <Zap className="h-5 w-5 text-white" />
-        </div>
-        <div>
-          <p className="text-sm font-extrabold text-slate-800 leading-tight">TechA Solutions</p>
-          <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest -mt-0.5">Powered by EasyTech</p>
-        </div>
-      </Link>
-
-      {/* Nav */}
-      <nav className="hidden md:flex items-center gap-6">
-        <Link to="/careers" className="text-sm font-semibold text-slate-600 hover:text-primary-500 transition-colors">
-          Trang chủ
-        </Link>
-        <Link to="/careers" className="text-sm font-semibold text-slate-600 hover:text-primary-500 transition-colors">
-          Cơ hội nghề nghiệp
-        </Link>
-        <Link to="/careers" className="text-sm font-semibold text-slate-600 hover:text-primary-500 transition-colors">
-          Về chúng tôi
-        </Link>
-        <Link to="/careers/applications/track" className="text-sm font-semibold text-slate-600 hover:text-primary-500 transition-colors">
-          Theo dõi hồ sơ
-        </Link>
-      </nav>
-
-      {/* CTA */}
-      <Link
-        to="/careers"
-        className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-xs font-bold transition-all shadow-sm shadow-primary-500/20"
-      >
-        Xem tất cả việc làm
-      </Link>
-    </div>
-  </header>
-);
 
 const CareerFooter: React.FC = () => (
   <footer className="bg-slate-900 text-slate-400 mt-20">
@@ -120,7 +80,6 @@ const CareerFooter: React.FC = () => (
 export const CareerLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
-      <CareerHeader />
       <main className="flex-1">
         <Outlet />
       </main>

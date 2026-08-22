@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   MapPin,
@@ -13,6 +13,8 @@ import {
   Building2,
   Globe,
   Phone,
+  UploadCloud,
+  FileText
 } from 'lucide-react';
 
 // Mock job data by slug
@@ -21,7 +23,6 @@ const JOB_MAP: Record<string, {
   salaryFrom: number; salaryTo: number; currency: string;
   experience: number; category: string; applicants: number; postedAt: string;
   description: string; requirements: string[]; benefits: string[];
-  rounds: { name: string; desc: string }[];
 }> = {
   'senior-ai-engineer': {
     title: 'Senior AI Engineer',
@@ -47,13 +48,7 @@ const JOB_MAP: Record<string, {
       'Bảo hiểm sức khỏe cao cấp (PVI Health)',
       'Budget học hỏi 10 triệu/năm (khóa học, conference)',
       'Làm việc hybrid: 3 ngày office, 2 ngày remote',
-      'Cơ phần tùy theo vị trí',
-    ],
-    rounds: [
-      { name: 'CV Screening', desc: 'HR review hồ sơ trong 3 ngày làm việc' },
-      { name: 'Technical Assessment', desc: 'Bài test kỹ thuật online (90 phút)' },
-      { name: 'Technical Interview', desc: 'Phỏng vấn kỹ thuật với Engineering Lead (60 phút)' },
-      { name: 'Offer & Negotiation', desc: 'Thảo luận offer và onboarding' },
+      'Cổ phần tùy theo vị trí',
     ],
   },
 };
@@ -64,6 +59,11 @@ const DEFAULT_JOB = JOB_MAP['senior-ai-engineer'];
 export const CareerJobDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const job = (slug && JOB_MAP[slug]) ? JOB_MAP[slug] : DEFAULT_JOB;
+  
+  // Form states
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
@@ -153,45 +153,10 @@ export const CareerJobDetail: React.FC = () => {
               ))}
             </div>
           </div>
-
-          {/* Interview Rounds */}
-          <div className="premium-card bg-white p-8 space-y-4">
-            <h2 className="text-lg font-extrabold text-slate-800">Quy trình tuyển dụng</h2>
-            <div className="space-y-3 relative pl-4">
-              <div className="absolute left-4 top-2 bottom-2 w-px bg-slate-200" />
-              {job.rounds.map((r, i) => (
-                <div key={i} className="relative flex items-start gap-4 pl-6">
-                  <div className="absolute left-0 top-2 h-3 w-3 rounded-full bg-primary-500 border-2 border-white ring-2 ring-primary-200 z-10" />
-                  <div>
-                    <p className="text-sm font-extrabold text-slate-800">Vòng {i + 1}: {r.name}</p>
-                    <p className="text-xs text-slate-400 font-semibold mt-0.5">{r.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Right: Sidebar */}
         <div className="space-y-6">
-          {/* Apply CTA */}
-          <div className="premium-card bg-white p-6 space-y-4 sticky top-20">
-            <div className="text-center space-y-2">
-              <h3 className="text-base font-extrabold text-slate-800">Quan tâm vị trí này?</h3>
-              <p className="text-xs text-slate-400 font-semibold">Nộp hồ sơ ngay hôm nay, phản hồi trong 3 ngày làm việc.</p>
-            </div>
-            <Link
-              to={`/careers/jobs/${slug || 'senior-ai-engineer'}/apply`}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold text-sm transition-all shadow-lg shadow-primary-500/20"
-            >
-              Ứng tuyển ngay
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-            <p className="text-[10px] text-center text-slate-400 font-semibold">
-              🔒 Thông tin của bạn được bảo mật theo chính sách PDPA
-            </p>
-          </div>
-
           {/* Company Info */}
           <div className="premium-card bg-white p-6 space-y-4">
             <h3 className="text-sm font-extrabold text-slate-800">Về TechA Solutions</h3>
@@ -222,16 +187,67 @@ export const CareerJobDetail: React.FC = () => {
             </div>
           </div>
 
-          {/* Share */}
-          <div className="premium-card bg-white p-6 space-y-3">
-            <h3 className="text-sm font-extrabold text-slate-800">Chia sẻ vị trí này</h3>
-            <div className="flex gap-2">
-              {['LinkedIn', 'Facebook', 'Copy Link'].map((s) => (
-                <button key={s} className="flex-1 py-2 text-[10px] font-bold text-slate-500 border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-primary-500 hover:border-primary-200 transition-all cursor-pointer">
-                  {s}
-                </button>
-              ))}
+          {/* Apply Inline Form */}
+          <div className="premium-card bg-white p-6 sticky top-6">
+            <div className="mb-5 pb-5 border-b border-slate-100">
+               <h3 className="text-lg font-extrabold text-slate-800 tracking-tight">Ứng tuyển ngay</h3>
+               <p className="text-xs text-slate-500 font-semibold mt-1">Gửi hồ sơ trực tiếp đến nhà tuyển dụng</p>
             </div>
+            
+            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+               {/* Upload CV */}
+               <div className="space-y-2">
+                 <label className="text-xs font-bold text-slate-700">Hồ sơ đính kèm (CV) *</label>
+                 <div className="border-2 border-dashed border-slate-200 bg-slate-50 rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                    <UploadCloud className="h-6 w-6 text-slate-400 mb-2" />
+                    <p className="text-xs font-bold text-slate-600">Tải lên từ thiết bị</p>
+                    <p className="text-[10px] text-slate-400 font-semibold mt-1">Chỉ nhận file PDF, DOC, DOCX. Tối đa 5MB.</p>
+                 </div>
+               </div>
+
+               {/* Full Name */}
+               <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700">Họ và tên *</label>
+                 <input 
+                   type="text" 
+                   required
+                   value={fullName}
+                   onChange={(e) => setFullName(e.target.value)}
+                   className="w-full px-3 py-2 text-sm text-slate-800 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all placeholder-slate-400"
+                   placeholder="Vd: Nguyễn Văn A"
+                 />
+               </div>
+
+               {/* Phone */}
+               <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700">Số điện thoại *</label>
+                 <input 
+                   type="tel" 
+                   required
+                   value={phone}
+                   onChange={(e) => setPhone(e.target.value)}
+                   className="w-full px-3 py-2 text-sm text-slate-800 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all placeholder-slate-400"
+                   placeholder="Vd: 0912345678"
+                 />
+               </div>
+
+               {/* Email */}
+               <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700">Email liên hệ *</label>
+                 <input 
+                   type="email" 
+                   required
+                   value={email}
+                   onChange={(e) => setEmail(e.target.value)}
+                   className="w-full px-3 py-2 text-sm text-slate-800 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all placeholder-slate-400"
+                   placeholder="Vd: email@example.com"
+                 />
+               </div>
+               
+               <button type="submit" className="w-full py-3 mt-2 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold text-sm transition-all shadow-lg shadow-primary-500/20">
+                 Nộp hồ sơ
+               </button>
+            </form>
           </div>
         </div>
       </div>

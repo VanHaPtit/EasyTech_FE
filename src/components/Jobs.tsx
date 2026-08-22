@@ -1,17 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Download, 
-  Plus, 
-  Briefcase, 
-  Users, 
-  TrendingUp, 
-  TrendingDown, 
-  Search, 
-  ChevronDown, 
-  ChevronLeft, 
-  ChevronRight 
-} from 'lucide-react';
+
 
 export const Jobs: React.FC = () => {
   const navigate = useNavigate();
@@ -82,7 +71,6 @@ export const Jobs: React.FC = () => {
         {/* Action Buttons */}
         <div className="flex items-center gap-3">
           <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-bold shadow-sm transition-all duration-200 cursor-pointer">
-            <Download className="h-4.5 w-4.5" />
             <span>Xuất dữ liệu</span>
           </button>
           
@@ -90,7 +78,6 @@ export const Jobs: React.FC = () => {
             onClick={() => navigate('/dashboard/jobs/create')}
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-500 text-white hover:bg-primary-600 text-sm font-bold shadow-md shadow-primary-500/10 hover:shadow-primary-500/20 transition-all duration-200 cursor-pointer"
           >
-            <Plus className="h-4.5 w-4.5" />
             <span>Tạo tin tuyển dụng</span>
           </button>
         </div>
@@ -105,12 +92,8 @@ export const Jobs: React.FC = () => {
               <span className="text-sm font-semibold text-slate-400">Tổng số vị trí</span>
               <p className="text-3xl font-extrabold text-slate-800 tracking-tight">24</p>
             </div>
-            <div className="h-10 w-10 rounded-full bg-primary-50 border border-primary-100 flex items-center justify-center text-primary-500">
-              <Briefcase className="h-5 w-5" />
-            </div>
           </div>
           <div className="flex items-center gap-1 text-xs font-semibold text-emerald-600 mt-2">
-            <TrendingUp className="h-3.5 w-3.5" />
             <span>+2</span>
           </div>
         </div>
@@ -122,12 +105,8 @@ export const Jobs: React.FC = () => {
               <span className="text-sm font-semibold text-slate-400">Vị trí đang mở</span>
               <p className="text-3xl font-extrabold text-slate-800 tracking-tight">12</p>
             </div>
-            <div className="h-10 w-10 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-500">
-              <Briefcase className="h-5 w-5" />
-            </div>
           </div>
           <div className="flex items-center gap-1 text-xs font-semibold text-emerald-600 mt-2">
-            <TrendingUp className="h-3.5 w-3.5" />
             <span>Tăng 15%</span>
           </div>
         </div>
@@ -138,9 +117,6 @@ export const Jobs: React.FC = () => {
             <div className="space-y-1">
               <span className="text-sm font-semibold text-slate-400">Ứng viên mới</span>
               <p className="text-3xl font-extrabold text-slate-800 tracking-tight">86</p>
-            </div>
-            <div className="h-10 w-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500">
-              <Users className="h-5 w-5" />
             </div>
           </div>
           {/* Empty spacer to align elements */}
@@ -154,12 +130,8 @@ export const Jobs: React.FC = () => {
               <span className="text-sm font-semibold text-slate-400">TG tuyển TB</span>
               <p className="text-3xl font-extrabold text-slate-800 tracking-tight">21 ngày</p>
             </div>
-            <div className="h-10 w-10 rounded-full bg-primary-50 border border-primary-100 flex items-center justify-center text-primary-500">
-              <TrendingDown className="h-5 w-5" />
-            </div>
           </div>
           <div className="flex items-center gap-1 text-xs font-semibold text-primary-600 mt-2">
-            <TrendingDown className="h-3.5 w-3.5" />
             <span>-2 ngày</span>
           </div>
         </div>
@@ -169,20 +141,16 @@ export const Jobs: React.FC = () => {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Search Input */}
         <div className="relative w-full sm:max-w-md">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-            <Search className="h-5 w-5" />
-          </span>
           <input
             type="text"
             placeholder="Tìm theo tiêu đề hoặc phòng ban..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm font-medium transition-colors"
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-primary-500 text-sm font-medium transition-colors"
           />
         </div>
 
         {/* Dropdown Selector */}
         <button className="w-full sm:w-auto inline-flex items-center justify-between gap-6 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 text-sm font-semibold shadow-sm transition-all duration-200 cursor-pointer">
           <span>Mới nhất</span>
-          <ChevronDown className="h-4.5 w-4.5 text-slate-400" />
         </button>
       </div>
 
@@ -212,9 +180,6 @@ export const Jobs: React.FC = () => {
                   >
                     {/* Job Title with Icon */}
                     <td className="px-6 py-4.5 flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-lg bg-primary-50 border border-primary-100 flex items-center justify-center text-primary-500">
-                        <Briefcase className="h-4.5 w-4.5" />
-                      </div>
                       <span className="font-extrabold text-slate-800 hover:text-primary-500 cursor-pointer transition-colors">
                         {job.title}
                       </span>
@@ -267,9 +232,9 @@ export const Jobs: React.FC = () => {
             {/* Prev Page Button */}
             <button 
               disabled
-              className="p-1.5 rounded-lg border border-slate-200 text-slate-300 bg-slate-50/50 cursor-not-allowed transition-all"
+              className="px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-300 bg-slate-50/50 cursor-not-allowed transition-all text-xs font-bold"
             >
-              <ChevronLeft className="h-4.5 w-4.5" />
+              &lt;
             </button>
 
             {/* Page 1 Button (Active) */}
@@ -283,8 +248,9 @@ export const Jobs: React.FC = () => {
             </button>
 
             {/* Next Page Button */}
-            <button className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all cursor-pointer">
-              <ChevronRight className="h-4.5 w-4.5" />
+            <button className="px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all cursor-pointer text-xs font-bold"
+            >
+              &gt;
             </button>
           </div>
         </div>
