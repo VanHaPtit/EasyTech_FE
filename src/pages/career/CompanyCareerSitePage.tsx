@@ -11,7 +11,8 @@ import {
   MapPin,
   Search,
   Send,
-  Users
+  Users,
+  Zap
 } from 'lucide-react';
 
 const WHY_CHOOSE_US = [

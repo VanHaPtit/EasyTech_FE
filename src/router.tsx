@@ -12,7 +12,6 @@ import { OnboardingPage } from './pages/OnboardingPage';
 import { JobCreateWizard } from './pages/hr/JobCreateWizard';
 import { JobDetail } from './pages/hr/JobDetail';
 import { RoundsConfig } from './pages/hr/RoundsConfig';
-import { CareerSiteSettings } from './pages/hr/CareerSiteSettings';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { CareerLayout } from './layouts/CareerLayout';
 import { CareerHome } from './pages/career/CareerHome';
@@ -96,7 +95,6 @@ export const router = createBrowserRouter([
       { path: 'jobs/:id/rounds', element: <RoundsConfig /> },
       { path: 'applications/kanban', element: <Kanban /> },
       { path: 'applications/list', element: <CandidatesList /> },
-      { path: 'career-site', element: <CareerSiteSettings /> },
       { path: 'settings', element: <Settings /> },
     ],
   },

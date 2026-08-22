@@ -125,16 +125,7 @@ export const Topbar: React.FC = () => {
           )}
         </div>
 
-        <div className="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg transition-colors">
-          <div className="hidden sm:flex flex-col items-end">
-            <span className="text-[13px] font-bold text-slate-900 leading-tight">Nguyễn Minh Anh</span>
-            <span className="text-[11px] text-slate-500 font-medium">HR</span>
-          </div>
-          <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden relative">
-            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120&h=120" alt="Avatar" className="w-full h-full object-cover" />
-          </div>
-          <ChevronDown className="w-4 h-4 text-slate-400" />
-        </div>
+
       </div>
     </header>
   );
