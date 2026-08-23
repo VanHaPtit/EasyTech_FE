@@ -1,161 +1,418 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Rocket, ShieldCheck, AlertCircle, Loader2, Briefcase } from 'lucide-react';
-import { PublicHeader } from '../components/PublicHeader';
-import { PublicFooter } from '../components/PublicFooter';
+import { CheckCircle2, Share2, Loader2, ArrowRight, ArrowLeft, Building2, User } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  // Shared state
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
+  // Register specific state
+  const [registerStep, setRegisterStep] = useState<1 | 2>(1);
 
-  const handleSimulatedGoogleLogin = () => {
+  // --- Step 1: User Info ---
+  const [fullName, setFullName] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [position, setPosition] = useState('');
+  const [department, setDepartment] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [otpEmail, setOtpEmail] = useState(''); // Simulated OTP
+  const [otpPhone, setOtpPhone] = useState(''); // Simulated OTP
+
+  // --- Step 2: Company Info ---
+  const [companyName, setCompanyName] = useState('');
+  const [taxId, setTaxId] = useState('');
+  const [businessType, setBusinessType] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [companySize, setCompanySize] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
-    setError(null);
     setTimeout(() => {
       setLoading(false);
-      // Redirect directly to dashboard so the user can see the new HR interface
       navigate('/dashboard');
     }, 1500);
   };
 
+  const handleNextStep = (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegisterStep(2);
+  };
+
+  const handleRegisterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/dashboard');
+    }, 1500);
+  };
+
+  const handleGoogleLogin = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/dashboard');
+    }, 1500);
+  };
+
+  // Helper for input styles
+  const inputClassName = "w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-[13px] focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-slate-700 bg-slate-50 focus:bg-white";
+  const labelClassName = "text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block";
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
-      {/* Public Header */}
-      <PublicHeader />
+    <div className="h-screen w-full flex flex-col bg-white font-sans overflow-hidden">
+      <main className="flex-1 flex w-full h-full">
+        
+        {/* Left Side: Form */}
+        <div className="w-full lg:w-1/2 h-full flex flex-col justify-center px-6 sm:px-12 md:px-20 relative overflow-y-auto bg-white custom-scrollbar">
+          <div className="max-w-[420px] w-full mx-auto my-auto py-8">
+            <h1 className="text-[28px] font-bold text-slate-900 mb-2 tracking-tight">Chào mừng HR quay lại</h1>
+            <p className="text-[14px] text-slate-500 mb-8">
+              Nhập thông tin của bạn để truy cập hệ thống quản trị
+            </p>
 
-      {/* Main Login Split Container */}
-      <main className="flex-1 flex items-center justify-center p-6 md:p-12 max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full items-stretch bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl min-h-[600px]">
-          
-          {/* Left Side: GlassCard Form */}
-          <div className="p-8 md:p-12 flex flex-col justify-center relative bg-gradient-to-b from-white to-slate-50/50">
-            {/* Background elements */}
-            <div className="absolute top-0 right-0 h-40 w-40 bg-primary-400/5 rounded-full blur-3xl pointer-events-none"></div>
+            {/* Tabs */}
+            <div className="flex items-center gap-8 border-b border-slate-200 mb-8">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('login');
+                  setRegisterStep(1);
+                }}
+                className={`pb-3 text-[15px] font-bold border-b-2 transition-colors ${
+                  activeTab === 'login' ? 'border-[#0052cc] text-[#0052cc]' : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                Login
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('register')}
+                className={`pb-3 text-[15px] font-bold border-b-2 transition-colors ${
+                  activeTab === 'register' ? 'border-[#0052cc] text-[#0052cc]' : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                Register
+              </button>
+            </div>
 
-            <div className="max-w-md w-full mx-auto space-y-8 text-left z-10">
-              {/* Rocket Launch Icon Box */}
-              <div className="h-12 w-12 rounded-xl bg-primary-500 text-white flex items-center justify-center shadow-md shadow-primary-500/20">
-                <Rocket className="h-6 w-6" />
-              </div>
+            {/* Login Form */}
+            {activeTab === 'login' && (
+              <form onSubmit={handleLogin} className="space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div>
+                  <label className={labelClassName}>EMAIL</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="hr@company.com"
+                    className={inputClassName}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className={labelClassName}>PASSWORD</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className={inputClassName}
+                    required
+                  />
+                </div>
 
-              {/* Headings */}
-              <div className="space-y-2">
-                <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Đăng nhập Doanh nghiệp</h1>
-                <p className="text-sm font-semibold text-slate-400">
-                  Khu vực quản lý tuyển dụng dành cho HR trên nền tảng EasyTech.
-                </p>
-              </div>
+                <div className="flex items-center justify-between pt-1">
+                  <label className="flex items-center gap-2.5 cursor-pointer group">
+                    <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
+                    <span className="text-[13px] font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Remember me</span>
+                  </label>
+                  <a href="#" className="text-[13px] font-bold text-[#0052cc] hover:text-blue-800 transition-colors">
+                    Forgot password?
+                  </a>
+                </div>
 
-              <div className="rounded-2xl border border-primary-100 bg-primary-50/70 p-4">
-                <div className="flex items-start gap-3">
-                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary-500" />
-                  <div className="space-y-1">
-                    <p className="text-sm font-extrabold text-slate-800">Dành riêng cho Nhà tuyển dụng</p>
-                    <p className="text-xs font-semibold leading-relaxed text-slate-500">
-                      Ứng viên không cần đăng nhập tại đây. Nếu bạn là ứng viên đang tìm việc, hãy truy cập Career Site của doanh nghiệp để xem các vị trí đang tuyển.
-                    </p>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3 rounded-lg bg-[#0052cc] hover:bg-[#0047b3] text-white text-[15px] font-bold transition-colors mt-4 flex items-center justify-center gap-2 shadow-md shadow-blue-500/20"
+                >
+                  {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Sign In'}
+                </button>
+
+                <div className="flex items-center gap-4 my-6">
+                  <div className="flex-1 h-[1px] bg-slate-200"></div>
+                  <span className="text-xs text-slate-400 font-medium px-2">or</span>
+                  <div className="flex-1 h-[1px] bg-slate-200"></div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  className="w-full flex items-center justify-center gap-3 py-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-[14px] font-bold text-slate-700 transition-colors shadow-sm"
+                >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24">
+                    <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l3.227-3.104C18.423 1.95 15.608 1 12.24 1 5.922 1 1 5.922 1 12.24s4.922 11.24 11.24 11.24c6.6 0 11-4.606 11-11.24 0-.756-.08-1.334-.18-1.955H12.24z" />
+                  </svg>
+                  <span>Login with Google</span>
+                </button>
+              </form>
+            )}
+
+            {/* Register Wizard */}
+            {activeTab === 'register' && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                {/* Stepper Header */}
+                <div className="flex items-center gap-3 mb-6">
+                  <div className={`flex items-center justify-center h-8 w-8 rounded-full font-bold text-xs ${registerStep === 1 ? 'bg-[#0052cc] text-white' : 'bg-green-500 text-white'}`}>
+                    {registerStep === 1 ? '1' : <CheckCircle2 className="h-4 w-4" />}
+                  </div>
+                  <div className={`h-1 flex-1 rounded-full ${registerStep === 2 ? 'bg-green-500' : 'bg-slate-100'}`}></div>
+                  <div className={`flex items-center justify-center h-8 w-8 rounded-full font-bold text-xs ${registerStep === 2 ? 'bg-[#0052cc] text-white' : 'bg-slate-100 text-slate-400'}`}>
+                    2
                   </div>
                 </div>
-              </div>
 
-              {/* Error Alert (Demo toggle) */}
-              {error && (
-                <div className="flex items-start gap-2.5 p-3.5 bg-red-50 text-red-600 border border-red-100 rounded-xl text-xs font-semibold">
-                  <AlertCircle className="h-4.5 w-4.5 shrink-0" />
-                  <span>{error}</span>
-                </div>
-              )}
+                {/* STEP 1: Thông tin người tạo */}
+                {registerStep === 1 && (
+                  <form onSubmit={handleNextStep} className="space-y-4">
+                    <div className="flex items-center gap-2 mb-2 text-[#0052cc]">
+                      <User className="h-5 w-5" />
+                      <h3 className="font-bold text-sm">1. Thông tin người đại diện</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className={labelClassName}>Họ và tên *</label>
+                        <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Nguyễn Văn A" className={inputClassName} required />
+                      </div>
+                      <div>
+                        <label className={labelClassName}>Chức vụ *</label>
+                        <input type="text" value={position} onChange={e => setPosition(e.target.value)} placeholder="HR Manager" className={inputClassName} required />
+                      </div>
+                    </div>
 
-              {/* Google Login Actions */}
-              <div className="space-y-4">
-                {loading ? (
-                  <div className="flex flex-col items-center justify-center py-6 space-y-3">
-                    <Loader2 className="h-8 w-8 text-primary-500 animate-spin" />
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest animate-pulse">
-                      Đang xác thực tài khoản...
-                    </span>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {/* Simulated Google Button for HR */}
+                    <div>
+                      <label className={labelClassName}>Phòng ban</label>
+                      <input type="text" value={department} onChange={e => setDepartment(e.target.value)} placeholder="VD: Human Resources" className={inputClassName} />
+                    </div>
+
+                    <div>
+                      <label className={labelClassName}>Email công ty *</label>
+                      <input type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)} placeholder="name@company.com" className={inputClassName} required />
+                    </div>
+
+                    <div>
+                      <label className={labelClassName}>Số điện thoại *</label>
+                      <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="09xx xxx xxx" className={inputClassName} required />
+                    </div>
+
+                    <div>
+                      <label className={labelClassName}>Mật khẩu *</label>
+                      <input type="password" value={regPassword} onChange={e => setRegPassword(e.target.value)} placeholder="••••••••" className={inputClassName} required />
+                    </div>
+
                     <button
-                      onClick={handleSimulatedGoogleLogin}
-                      className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-bold text-slate-700 hover:text-slate-800 transition-all shadow-sm cursor-pointer select-none"
+                      type="submit"
+                      className="w-full py-3 rounded-lg bg-[#0052cc] hover:bg-[#0047b3] text-white text-[14px] font-bold transition-colors mt-6 flex items-center justify-center gap-2"
                     >
-                      <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
-                        <path
-                          fill="#EA4335"
-                          d="M12.24 10.285V14.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l3.227-3.104C18.423 1.95 15.608 1 12.24 1 5.922 1 1 5.922 1 12.24s4.922 11.24 11.24 11.24c6.6 0 11-4.606 11-11.24 0-.756-.08-1.334-.18-1.955H12.24z"
-                        />
-                      </svg>
-                      <span>Đăng nhập tài khoản Google</span>
+                      Tiếp theo: Thông tin công ty
+                      <ArrowRight className="h-4 w-4" />
                     </button>
+                  </form>
+                )}
 
-                    <button
-                      onClick={() => navigate('/careers')}
-                      className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-sm font-bold text-white transition-all shadow-sm cursor-pointer select-none"
-                    >
-                      <Briefcase className="h-5 w-5" />
-                      <span>Tìm việc ngay</span>
-                    </button>
-                  </div>
+                {/* STEP 2: Thông tin công ty */}
+                {registerStep === 2 && (
+                  <form onSubmit={handleRegisterSubmit} className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="flex items-center gap-2 mb-2 text-[#0052cc]">
+                      <Building2 className="h-5 w-5" />
+                      <h3 className="font-bold text-sm">2. Thông tin doanh nghiệp</h3>
+                    </div>
+                    
+                    <div>
+                      <label className={labelClassName}>Tên công ty (Pháp lý) *</label>
+                      <input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} placeholder="Công ty CP Công nghệ VTT..." className={inputClassName} required />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className={labelClassName}>Mã số thuế (MST) *</label>
+                        <input type="text" value={taxId} onChange={e => setTaxId(e.target.value)} placeholder="0101xxxxxx" className={inputClassName} required />
+                      </div>
+                      <div>
+                        <label className={labelClassName}>Loại hình DN *</label>
+                        <select value={businessType} onChange={e => setBusinessType(e.target.value)} className={inputClassName} required>
+                          <option value="">Chọn loại hình</option>
+                          <option value="tnhh">TNHH</option>
+                          <option value="cp">Cổ phần</option>
+                          <option value="fd">FDI</option>
+                          <option value="other">Khác</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className={labelClassName}>Lĩnh vực hoạt động *</label>
+                        <select value={industry} onChange={e => setIndustry(e.target.value)} className={inputClassName} required>
+                          <option value="">Chọn lĩnh vực</option>
+                          <option value="it">IT - Phần mềm</option>
+                          <option value="fin">Tài chính - Ngân hàng</option>
+                          <option value="man">Sản xuất</option>
+                          <option value="edu">Giáo dục</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className={labelClassName}>Quy mô nhân sự *</label>
+                        <select value={companySize} onChange={e => setCompanySize(e.target.value)} className={inputClassName} required>
+                          <option value="">Chọn quy mô</option>
+                          <option value="1-10">1 - 10</option>
+                          <option value="11-50">11 - 50</option>
+                          <option value="51-200">51 - 200</option>
+                          <option value="200+">Trên 200</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className={labelClassName}>Địa chỉ trụ sở *</label>
+                      <input type="text" value={address} onChange={e => setAddress(e.target.value)} placeholder="Số nhà, Đường, Phường/Xã..." className={inputClassName} required />
+                    </div>
+                    
+                    <div>
+                      <label className={labelClassName}>Tỉnh / Thành phố *</label>
+                      <select value={city} onChange={e => setCity(e.target.value)} className={inputClassName} required>
+                        <option value="">Chọn Tỉnh/Thành phố</option>
+                        <option value="hanoi">Hà Nội</option>
+                        <option value="hcm">Hồ Chí Minh</option>
+                        <option value="danang">Đà Nẵng</option>
+                      </select>
+                    </div>
+
+                    <div className="flex items-center gap-3 mt-6">
+                      <button
+                        type="button"
+                        onClick={() => setRegisterStep(1)}
+                        className="py-3 px-4 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[14px] font-bold transition-colors flex items-center justify-center gap-2"
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                        Quay lại
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="flex-1 py-3 rounded-lg bg-[#0052cc] hover:bg-[#0047b3] text-white text-[14px] font-bold transition-colors flex items-center justify-center gap-2 shadow-md shadow-blue-500/20"
+                      >
+                        {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Hoàn tất Đăng ký'}
+                      </button>
+                    </div>
+                  </form>
                 )}
               </div>
+            )}
 
-              {/* Warning Alert if Client ID is missing */}
-              <div className="pt-6 border-t border-slate-100 flex justify-between items-center text-[10px] font-semibold text-slate-400 select-none">
-                <div className="flex gap-2 items-center">
-                  <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
-                  <span>Google Client ID configured. One-tap signup enabled.</span>
-                </div>
+            {/* Admin Portal Link */}
+            {activeTab === 'login' && (
+              <div className="mt-8 text-center">
                 <button 
                   onClick={() => navigate('/admin/login')}
-                  className="hover:text-primary-500 transition-colors cursor-pointer"
+                  className="text-[11px] text-slate-400 hover:text-slate-600 font-bold underline decoration-slate-300 underline-offset-4"
                 >
-                  Admin Portal &rarr;
+                  Admin Portal
                 </button>
               </div>
-            </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Side: Visual/Feature List */}
+        <div className="hidden lg:flex w-1/2 relative bg-[#ebf2ff] items-center justify-center overflow-hidden p-12 shadow-[inset_1px_0_10px_rgba(0,0,0,0.02)]">
+          {/* Abstract Background pattern simulation */}
+          <div className="absolute inset-0 opacity-70">
+             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3"></div>
+             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/20 rounded-full blur-[80px] -translate-x-1/4 translate-y-1/4"></div>
+             
+             {/* Network pattern SVG */}
+             <svg className="absolute inset-0 w-full h-full text-blue-400/30" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="network-pattern-full" x="0" y="0" width="160" height="160" patternUnits="userSpaceOnUse">
+                    <circle cx="30" cy="30" r="5" fill="currentColor" />
+                    <circle cx="120" cy="80" r="4" fill="currentColor" />
+                    <circle cx="140" cy="140" r="6" fill="currentColor" />
+                    <circle cx="20" cy="120" r="3" fill="currentColor" />
+                    
+                    <path d="M30,30 L120,80 L140,140 L20,120 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                    <path d="M30,30 L20,120" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                  </pattern>
+                </defs>
+                <rect x="0" y="0" width="100%" height="100%" fill="url(#network-pattern-full)" />
+             </svg>
           </div>
 
-          {/* Right Side: AI Illustration & Badge */}
-          <div className="hidden lg:flex flex-col items-center justify-center p-12 bg-gradient-to-tr from-slate-900 to-slate-850 text-white relative overflow-hidden">
-            {/* Gradient glow rings */}
-            <div className="absolute -top-20 -left-20 h-80 w-80 bg-primary-500/10 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-20 -right-20 h-80 w-80 bg-amber-500/10 rounded-full blur-3xl"></div>
+          {/* Feature Card */}
+          <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-10 max-w-[440px] w-full shadow-[0_20px_60px_-15px_rgba(0,30,100,0.15)] relative z-10 border border-white">
+            <div className="flex items-center gap-3.5 mb-6">
+              <Share2 className="h-8 w-8 text-[#0052cc]" />
+              <h2 className="text-2xl font-bold text-slate-800">VTT Careers</h2>
+            </div>
+            
+            <p className="text-[15px] text-slate-500 mb-10 leading-relaxed font-medium">
+              Trang bị cho chuyên gia nhân sự những phân tích chuyên sâu từ AI để tìm kiếm nhân tài hàng đầu nhanh chóng và thông minh hơn.
+            </p>
 
-            <div className="max-w-sm text-center space-y-8 z-10">
-              {/* Illustration Placeholder */}
-              <div className="h-64 w-64 rounded-3xl bg-slate-800/80 border border-slate-700/50 flex flex-col items-center justify-center p-6 shadow-inner mx-auto relative">
-                <div className="h-20 w-20 rounded-full bg-primary-500/20 border border-primary-500/40 flex items-center justify-center text-primary-400 mb-4 animate-pulse">
-                  <Rocket className="h-10 w-10" />
+            <div className="space-y-5">
+              {[
+                'Luồng ứng viên được tối ưu hóa',
+                'Bảng điều khiển phân tích nâng cao',
+                'Cộng tác nhóm liền mạch'
+              ].map((text, i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <CheckCircle2 className="h-5 w-5 text-[#0052cc] shrink-0 stroke-[2.5]" />
+                  <span className="text-[15px] text-slate-700 font-semibold">{text}</span>
                 </div>
-                <h3 className="text-base font-extrabold text-slate-100">AI Core Active</h3>
-                <p className="text-xs text-slate-400 font-semibold mt-1">
-                  Automated CV screening and job description generation is fully operational.
-                </p>
-
-                {/* Badge Overlay */}
-                <span className="absolute top-4 right-4 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 uppercase tracking-wider">
-                  SYSTEM OK
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                <h2 className="text-xl font-bold tracking-tight text-slate-100">Nền tảng tuyển dụng thông minh</h2>
-                <p className="text-xs text-slate-400 font-semibold leading-relaxed">
-                  Trải nghiệm giải pháp B2B SaaS quản trị ứng viên, thiết lập kịch bản vòng tuyển dụng linh hoạt và tạo JD tự động bằng trí tuệ nhân tạo.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
-
         </div>
       </main>
 
-      {/* Public Footer */}
-      <PublicFooter />
+      {/* Footer */}
+      <footer className="w-full bg-[#f4f7fb] py-5 px-8 md:px-16 flex flex-col md:flex-row items-center justify-between text-[12px] text-[#2c3e50] font-bold border-t border-slate-200 shrink-0">
+        <div>© 2024 VTT Careers. All rights reserved.</div>
+        <div className="flex items-center gap-8 mt-4 md:mt-0">
+          <a href="#" className="hover:text-[#0052cc] transition-colors">Privacy Policy</a>
+          <a href="#" className="hover:text-[#0052cc] transition-colors">Terms of Service</a>
+          <a href="#" className="hover:text-[#0052cc] transition-colors">Help Center</a>
+          <a href="#" className="hover:text-[#0052cc] transition-colors">Contact Support</a>
+        </div>
+      </footer>
+      
+      {/* Basic styles for custom scrollbar hiding on left panel to look cleaner */}
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #e2e8f0;
+          border-radius: 4px;
+        }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+        }
+      `}</style>
     </div>
   );
 };

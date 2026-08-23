@@ -19,7 +19,6 @@ import {
   MapPin,
   FileCheck2,
   Activity,
-  ShieldCheck,
   ScrollText,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -152,6 +151,13 @@ const BUSINESSES: BusinessRow[] = [
   },
 ];
 
+const hrAccounts = [
+  { name: 'Nguyễn Minh Anh', email: 'hr@techa.vn', business: 'TechA Solutions JSC', status: 'ACTIVE', lastLogin: 'Hôm nay 08:45' },
+  { name: 'Trần Hoàng Nam', email: 'careers@innovate.vn', business: 'InnovateTech VN', status: 'PENDING', lastLogin: 'Chưa kích hoạt' },
+  { name: 'Phạm Quốc Bảo', email: 'hr@databridge.vn', business: 'DataBridge Analytics', status: 'ACTIVE', lastLogin: 'Hôm qua 17:20' },
+  { name: 'CloudNine HR', email: 'talent@cloudnine.io', business: 'CloudNine Systems', status: 'BLOCKED', lastLogin: '2026-07-30' },
+];
+
 // ─── Confirmation Dialog ──────────────────────────────────
 const ConfirmDialog: React.FC<{
   open: boolean;
@@ -167,11 +173,11 @@ const ConfirmDialog: React.FC<{
 }> = ({ open, title, message, confirmLabel, confirmColor, showReason, reason, onReasonChange, onConfirm, onCancel }) => {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-sm p-6 space-y-5 text-center">
         <div className="space-y-2">
           <h3 className="text-sm font-extrabold text-slate-800">{title}</h3>
-          <p className="text-xs text-slate-400 font-semibold leading-relaxed">{message}</p>
+          <p className="text-xs text-slate-500 font-semibold leading-relaxed">{message}</p>
         </div>
         {showReason && (
           <div className="text-left space-y-1.5">
@@ -180,7 +186,7 @@ const ConfirmDialog: React.FC<{
               value={reason}
               onChange={(e) => onReasonChange?.(e.target.value)}
               rows={4}
-              className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 focus:border-primary-500 focus:bg-white focus:outline-none"
+              className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 focus:border-[#0052cc] focus:bg-white focus:outline-none"
               placeholder="VD: Thiếu thông tin xác thực doanh nghiệp, email không dùng domain công ty..."
             />
           </div>
@@ -205,7 +211,7 @@ const ConfirmDialog: React.FC<{
 export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [businesses, setBusinesses] = useState<BusinessRow[]>(BUSINESSES);
-  const [adminTab, setAdminTab] = useState<'overview' | 'businesses' | 'hr' | 'audit'>('overview');
+  const [adminTab, setAdminTab] = useState<'overview' | 'businesses' | 'audit'>('overview');
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedBusiness, setSelectedBusiness] = useState<BusinessRow | null>(null);
@@ -218,7 +224,6 @@ export const AdminDashboard: React.FC = () => {
     total: businesses.length,
     pending: businesses.filter((b) => b.status === 'PENDING').length,
     active: businesses.filter((b) => b.status === 'ACTIVE').length,
-    blocked: businesses.filter((b) => b.status === 'BLOCKED').length,
   };
 
   const filtered = businesses.filter((b) => {
@@ -244,16 +249,15 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const statusCfg = {
-    PENDING: { cls: 'bg-amber-50 text-amber-600 border-amber-100', dot: 'bg-amber-500', label: 'Chờ duyệt' },
-    ACTIVE: { cls: 'bg-emerald-50 text-emerald-600 border-emerald-100', dot: 'bg-emerald-500', label: 'Hoạt động' },
-    BLOCKED: { cls: 'bg-red-50 text-red-500 border-red-100', dot: 'bg-red-500', label: 'Bị khóa' },
+    PENDING: { cls: 'bg-amber-50 text-amber-600 border-amber-200', dot: 'bg-amber-500', label: 'Chờ duyệt' },
+    ACTIVE: { cls: 'bg-emerald-50 text-emerald-600 border-emerald-200', dot: 'bg-emerald-500', label: 'Hoạt động' },
+    BLOCKED: { cls: 'bg-red-50 text-red-600 border-red-200', dot: 'bg-red-500', label: 'Bị khóa' },
   };
 
   const statCards = [
-    { label: 'Tổng Doanh nghiệp', value: stats.total, icon: Building2, color: 'bg-primary-50 text-primary-500 border-primary-100' },
-    { label: 'Chờ duyệt', value: stats.pending, icon: Clock, color: 'bg-amber-50 text-amber-500 border-amber-100' },
-    { label: 'Đang hoạt động', value: stats.active, icon: TrendingUp, color: 'bg-emerald-50 text-emerald-500 border-emerald-100' },
-    { label: 'Bị khóa', value: stats.blocked, icon: Ban, color: 'bg-red-50 text-red-500 border-red-100' },
+    { label: 'Tổng Doanh nghiệp', value: stats.total, icon: Building2, color: 'bg-blue-50 text-[#0052cc] border-blue-100' },
+    { label: 'Chờ duyệt', value: stats.pending, icon: Clock, color: 'bg-amber-50 text-amber-600 border-amber-100' },
+    { label: 'Đang hoạt động', value: stats.active, icon: TrendingUp, color: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
   ];
 
   const confirmMeta = {
@@ -263,16 +267,9 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const recentAudits = [
-    { action: 'Duyệt TechA Solutions JSC', actor: 'admin@easytech.vn', time: '08:30 hôm nay', tone: 'text-emerald-400' },
-    { action: 'Khóa CloudNine Systems', actor: 'admin@easytech.vn', time: 'Hôm qua', tone: 'text-red-400' },
-    { action: 'Nhận hồ sơ InnovateTech VN', actor: 'system', time: '2 ngày trước', tone: 'text-amber-400' },
-  ];
-
-  const hrAccounts = [
-    { name: 'Nguyễn Minh Anh', email: 'minhanh@techa.vn', business: 'TechA Solutions JSC', status: 'ACTIVE', lastLogin: 'Hôm nay 08:45' },
-    { name: 'Trần Hoàng Nam', email: 'careers@innovate.vn', business: 'InnovateTech VN', status: 'PENDING', lastLogin: 'Chưa kích hoạt' },
-    { name: 'Phạm Quốc Bảo', email: 'hr@databridge.vn', business: 'DataBridge Analytics', status: 'ACTIVE', lastLogin: 'Hôm qua 17:20' },
-    { name: 'CloudNine HR', email: 'talent@cloudnine.io', business: 'CloudNine Systems', status: 'BLOCKED', lastLogin: '2026-07-30' },
+    { action: 'Duyệt TechA Solutions JSC', actor: 'admin@easytech.vn', time: '08:30 hôm nay', tone: 'text-emerald-600' },
+    { action: 'Khóa CloudNine Systems', actor: 'admin@easytech.vn', time: 'Hôm qua', tone: 'text-red-600' },
+    { action: 'Nhận hồ sơ InnovateTech VN', actor: 'system', time: '2 ngày trước', tone: 'text-amber-600' },
   ];
 
   const auditRows = [
@@ -285,57 +282,49 @@ export const AdminDashboard: React.FC = () => {
   const adminNavItems = [
     { id: 'overview' as const, label: 'Tổng quan', icon: LayoutDashboard },
     { id: 'businesses' as const, label: 'Doanh nghiệp', icon: Building2 },
-    { id: 'hr' as const, label: 'Tài khoản HR', icon: Users },
     { id: 'audit' as const, label: 'Audit Log', icon: ScrollText },
   ];
 
   const pageMeta = {
     overview: {
       title: 'Tổng quan kiểm duyệt',
-      desc: 'Theo dõi trạng thái nền tảng, hàng đợi kiểm duyệt và audit gần đây.',
     },
     businesses: {
       title: 'Quản lý Doanh nghiệp',
-      desc: 'Duyệt hồ sơ, kiểm tra thông tin và kiểm soát tenant trên nền tảng EasyTech.',
-    },
-    hr: {
-      title: 'Quản lý tài khoản HR',
-      desc: 'Theo dõi trạng thái tài khoản HR được gắn với từng doanh nghiệp.',
     },
     audit: {
       title: 'Audit Log',
-      desc: 'Theo dõi các thao tác quản trị quan trọng trên nền tảng.',
     },
   };
 
   return (
     <>
       {/* Admin Shell Layout */}
-      <div className="min-h-screen bg-slate-950 flex flex-col">
+      <div className="min-h-screen bg-[#f4f7fb] flex flex-col font-sans">
         {/* Admin Header */}
-        <header className="h-16 border-b border-slate-800 bg-slate-950 px-6 flex items-center justify-between shrink-0 sticky top-0 z-30">
+        <header className="h-16 border-b border-slate-200 bg-white px-6 flex items-center justify-between shrink-0 sticky top-0 z-30">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary-500 to-amber-500 flex items-center justify-center text-white shadow-md shadow-primary-500/30">
+            <div className="h-9 w-9 rounded-xl bg-[#0052cc] flex items-center justify-center text-white shadow-md shadow-blue-500/20">
               <ShieldAlert className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-extrabold text-white tracking-wider">VTT Careers</p>
-              <p className="text-[9px] font-bold text-primary-400 uppercase tracking-widest -mt-0.5">Admin Command Panel</p>
+              <p className="text-sm font-extrabold text-slate-800 tracking-wider">VTT Careers</p>
+              <p className="text-[9px] font-bold text-[#0052cc] uppercase tracking-widest -mt-0.5">Admin Command Panel</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700">
-              <div className="h-6 w-6 rounded-full bg-primary-500 flex items-center justify-center">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div className="h-6 w-6 rounded-full bg-[#0052cc] flex items-center justify-center">
                 <ShieldAlert className="h-3.5 w-3.5 text-white" />
               </div>
               <div>
-                <p className="text-xs font-bold text-white">Admin</p>
-                <p className="text-[9px] text-slate-400 font-semibold">admin@easytech.vn</p>
+                <p className="text-xs font-bold text-slate-800">Admin</p>
+                <p className="text-[9px] text-slate-500 font-semibold">admin@easytech.vn</p>
               </div>
             </div>
             <button
               onClick={() => navigate('/admin/login')}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 border border-slate-800 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 px-3 py-1.5 rounded-lg hover:bg-slate-100 border border-transparent transition-all cursor-pointer"
             >
               <LogOut className="h-3.5 w-3.5" />
               Đăng xuất
@@ -345,7 +334,7 @@ export const AdminDashboard: React.FC = () => {
 
         <div className="flex flex-1">
           {/* Admin Sidebar */}
-          <aside className="w-56 bg-slate-900 border-r border-slate-800 flex flex-col py-6 px-3 shrink-0">
+          <aside className="w-56 bg-white border-r border-slate-200 flex flex-col py-6 px-3 shrink-0">
             <nav className="space-y-1.5">
               {adminNavItems.map((item) => {
                 const Icon = item.icon;
@@ -356,8 +345,8 @@ export const AdminDashboard: React.FC = () => {
                     onClick={() => setAdminTab(item.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-colors text-left ${
                       active
-                        ? 'bg-primary-500/10 text-primary-400'
-                        : 'text-slate-500 hover:bg-slate-800 hover:text-slate-200'
+                        ? 'bg-blue-50 text-[#0052cc]'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -369,35 +358,26 @@ export const AdminDashboard: React.FC = () => {
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1 p-8 bg-slate-950 space-y-8 overflow-y-auto">
+          <main className="flex-1 p-8 space-y-8 overflow-y-auto">
             {/* Page Title */}
             <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-4">
               <div className="text-left">
-                <h1 className="text-2xl font-extrabold text-white tracking-tight">{pageMeta[adminTab].title}</h1>
-                <p className="text-sm text-slate-400 font-semibold mt-1">{pageMeta[adminTab].desc}</p>
-              </div>
-              <div className="grid grid-cols-3 gap-2 max-w-md">
-                {['Không xem CV', 'Có audit log', 'Tenant isolated'].map((item) => (
-                  <div key={item} className="rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-center">
-                    <ShieldCheck className="mx-auto mb-1 h-4 w-4 text-primary-400" />
-                    <p className="text-[10px] font-bold text-slate-400">{item}</p>
-                  </div>
-                ))}
+                <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{pageMeta[adminTab].title}</h1>
               </div>
             </div>
 
             {/* Stats Grid */}
-            <div className={`${adminTab === 'overview' ? 'grid' : 'hidden'} grid-cols-2 lg:grid-cols-4 gap-5`}>
+            <div className={`${adminTab === 'overview' ? 'grid' : 'hidden'} grid-cols-1 md:grid-cols-3 gap-5`}>
               {statCards.map((s) => {
                 const Icon = s.icon;
                 return (
-                  <div key={s.label} className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 hover:border-slate-700 transition-colors">
+                  <div key={s.label} className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3 hover:shadow-md transition-shadow">
                     <div className={`h-10 w-10 rounded-xl border flex items-center justify-center ${s.color}`}>
                       <Icon className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-3xl font-extrabold text-white">{s.value}</p>
-                      <p className="text-xs text-slate-400 font-semibold mt-0.5">{s.label}</p>
+                      <p className="text-3xl font-extrabold text-slate-800">{s.value}</p>
+                      <p className="text-xs text-slate-500 font-semibold mt-0.5">{s.label}</p>
                     </div>
                   </div>
                 );
@@ -407,38 +387,38 @@ export const AdminDashboard: React.FC = () => {
             {/* Filter Bar */}
             <div className={`${adminTab === 'businesses' ? 'flex' : 'hidden'} flex-wrap items-center gap-3`}>
               <div className="relative flex-1 min-w-[200px] max-w-xs">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Tìm doanh nghiệp, email..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-slate-900 focus:outline-none focus:border-primary-500 text-sm font-medium text-slate-200 placeholder:text-slate-600 transition-colors"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-[#0052cc] focus:ring-1 focus:ring-[#0052cc] text-sm font-medium text-slate-800 placeholder:text-slate-400 transition-colors shadow-sm"
                 />
               </div>
               <div className="relative">
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-700 bg-slate-900 focus:outline-none focus:border-primary-500 text-sm font-semibold text-slate-200 transition-colors cursor-pointer"
+                  className="appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-[#0052cc] focus:ring-1 focus:ring-[#0052cc] text-sm font-semibold text-slate-700 transition-colors cursor-pointer shadow-sm"
                 >
                   <option value="all">Tất cả trạng thái</option>
                   <option value="PENDING">Chờ duyệt</option>
                   <option value="ACTIVE">Đang hoạt động</option>
                   <option value="BLOCKED">Bị khóa</option>
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
               </div>
             </div>
 
             <div className={`${adminTab === 'overview' ? 'grid' : 'hidden'} grid-cols-1 xl:grid-cols-3 gap-5`}>
-              <div className="xl:col-span-2 rounded-2xl border border-slate-800 bg-slate-900 p-5">
+              <div className="xl:col-span-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-sm font-extrabold text-white">Hàng đợi kiểm duyệt</p>
+                    <p className="text-sm font-extrabold text-slate-800">Hàng đợi kiểm duyệt</p>
                     <p className="text-xs font-semibold text-slate-500 mt-1">Các doanh nghiệp cần kiểm tra trước khi cấp Career Site.</p>
                   </div>
-                  <span className="rounded-full bg-amber-500/10 px-3 py-1 text-[10px] font-bold text-amber-400 border border-amber-500/20">
+                  <span className="rounded-full bg-amber-50 px-3 py-1 text-[10px] font-bold text-amber-600 border border-amber-200">
                     {stats.pending} đang chờ
                   </span>
                 </div>
@@ -447,29 +427,29 @@ export const AdminDashboard: React.FC = () => {
                     <button
                       key={b.id}
                       onClick={() => setSelectedBusiness(b)}
-                      className="text-left rounded-xl border border-slate-800 bg-slate-950/60 p-4 hover:border-primary-500/60 transition-colors cursor-pointer"
+                      className="text-left rounded-xl border border-slate-100 bg-slate-50 p-4 hover:border-blue-200 hover:bg-blue-50/50 transition-colors cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <img src={b.logo} alt={b.name} className="h-10 w-10 rounded-xl object-cover border border-slate-700" />
+                        <img src={b.logo} alt={b.name} className="h-10 w-10 rounded-xl object-cover border border-slate-200" />
                         <div className="min-w-0">
-                          <p className="truncate text-xs font-extrabold text-slate-100">{b.name}</p>
+                          <p className="truncate text-xs font-extrabold text-slate-800">{b.name}</p>
                           <p className="truncate text-[10px] font-semibold text-slate-500">{b.industry}</p>
                         </div>
                       </div>
-                      <p className="mt-3 text-[11px] font-semibold leading-relaxed text-slate-400">{b.riskNote}</p>
+                      <p className="mt-3 text-[11px] font-semibold leading-relaxed text-slate-500">{b.riskNote}</p>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
-                  <Activity className="h-4 w-4 text-primary-400" />
-                  <p className="text-sm font-extrabold text-white">Audit gần đây</p>
+                  <Activity className="h-4 w-4 text-[#0052cc]" />
+                  <p className="text-sm font-extrabold text-slate-800">Audit gần đây</p>
                 </div>
                 <div className="space-y-3">
                   {recentAudits.map((audit) => (
-                    <div key={audit.action} className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">
+                    <div key={audit.action} className="rounded-xl bg-slate-50 border border-slate-100 p-3">
                       <p className={`text-xs font-bold ${audit.tone}`}>{audit.action}</p>
                       <p className="mt-1 text-[10px] font-semibold text-slate-500">{audit.actor} · {audit.time}</p>
                     </div>
@@ -479,11 +459,11 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {/* Business Table */}
-            <div className={`${adminTab === 'businesses' ? 'block' : 'hidden'} bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden`}>
+            <div className={`${adminTab === 'businesses' ? 'block' : 'hidden'} bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm`}>
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-800 text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
+                  <thead className="bg-slate-50">
+                    <tr className="border-b border-slate-100 text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
                       <th className="px-6 py-4">Doanh nghiệp</th>
                       <th className="px-6 py-4">Email HR</th>
                       <th className="px-6 py-4">Subdomain</th>
@@ -492,26 +472,26 @@ export const AdminDashboard: React.FC = () => {
                       <th className="px-6 py-4 text-right">Thao tác</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800">
+                  <tbody className="divide-y divide-slate-100">
                     {filtered.map((b) => {
                       const cfg = statusCfg[b.status];
                       return (
-                        <tr key={b.id} className="hover:bg-slate-800/40 transition-colors">
+                        <tr key={b.id} className="hover:bg-slate-50/50 transition-colors">
                           {/* Logo + Name */}
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <img src={b.logo} alt={b.name} className="h-10 w-10 rounded-xl object-cover border border-slate-700" />
+                              <img src={b.logo} alt={b.name} className="h-10 w-10 rounded-xl object-cover border border-slate-200" />
                               <div>
-                                <p className="text-sm font-extrabold text-slate-100">{b.name}</p>
+                                <p className="text-sm font-extrabold text-slate-800">{b.name}</p>
                                 <p className="text-[10px] text-slate-500 font-semibold mt-0.5">{b.website}</p>
                               </div>
                             </div>
                           </td>
                           {/* Email */}
-                          <td className="px-6 py-4 text-sm text-slate-400 font-medium">{b.email}</td>
+                          <td className="px-6 py-4 text-sm text-slate-600 font-medium">{b.email}</td>
                           {/* Subdomain */}
                           <td className="px-6 py-4">
-                            <code className="text-xs font-mono text-primary-400 bg-primary-500/10 px-2 py-0.5 rounded-lg">
+                            <code className="text-xs font-mono text-[#0052cc] bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
                               {b.status === 'ACTIVE' ? b.subdomain : '—'}
                             </code>
                           </td>
@@ -531,21 +511,21 @@ export const AdminDashboard: React.FC = () => {
                                 <>
                                   <button
                                     onClick={() => setSelectedBusiness(b)}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 hover:bg-slate-700 text-slate-300 text-[10px] font-bold transition-all cursor-pointer"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 text-[10px] font-bold transition-all cursor-pointer"
                                   >
                                     <Eye className="h-3.5 w-3.5" />
                                     Xem
                                   </button>
                                   <button
                                     onClick={() => setConfirm({ open: true, type: 'approve', id: b.id })}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold transition-all cursor-pointer"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold transition-all cursor-pointer shadow-sm shadow-emerald-500/20"
                                   >
                                     <Check className="h-3.5 w-3.5" />
                                     Duyệt
                                   </button>
                                   <button
                                     onClick={() => setConfirm({ open: true, type: 'reject', id: b.id })}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-[10px] font-bold transition-all cursor-pointer"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-[10px] font-bold transition-all cursor-pointer shadow-sm shadow-red-500/20"
                                   >
                                     <X className="h-3.5 w-3.5" />
                                     Từ chối
@@ -556,14 +536,14 @@ export const AdminDashboard: React.FC = () => {
                                 <>
                                   <button
                                     onClick={() => setSelectedBusiness(b)}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 hover:bg-slate-700 text-slate-300 text-[10px] font-bold transition-all cursor-pointer"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 text-[10px] font-bold transition-all cursor-pointer"
                                   >
                                     <Eye className="h-3.5 w-3.5" />
                                     Xem
                                   </button>
                                   <button
                                     onClick={() => setConfirm({ open: true, type: 'block', id: b.id })}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-red-800 hover:bg-red-900/30 text-red-400 text-[10px] font-bold transition-all cursor-pointer"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 text-[10px] font-bold transition-all cursor-pointer"
                                   >
                                     <Ban className="h-3.5 w-3.5" />
                                     Khóa
@@ -571,7 +551,7 @@ export const AdminDashboard: React.FC = () => {
                                 </>
                               )}
                               {b.status === 'BLOCKED' && (
-                                <span className="text-[10px] font-semibold text-slate-600">Đã khóa</span>
+                                <span className="text-[10px] font-semibold text-slate-400">Đã khóa</span>
                               )}
                             </div>
                           </td>
@@ -588,56 +568,24 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className={`${adminTab === 'hr' || adminTab === 'audit' ? 'grid' : 'hidden'} grid-cols-1 gap-5`}>
-              <div className={`${adminTab === 'hr' ? 'block' : 'hidden'} rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden`}>
-                <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+            <div className={`${adminTab === 'audit' ? 'grid' : 'hidden'} grid-cols-1 gap-5`}>
+              <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+                <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-5 py-4">
                   <div>
-                    <p className="text-sm font-extrabold text-white">Tài khoản HR</p>
-                    <p className="mt-1 text-xs font-semibold text-slate-500">Mock danh sách HR gắn với từng doanh nghiệp.</p>
+                    <p className="text-sm font-extrabold text-slate-800">Audit Log đầy đủ</p>
+                    <p className="mt-1 text-xs font-semibold text-slate-500">Theo dõi các thao tác quản trị quan trọng.</p>
                   </div>
-                  <Users className="h-5 w-5 text-primary-400" />
+                  <Activity className="h-5 w-5 text-[#0052cc]" />
                 </div>
-                <div className="divide-y divide-slate-800">
-                  {hrAccounts.map((hr) => (
-                    <div key={hr.email} className="flex items-center justify-between gap-4 px-5 py-4">
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-extrabold text-slate-100">{hr.name}</p>
-                        <p className="truncate text-xs font-semibold text-slate-500">{hr.email} · {hr.business}</p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold ${
-                          hr.status === 'ACTIVE'
-                            ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400'
-                            : hr.status === 'PENDING'
-                              ? 'border-amber-500/20 bg-amber-500/10 text-amber-400'
-                              : 'border-red-500/20 bg-red-500/10 text-red-400'
-                        }`}>
-                          {hr.status}
-                        </span>
-                        <p className="mt-1 text-[10px] font-semibold text-slate-600">{hr.lastLogin}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className={`${adminTab === 'audit' ? 'block' : 'hidden'} rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden`}>
-                <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-                  <div>
-                    <p className="text-sm font-extrabold text-white">Audit Log đầy đủ</p>
-                    <p className="mt-1 text-xs font-semibold text-slate-500">Theo dõi các thao tác kiểm duyệt quan trọng.</p>
-                  </div>
-                  <Activity className="h-5 w-5 text-primary-400" />
-                </div>
-                <div className="divide-y divide-slate-800">
+                <div className="divide-y divide-slate-100">
                   {auditRows.map((row) => (
-                    <div key={`${row.time}-${row.action}`} className="px-5 py-4">
+                    <div key={`${row.time}-${row.action}`} className="px-5 py-4 hover:bg-slate-50/50 transition-colors">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <p className="text-xs font-extrabold text-slate-100">{row.action}</p>
-                        <p className="text-[10px] font-semibold text-slate-500">{row.time}</p>
+                        <p className="text-xs font-extrabold text-slate-800">{row.action}</p>
+                        <p className="text-[10px] font-semibold text-slate-400">{row.time}</p>
                       </div>
-                      <p className="mt-1 text-xs font-semibold text-slate-400">{row.target}</p>
-                      <p className="mt-1 text-[11px] font-semibold text-slate-600">{row.actor} · {row.detail}</p>
+                      <p className="mt-1 text-xs font-semibold text-slate-600">{row.target}</p>
+                      <p className="mt-1 text-[11px] font-semibold text-slate-500">{row.actor} · {row.detail}</p>
                     </div>
                   ))}
                 </div>
@@ -661,28 +609,29 @@ export const AdminDashboard: React.FC = () => {
         }}
       />
 
+      {/* Business Detail Drawer */}
       {selectedBusiness && (
-        <div className="fixed inset-0 z-40 flex justify-end bg-slate-950/70 backdrop-blur-sm">
-          <div className="h-full w-full max-w-xl overflow-y-auto border-l border-slate-800 bg-slate-950 shadow-2xl">
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-950/95 px-6 py-4">
+        <div className="fixed inset-0 z-40 flex justify-end bg-slate-900/40 backdrop-blur-sm">
+          <div className="h-full w-full max-w-xl overflow-y-auto border-l border-slate-200 bg-white shadow-2xl">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/95 px-6 py-4">
               <div>
-                <p className="text-sm font-extrabold text-white">Hồ sơ doanh nghiệp</p>
-                <p className="text-xs font-semibold text-slate-500">Mock detail để mô phỏng bước kiểm duyệt</p>
+                <p className="text-sm font-extrabold text-slate-800">Hồ sơ doanh nghiệp</p>
+                <p className="text-xs font-semibold text-slate-500">Chi tiết thông tin đăng ký</p>
               </div>
               <button
                 onClick={() => setSelectedBusiness(null)}
-                className="rounded-xl border border-slate-800 px-3 py-2 text-xs font-bold text-slate-400 hover:bg-slate-900 hover:text-white cursor-pointer"
+                className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-500 hover:bg-slate-50 hover:text-slate-800 cursor-pointer"
               >
                 Đóng
               </button>
             </div>
 
             <div className="p-6 space-y-6">
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                 <div className="flex items-start gap-4">
-                  <img src={selectedBusiness.logo} alt={selectedBusiness.name} className="h-16 w-16 rounded-2xl object-cover border border-slate-700" />
+                  <img src={selectedBusiness.logo} alt={selectedBusiness.name} className="h-16 w-16 rounded-2xl object-cover border border-slate-200 bg-white" />
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-xl font-extrabold text-white">{selectedBusiness.name}</h2>
+                    <h2 className="text-xl font-extrabold text-slate-900">{selectedBusiness.name}</h2>
                     <p className="mt-1 text-xs font-semibold text-slate-500">{selectedBusiness.industry} · {selectedBusiness.employees} nhân sự</p>
                     <span className={`mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusCfg[selectedBusiness.status].cls}`}>
                       <span className={`h-1.5 w-1.5 rounded-full ${statusCfg[selectedBusiness.status].dot}`} />
@@ -690,6 +639,49 @@ export const AdminDashboard: React.FC = () => {
                     </span>
                   </div>
                 </div>
+              </div>
+
+              {/* HR Accounts attached to this business */}
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <Users className="h-4 w-4 text-[#0052cc]" />
+                  <p className="text-sm font-extrabold text-slate-800">Tài khoản Nhân sự (HR)</p>
+                </div>
+                
+                {(() => {
+                  const hrForBusiness = hrAccounts.find(hr => hr.business === selectedBusiness.name) || {
+                    name: selectedBusiness.representative,
+                    email: selectedBusiness.email,
+                    status: selectedBusiness.status,
+                    lastLogin: 'Chưa xác định'
+                  };
+
+                  return (
+                    <div className="flex items-center justify-between p-3 border border-slate-100 rounded-xl bg-slate-50">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+                          {hrForBusiness.name?.charAt(0) || 'U'}
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-slate-800">{hrForBusiness.name}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">{hrForBusiness.email}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                         <span className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold ${
+                            hrForBusiness.status === 'ACTIVE'
+                              ? 'border-emerald-200 bg-emerald-50 text-emerald-600'
+                              : hrForBusiness.status === 'PENDING'
+                                ? 'border-amber-200 bg-amber-50 text-amber-600'
+                                : 'border-red-200 bg-red-50 text-red-600'
+                          }`}>
+                           {hrForBusiness.status}
+                         </span>
+                         <p className="mt-1 text-[10px] text-slate-500">Lần cuối: {hrForBusiness.lastLogin}</p>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -701,17 +693,17 @@ export const AdminDashboard: React.FC = () => {
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
-                    <div key={item.label} className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
-                      <Icon className="mb-3 h-4 w-4 text-primary-400" />
+                    <div key={item.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                      <Icon className="mb-3 h-4 w-4 text-[#0052cc]" />
                       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{item.label}</p>
-                      <p className="mt-1 text-xs font-bold text-slate-200">{item.value}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-800">{item.value}</p>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="text-sm font-extrabold text-white">Checklist xác minh</p>
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <p className="text-sm font-extrabold text-slate-800">Checklist xác minh</p>
                 <div className="mt-4 space-y-3">
                   {[
                     'Email HR dùng domain doanh nghiệp hoặc domain có thể xác minh',
@@ -720,14 +712,14 @@ export const AdminDashboard: React.FC = () => {
                     'Không yêu cầu truy cập dữ liệu CV của doanh nghiệp khác',
                   ].map((item) => (
                     <div key={item} className="flex items-start gap-3">
-                      <FileCheck2 className="mt-0.5 h-4 w-4 text-emerald-400 shrink-0" />
-                      <p className="text-xs font-semibold leading-relaxed text-slate-300">{item}</p>
+                      <FileCheck2 className="mt-0.5 h-4 w-4 text-emerald-500 shrink-0" />
+                      <p className="text-xs font-semibold leading-relaxed text-slate-600">{item}</p>
                     </div>
                   ))}
                 </div>
-                <div className="mt-5 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-amber-400">Ghi chú kiểm duyệt</p>
-                  <p className="mt-1 text-xs font-semibold leading-relaxed text-slate-300">{selectedBusiness.riskNote}</p>
+                <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Ghi chú kiểm duyệt</p>
+                  <p className="mt-1 text-xs font-semibold leading-relaxed text-slate-700">{selectedBusiness.riskNote}</p>
                 </div>
               </div>
 
@@ -735,13 +727,13 @@ export const AdminDashboard: React.FC = () => {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setConfirm({ open: true, type: 'reject', id: selectedBusiness.id })}
-                    className="rounded-2xl border border-red-800 bg-red-950/20 px-4 py-3 text-xs font-extrabold text-red-300 hover:bg-red-900/40 cursor-pointer"
+                    className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-extrabold text-red-600 hover:bg-red-100 cursor-pointer transition-colors"
                   >
                     Từ chối hồ sơ
                   </button>
                   <button
                     onClick={() => setConfirm({ open: true, type: 'approve', id: selectedBusiness.id })}
-                    className="rounded-2xl bg-emerald-500 px-4 py-3 text-xs font-extrabold text-white hover:bg-emerald-600 cursor-pointer"
+                    className="rounded-2xl bg-emerald-500 px-4 py-3 text-xs font-extrabold text-white hover:bg-emerald-600 cursor-pointer transition-colors shadow-sm shadow-emerald-500/20"
                   >
                     Duyệt doanh nghiệp
                   </button>

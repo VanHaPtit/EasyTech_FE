@@ -10,6 +10,10 @@ import { useNavigate } from 'react-router-dom';
 import { CandidateDrawer, type CandidateData } from './CandidateDrawer';
 import { InterviewSchedulerModal } from './modals/InterviewSchedulerModal';
 import { AISuggestionsModal } from './modals/AISuggestionsModal';
+import { RejectionReasonModal } from './modals/RejectionReasonModal';
+import { AIShadowMatchingModal } from './modals/AIShadowMatchingModal';
+import { AIEmailPreviewModal } from './modals/AIEmailPreviewModal';
+import { Sparkles } from 'lucide-react';
 
 const MOCK_CANDIDATES: CandidateData[] = [
   {
@@ -194,6 +198,12 @@ export const Kanban: React.FC = () => {
   // Modal states
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [shadowMatchModalOpen, setShadowMatchModalOpen] = useState(false);
+  const [emailPreviewModalOpen, setEmailPreviewModalOpen] = useState(false);
+  
+  // Shadow Matching Flow state
+  const [candidateToReject, setCandidateToReject] = useState<CandidateData | null>(null);
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -215,6 +225,28 @@ export const Kanban: React.FC = () => {
       prev.map((c) => (c.id === id ? { ...c, status: 'PASSED' } : c))
     );
     closeDrawer();
+  };
+
+  const handleInitiateFail = (id: string) => {
+    const cand = candidates.find(c => c.id === id);
+    if (cand) {
+      setCandidateToReject(cand);
+      setRejectModalOpen(true);
+    }
+  };
+
+  const handleConfirmReject = (reason: string) => {
+    if (candidateToReject) {
+      setCandidates((prev) =>
+        prev.map((c) => (c.id === candidateToReject.id ? { ...c, status: 'REJECTED' } : c))
+      );
+      setRejectModalOpen(false);
+      closeDrawer();
+      // Wait a moment then open shadow matching
+      setTimeout(() => {
+        setShadowMatchModalOpen(true);
+      }, 500);
+    }
   };
 
   const handleFail = (id: string) => {
@@ -388,9 +420,17 @@ export const Kanban: React.FC = () => {
                       {col.label}
                     </span>
                   </div>
-                  <span className="text-xs font-extrabold text-slate-500 bg-white px-2 py-0.5 rounded-lg border border-slate-200">
-                    {colCandidates.length}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    {col.key === 'REJECTED' && colCandidates.length > 0 && (
+                      <button className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary-50 hover:bg-primary-100 text-primary-600 border border-primary-200 text-[10px] font-bold transition-colors">
+                        <Sparkles className="h-3 w-3" />
+                        Tái chế
+                      </button>
+                    )}
+                    <span className="text-xs font-extrabold text-slate-500 bg-white px-2 py-0.5 rounded-lg border border-slate-200">
+                      {colCandidates.length}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Cards */}
@@ -416,6 +456,7 @@ export const Kanban: React.FC = () => {
         onClose={closeDrawer}
         onPass={handlePass}
         onFail={handleFail}
+        onInitiateFail={handleInitiateFail}
         onSchedule={() => {
           setDrawerOpen(false);
           setScheduleModalOpen(true);
@@ -440,6 +481,33 @@ export const Kanban: React.FC = () => {
         onClose={() => setAiModalOpen(false)}
         candidateName={selectedCandidate?.name}
         matchScore={selectedCandidate?.matchScore}
+      />
+
+      {/* AI Shadow Matching Feature Modals */}
+      <RejectionReasonModal
+        isOpen={rejectModalOpen}
+        onClose={() => setRejectModalOpen(false)}
+        candidateName={candidateToReject?.name}
+        onConfirm={handleConfirmReject}
+      />
+
+      <AIShadowMatchingModal
+        isOpen={shadowMatchModalOpen}
+        onClose={() => setShadowMatchModalOpen(false)}
+        candidateName={candidateToReject?.name}
+        onSnooze={() => setShadowMatchModalOpen(false)}
+        onSendEmail={() => {
+          setShadowMatchModalOpen(false);
+          setEmailPreviewModalOpen(true);
+        }}
+      />
+
+      <AIEmailPreviewModal
+        isOpen={emailPreviewModalOpen}
+        onClose={() => setEmailPreviewModalOpen(false)}
+        candidateName={candidateToReject?.name}
+        candidateEmail={candidateToReject?.email}
+        onSend={() => setEmailPreviewModalOpen(false)}
       />
     </>
   );

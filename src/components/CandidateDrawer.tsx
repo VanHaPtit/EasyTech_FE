@@ -35,6 +35,7 @@ interface CandidateDrawerProps {
   onClose: () => void;
   onPass?: (id: string) => void;
   onFail?: (id: string) => void;
+  onInitiateFail?: (id: string) => void;
   onSchedule?: (id: string) => void;
   onAISuggest?: (id: string) => void;
 }
@@ -45,6 +46,7 @@ export const CandidateDrawer: React.FC<CandidateDrawerProps> = ({
   onClose,
   onPass,
   onFail,
+  onInitiateFail,
   onSchedule,
   onAISuggest,
 }) => {
@@ -386,7 +388,7 @@ export const CandidateDrawer: React.FC<CandidateDrawerProps> = ({
               ĐẠT vòng này
             </button>
             <button
-              onClick={() => onFail?.(candidate.id)}
+              onClick={() => onInitiateFail ? onInitiateFail(candidate.id) : onFail?.(candidate.id)}
               className="flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white text-xs font-bold shadow-sm shadow-red-500/20 transition-all cursor-pointer active:scale-95"
             >
               TRƯỢT
