@@ -4,6 +4,17 @@ import {
   Mail,
   Phone,
   Clock,
+  BrainCircuit,
+  FileText,
+  Mic2,
+  ListChecks,
+  CheckCircle2,
+  AlertCircle,
+  XCircle,
+  PlayCircle,
+  PauseCircle,
+  Zap,
+  Search,
 } from 'lucide-react';
 
 export interface CandidateData {
@@ -51,6 +62,8 @@ export const CandidateDrawer: React.FC<CandidateDrawerProps> = ({
   onAISuggest,
 }) => {
   const [activeSection, setActiveSection] = useState<'info' | 'rounds' | 'ai'>('info');
+  const [aiSubTab, setAiSubTab] = useState<'overview' | 'cv' | 'interview' | 'jd'>('overview');
+  const [isPlaying, setIsPlaying] = useState(false);
 
   if (!candidate) return null;
 
@@ -90,7 +103,7 @@ export const CandidateDrawer: React.FC<CandidateDrawerProps> = ({
 
       {/* Drawer Panel */}
       <aside
-        className={`fixed right-0 top-0 h-full w-[480px] max-w-full bg-white shadow-2xl z-50 flex flex-col transform transition-transform duration-300 ease-out ${
+        className={`fixed right-0 top-0 h-full w-[900px] max-w-full bg-white shadow-2xl z-50 flex flex-col transform transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -313,66 +326,298 @@ export const CandidateDrawer: React.FC<CandidateDrawerProps> = ({
           )}
 
           {activeSection === 'ai' && (
-            <div className="space-y-5">
-              {/* Score card */}
-              <div className="p-5 bg-gradient-to-br from-primary-50 to-amber-50 rounded-2xl border border-primary-100">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-10 w-10 rounded-xl bg-primary-500 flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">AI</span>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-700">AI Phân tích hồ sơ</p>
-                    <p className="text-[10px] text-slate-400 font-semibold">Vector Embedding Matching</p>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <p className={`text-5xl font-extrabold ${scoreColor}`}>{candidate.matchScore}%</p>
-                  <p className="text-xs text-slate-500 font-semibold mt-1">Độ phù hợp với JD</p>
-                </div>
-              </div>
-
-              {/* Strengths */}
-              <div className="space-y-2">
-                <h4 className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-1.5">
-                  Điểm mạnh
-                </h4>
-                {['Kinh nghiệm phù hợp với JD', 'Kỹ năng kỹ thuật tốt', 'CV rõ ràng, có dự án thực tế'].map((s, i) => (
-                  <div key={i} className="flex items-start gap-2.5 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <p className="text-xs font-semibold text-slate-700">{s}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Weaknesses */}
-              <div className="space-y-2">
-                <h4 className="text-[10px] font-bold text-red-500 uppercase tracking-widest flex items-center gap-1.5">
-                  Điểm cần xem xét
-                </h4>
-                {['Chưa có kinh nghiệm quản lý team', 'Thiếu chứng chỉ yêu cầu'].map((w, i) => (
-                  <div key={i} className="flex items-start gap-2.5 p-3 bg-red-50 rounded-xl border border-red-100">
-                    <p className="text-xs font-semibold text-slate-700">{w}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Interview Questions */}
-              <div className="space-y-2">
-                <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
-                  Câu hỏi phỏng vấn đề xuất
-                </h4>
+            <div className="flex flex-col h-full bg-slate-50 -mx-6 -my-5 px-6 py-5">
+              {/* Sub-tabs header */}
+              <div className="flex items-center gap-2 mb-6 border-b border-slate-200 pb-4">
                 {[
-                  'Hãy mô tả dự án AI lớn nhất bạn từng tham gia?',
-                  'Bạn xử lý vector database như thế nào khi scale?',
-                  'Kinh nghiệm với LLM fine-tuning của bạn?',
-                ].map((q, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                    <span className="h-5 w-5 rounded-lg bg-primary-100 text-primary-600 text-[10px] font-extrabold flex items-center justify-center shrink-0">
-                      {i + 1}
-                    </span>
-                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">{q}</p>
-                  </div>
-                ))}
+                  { id: 'overview', label: 'Tổng quan', icon: BrainCircuit },
+                  { id: 'cv', label: 'Phân tích CV', icon: FileText },
+                  { id: 'interview', label: 'Phỏng vấn', icon: Mic2 },
+                  { id: 'jd', label: 'Đối chiếu JD', icon: ListChecks },
+                ].map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = aiSubTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setAiSubTab(tab.id as any)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-primary-500 text-white shadow-md shadow-primary-500/20'
+                          : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                      {tab.label}
+                    </button>
+                  );
+                })}
               </div>
+
+              {/* TAB CONTENT: Overview */}
+              {aiSubTab === 'overview' && (
+                <div className="space-y-6">
+                  {/* Score & Radar Replacement (using Progress bars instead of actual Radar for simplicity, or just a grid of scores) */}
+                  <div className="grid grid-cols-3 gap-5">
+                    <div className="col-span-1 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center text-center">
+                       <div className="h-16 w-16 rounded-full bg-primary-100 flex items-center justify-center mb-3">
+                         <Zap className="h-8 w-8 text-primary-600" />
+                       </div>
+                       <p className={`text-4xl font-extrabold ${scoreColor}`}>{candidate.matchScore}%</p>
+                       <p className="text-xs text-slate-500 font-bold mt-1">Độ phù hợp tổng thể</p>
+                       <span className={`mt-3 inline-flex px-3 py-1 rounded-full text-[10px] font-bold ${
+                         candidate.matchScore >= 85 ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                       }`}>
+                         {candidate.matchScore >= 85 ? 'Phù hợp cao' : 'Cần xem xét'}
+                       </span>
+                    </div>
+
+                    <div className="col-span-2 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                      <h4 className="text-sm font-extrabold text-slate-800">Chi tiết Năng lực</h4>
+                      <div className="space-y-3">
+                        {[
+                          { label: 'Kỹ năng chuyên môn', score: 90 },
+                          { label: 'Kinh nghiệm thực tế', score: 85 },
+                          { label: 'Kỹ năng mềm & Giao tiếp', score: 75 },
+                          { label: 'Phù hợp văn hóa', score: 80 },
+                        ].map(skill => (
+                          <div key={skill.label}>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs font-semibold text-slate-600">{skill.label}</span>
+                              <span className="text-xs font-bold text-slate-800">{skill.score}%</span>
+                            </div>
+                            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                              <div className={`h-full bg-primary-500 rounded-full`} style={{ width: `${skill.score}%` }} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-5">
+                    <div className="bg-emerald-50 p-5 rounded-2xl border border-emerald-100">
+                      <h4 className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-1.5 mb-3">
+                        <CheckCircle2 className="h-4 w-4" /> Điểm mạnh nổi bật
+                      </h4>
+                      <ul className="space-y-2">
+                        <li className="text-xs font-semibold text-slate-700 flex gap-2"><span className="text-emerald-500">•</span> Nắm vững kiến trúc Microservices và RESTful API.</li>
+                        <li className="text-xs font-semibold text-slate-700 flex gap-2"><span className="text-emerald-500">•</span> Trả lời phỏng vấn tự tin, rành mạch.</li>
+                        <li className="text-xs font-semibold text-slate-700 flex gap-2"><span className="text-emerald-500">•</span> Đã từng làm việc với hệ thống high-traffic.</li>
+                      </ul>
+                    </div>
+                    <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100">
+                      <h4 className="text-[10px] font-bold text-amber-600 uppercase tracking-widest flex items-center gap-1.5 mb-3">
+                        <AlertCircle className="h-4 w-4" /> Yếu tố cần cân nhắc
+                      </h4>
+                      <ul className="space-y-2">
+                        <li className="text-xs font-semibold text-slate-700 flex gap-2"><span className="text-amber-500">•</span> Chưa có nhiều kinh nghiệm lead team quy mô &gt; 10 người.</li>
+                        <li className="text-xs font-semibold text-slate-700 flex gap-2"><span className="text-amber-500">•</span> Tiếng Anh giao tiếp ở mức khá, đôi lúc vấp.</li>
+                        <li className="text-xs font-semibold text-slate-700 flex gap-2"><span className="text-amber-500">•</span> Mức lương kỳ vọng hơi cao so với budget (+10%).</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB CONTENT: Phân tích CV */}
+              {aiSubTab === 'cv' && (
+                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 h-full">
+                  <div>
+                    <h4 className="text-sm font-extrabold text-slate-800 mb-4">Học vấn & Chứng chỉ</h4>
+                    <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2.5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+                      <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div className="flex items-center justify-center w-5 h-5 rounded-full border-2 border-white bg-slate-300 group-[.is-active]:bg-primary-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10" />
+                        <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.25rem)] p-4 rounded-xl border border-slate-100 bg-slate-50">
+                          <p className="text-xs font-bold text-slate-800">Cử nhân Công nghệ Thông tin</p>
+                          <p className="text-[10px] font-semibold text-slate-500">Đại học Bách Khoa TP.HCM (2018 - 2022)</p>
+                          <p className="text-[10px] font-semibold text-slate-400 mt-1">GPA: 3.8/4.0</p>
+                        </div>
+                      </div>
+                      <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div className="flex items-center justify-center w-5 h-5 rounded-full border-2 border-white bg-slate-300 group-[.is-active]:bg-primary-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10" />
+                        <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.25rem)] p-4 rounded-xl border border-slate-100 bg-slate-50">
+                          <p className="text-xs font-bold text-slate-800">AWS Certified Solutions Architect</p>
+                          <p className="text-[10px] font-semibold text-slate-500">Amazon Web Services (2023)</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-extrabold text-slate-800 mb-3">Kỹ năng trích xuất (Skills)</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {['Java', 'Spring Boot', 'ReactJS', 'AWS', 'Docker', 'Kubernetes', 'MySQL', 'Redis'].map(skill => (
+                        <span key={skill} className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold border border-blue-100">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB CONTENT: Interview */}
+              {aiSubTab === 'interview' && (
+                <div className="flex gap-5 h-[500px]">
+                  {/* Left: Player & Insights */}
+                  <div className="w-1/3 flex flex-col gap-4">
+                    <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+                      <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3">
+                        <Mic2 className="h-6 w-6 text-slate-600" />
+                      </div>
+                      <p className="text-xs font-bold text-slate-800">Technical_Interview_T1.mp3</p>
+                      <p className="text-[10px] font-semibold text-slate-400">45:20 • Recorded on Oct 12, 2026</p>
+                      
+                      <div className="mt-4 flex items-center justify-center gap-3">
+                        <button onClick={() => setIsPlaying(!isPlaying)} className="text-primary-600 hover:text-primary-700 cursor-pointer">
+                          {isPlaying ? <PauseCircle className="h-10 w-10" /> : <PlayCircle className="h-10 w-10" />}
+                        </button>
+                      </div>
+                      <div className="mt-4 w-full h-1 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-primary-500 w-1/3" />
+                      </div>
+                      <div className="flex justify-between mt-1 px-1">
+                         <span className="text-[9px] text-slate-400">15:10</span>
+                         <span className="text-[9px] text-slate-400">45:20</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-primary-50 p-4 rounded-2xl border border-primary-100 flex-1 overflow-y-auto">
+                      <h4 className="text-xs font-bold text-primary-700 mb-3">AI Đánh giá Giao tiếp</h4>
+                      <p className="text-xs text-primary-900 font-medium leading-relaxed mb-3">
+                        Ứng viên trả lời rành mạch, tốc độ nói vừa phải (120 từ/phút). Cấu trúc câu hỏi tình huống bằng phương pháp STAR rất rõ ràng.
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center text-[10px] font-bold">
+                          <span className="text-slate-600">Sự tự tin</span>
+                          <span className="text-emerald-600">Cao</span>
+                        </div>
+                        <div className="flex justify-between items-center text-[10px] font-bold">
+                          <span className="text-slate-600">Sự chân thật</span>
+                          <span className="text-emerald-600">Đáng tin cậy</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: Transcript */}
+                  <div className="w-2/3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="text-sm font-extrabold text-slate-800">Transcript (Bóc băng AI)</h4>
+                      <div className="relative">
+                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400" />
+                        <input type="text" placeholder="Tìm từ khóa..." className="pl-7 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-[10px] focus:outline-none focus:border-primary-500 w-40" />
+                      </div>
+                    </div>
+                    <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+                      <div className="flex gap-3">
+                        <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 font-bold text-[10px] flex items-center justify-center shrink-0">HR</div>
+                        <div>
+                          <p className="text-[9px] text-slate-400 font-bold mb-0.5">14:05</p>
+                          <p className="text-xs text-slate-700 leading-relaxed font-medium">Bạn có thể chia sẻ về một thử thách khó nhất bạn từng gặp khi thiết kế hệ thống Backend không?</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <div className="h-6 w-6 rounded-full bg-amber-100 text-amber-600 font-bold text-[10px] flex items-center justify-center shrink-0">UV</div>
+                        <div>
+                          <p className="text-[9px] text-slate-400 font-bold mb-0.5">14:20</p>
+                          <p className="text-xs text-slate-700 leading-relaxed font-medium bg-amber-50 px-3 py-2 rounded-xl rounded-tl-none border border-amber-100">
+                            Vâng, tại dự án trước, hệ thống gặp tình trạng bottleneck khi lượng request tăng đột biến lên <span className="bg-yellow-200 text-yellow-900 px-1 rounded font-bold cursor-help" title="Kinh nghiệm tối ưu hiệu năng">50,000 rps</span>. Lúc đó, giải pháp của em là implement <span className="bg-yellow-200 text-yellow-900 px-1 rounded font-bold cursor-help" title="Kỹ năng Redis">Redis Caching</span> ở tầng API Gateway và chia nhỏ một monolith service thành 3 <span className="bg-yellow-200 text-yellow-900 px-1 rounded font-bold cursor-help" title="Kiến trúc hệ thống">Microservices</span> chạy trên Kubernetes...
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 font-bold text-[10px] flex items-center justify-center shrink-0">HR</div>
+                        <div>
+                          <p className="text-[9px] text-slate-400 font-bold mb-0.5">15:10</p>
+                          <p className="text-xs text-slate-700 leading-relaxed font-medium">Tuyệt vời, vậy bạn xử lý vấn đề data consistency giữa các service đó như thế nào?</p>
+                        </div>
+                      </div>
+                      {/* Active playing line */}
+                      <div className="flex gap-3 relative">
+                        <div className="absolute -left-2 top-2 h-2 w-2 rounded-full bg-primary-500 animate-ping" />
+                        <div className="h-6 w-6 rounded-full bg-amber-100 text-amber-600 font-bold text-[10px] flex items-center justify-center shrink-0">UV</div>
+                        <div>
+                          <p className="text-[9px] text-primary-500 font-bold mb-0.5">15:15</p>
+                          <p className="text-xs text-slate-900 leading-relaxed font-bold bg-white px-3 py-2 rounded-xl rounded-tl-none border-2 border-primary-500 shadow-sm">
+                            Em sử dụng pattern Saga kết hợp với Kafka để đảm bảo eventual consistency...
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB CONTENT: JD Matching */}
+              {aiSubTab === 'jd' && (
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-full flex flex-col">
+                  <div className="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
+                    <div>
+                      <h4 className="text-sm font-extrabold text-slate-800">Đối chiếu Yêu cầu Công việc (JD)</h4>
+                      <p className="text-[10px] font-semibold text-slate-500 mt-0.5">Kết hợp dữ liệu từ CV và Phỏng vấn</p>
+                    </div>
+                  </div>
+                  <div className="flex-1 overflow-y-auto">
+                    <table className="w-full text-left">
+                      <thead className="bg-white sticky top-0 border-b border-slate-100 shadow-sm">
+                        <tr>
+                          <th className="px-5 py-3 text-[10px] font-bold text-slate-400 uppercase">Yêu cầu từ JD</th>
+                          <th className="px-5 py-3 text-[10px] font-bold text-slate-400 uppercase">Bằng chứng (CV / PV)</th>
+                          <th className="px-5 py-3 text-[10px] font-bold text-slate-400 uppercase w-28">Trạng thái</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-5 py-4 text-xs font-bold text-slate-700">Kinh nghiệm 2+ năm Node.js / Java</td>
+                          <td className="px-5 py-4 text-xs font-medium text-slate-600 leading-relaxed">
+                            Có 3 năm kinh nghiệm làm Backend Developer tại FPT Software (Theo CV).
+                          </td>
+                          <td className="px-5 py-4">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 text-emerald-600 rounded text-[10px] font-bold border border-emerald-100">
+                              <CheckCircle2 className="h-3 w-3" /> Đạt
+                            </span>
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-5 py-4 text-xs font-bold text-slate-700">Kiến trúc Microservices, AWS</td>
+                          <td className="px-5 py-4 text-xs font-medium text-slate-600 leading-relaxed">
+                            Có chứng chỉ AWS. Đã giải thích rất chi tiết về Microservices và scale hệ thống trong buổi phỏng vấn (14:20).
+                          </td>
+                          <td className="px-5 py-4">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 text-emerald-600 rounded text-[10px] font-bold border border-emerald-100">
+                              <CheckCircle2 className="h-3 w-3" /> Đạt
+                            </span>
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-5 py-4 text-xs font-bold text-slate-700">Tiếng Anh giao tiếp tốt (Tương đương IELTS 6.0)</td>
+                          <td className="px-5 py-4 text-xs font-medium text-slate-600 leading-relaxed">
+                            CV ghi TOEIC 650. Tuy nhiên trong phỏng vấn kỹ năng nói Tiếng Anh có phần vấp, thiếu từ vựng chuyên ngành.
+                          </td>
+                          <td className="px-5 py-4">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-600 rounded text-[10px] font-bold border border-amber-100">
+                              <AlertCircle className="h-3 w-3" /> Cân nhắc
+                            </span>
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-5 py-4 text-xs font-bold text-slate-700">Kinh nghiệm vận hành CI/CD pipelines</td>
+                          <td className="px-5 py-4 text-xs font-medium text-slate-600 leading-relaxed">
+                            Không tìm thấy keyword trong CV, và chưa đề cập trong nội dung phỏng vấn.
+                          </td>
+                          <td className="px-5 py-4">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-50 text-red-500 rounded text-[10px] font-bold border border-red-100">
+                              <XCircle className="h-3 w-3" /> Thiếu
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

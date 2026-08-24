@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShieldAlert,
   LayoutDashboard,
@@ -35,12 +35,18 @@ interface BusinessRow {
   createdAt: string;
   totalJobs?: number;
   representative?: string;
+  hrPosition?: string;
+  hrDepartment?: string;
+  hrPhone?: string;
   phone?: string;
   address?: string;
+  city?: string;
   industry?: string;
   employees?: string;
   requestedPlan?: string;
   riskNote?: string;
+  taxCode?: string;
+  businessType?: string;
 }
 
 // ─── Mock Data ────────────────────────────────────────────
@@ -56,10 +62,16 @@ const BUSINESSES: BusinessRow[] = [
     createdAt: '2026-07-10',
     totalJobs: 8,
     representative: 'Nguyễn Minh Anh',
+    hrPosition: 'HR Manager',
+    hrDepartment: 'Human Resources',
+    hrPhone: '0988 123 456',
     phone: '+84 900 100 200',
-    address: '68 Nguyễn Huệ, Q.1, TP.HCM',
+    address: '68 Nguyễn Huệ, Phường Bến Nghé, Quận 1',
+    city: 'Hồ Chí Minh',
     industry: 'AI / SaaS',
     employees: '120+',
+    taxCode: '0101234567',
+    businessType: 'Công ty Cổ phần',
     requestedPlan: 'Growth',
     riskNote: 'Website, email domain và thông tin liên hệ trùng khớp.',
   },
@@ -211,7 +223,7 @@ const ConfirmDialog: React.FC<{
 export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [businesses, setBusinesses] = useState<BusinessRow[]>(BUSINESSES);
-  const [adminTab, setAdminTab] = useState<'overview' | 'businesses' | 'audit'>('overview');
+  const [adminTab, setAdminTab] = useState<'overview' | 'businesses'>('overview');
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedBusiness, setSelectedBusiness] = useState<BusinessRow | null>(null);
@@ -219,6 +231,13 @@ export const AdminDashboard: React.FC = () => {
   const [confirm, setConfirm] = useState<{ open: boolean; type: 'approve' | 'reject' | 'block'; id: string }>({
     open: false, type: 'approve', id: '',
   });
+  const [detailTab, setDetailTab] = useState<'company' | 'hr'>('company');
+
+  useEffect(() => {
+    if (selectedBusiness) {
+      setDetailTab('company');
+    }
+  }, [selectedBusiness]);
 
   const stats = {
     total: businesses.length,
@@ -266,23 +285,9 @@ export const AdminDashboard: React.FC = () => {
     block: { title: 'Khóa doanh nghiệp?', message: 'Tài khoản sẽ bị tạm khóa. HR sẽ không thể đăng nhập.', confirmLabel: 'Khóa tài khoản', confirmColor: 'bg-red-500 hover:bg-red-600' },
   };
 
-  const recentAudits = [
-    { action: 'Duyệt TechA Solutions JSC', actor: 'admin@easytech.vn', time: '08:30 hôm nay', tone: 'text-emerald-600' },
-    { action: 'Khóa CloudNine Systems', actor: 'admin@easytech.vn', time: 'Hôm qua', tone: 'text-red-600' },
-    { action: 'Nhận hồ sơ InnovateTech VN', actor: 'system', time: '2 ngày trước', tone: 'text-amber-600' },
-  ];
-
-  const auditRows = [
-    { time: '2026-08-14 08:30', actor: 'admin@easytech.vn', action: 'APPROVE_BUSINESS', target: 'TechA Solutions JSC', detail: 'Cấp subdomain techa.easytech.vn' },
-    { time: '2026-08-13 17:10', actor: 'admin@easytech.vn', action: 'BLOCK_BUSINESS', target: 'CloudNine Systems', detail: 'Khóa do phản ánh tuyển dụng không minh bạch' },
-    { time: '2026-08-13 14:22', actor: 'system', action: 'RECEIVE_BUSINESS_REQUEST', target: 'Nexus Digital Agency', detail: 'Hồ sơ chờ kiểm duyệt' },
-    { time: '2026-08-12 09:05', actor: 'admin@easytech.vn', action: 'REVIEW_BUSINESS', target: 'FutureSoft Corp', detail: 'Kiểm tra website và email HR' },
-  ];
-
   const adminNavItems = [
     { id: 'overview' as const, label: 'Tổng quan', icon: LayoutDashboard },
     { id: 'businesses' as const, label: 'Doanh nghiệp', icon: Building2 },
-    { id: 'audit' as const, label: 'Audit Log', icon: ScrollText },
   ];
 
   const pageMeta = {
@@ -291,9 +296,6 @@ export const AdminDashboard: React.FC = () => {
     },
     businesses: {
       title: 'Quản lý Doanh nghiệp',
-    },
-    audit: {
-      title: 'Audit Log',
     },
   };
 
@@ -411,8 +413,8 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className={`${adminTab === 'overview' ? 'grid' : 'hidden'} grid-cols-1 xl:grid-cols-3 gap-5`}>
-              <div className="xl:col-span-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className={`${adminTab === 'overview' ? 'block' : 'hidden'} space-y-5`}>
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="text-sm font-extrabold text-slate-800">Hàng đợi kiểm duyệt</p>
@@ -438,21 +440,6 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                       <p className="mt-3 text-[11px] font-semibold leading-relaxed text-slate-500">{b.riskNote}</p>
                     </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <Activity className="h-4 w-4 text-[#0052cc]" />
-                  <p className="text-sm font-extrabold text-slate-800">Audit gần đây</p>
-                </div>
-                <div className="space-y-3">
-                  {recentAudits.map((audit) => (
-                    <div key={audit.action} className="rounded-xl bg-slate-50 border border-slate-100 p-3">
-                      <p className={`text-xs font-bold ${audit.tone}`}>{audit.action}</p>
-                      <p className="mt-1 text-[10px] font-semibold text-slate-500">{audit.actor} · {audit.time}</p>
-                    </div>
                   ))}
                 </div>
               </div>
@@ -483,7 +470,6 @@ export const AdminDashboard: React.FC = () => {
                               <img src={b.logo} alt={b.name} className="h-10 w-10 rounded-xl object-cover border border-slate-200" />
                               <div>
                                 <p className="text-sm font-extrabold text-slate-800">{b.name}</p>
-                                <p className="text-[10px] text-slate-500 font-semibold mt-0.5">{b.website}</p>
                               </div>
                             </div>
                           </td>
@@ -568,29 +554,7 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className={`${adminTab === 'audit' ? 'grid' : 'hidden'} grid-cols-1 gap-5`}>
-              <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
-                <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-5 py-4">
-                  <div>
-                    <p className="text-sm font-extrabold text-slate-800">Audit Log đầy đủ</p>
-                    <p className="mt-1 text-xs font-semibold text-slate-500">Theo dõi các thao tác quản trị quan trọng.</p>
-                  </div>
-                  <Activity className="h-5 w-5 text-[#0052cc]" />
-                </div>
-                <div className="divide-y divide-slate-100">
-                  {auditRows.map((row) => (
-                    <div key={`${row.time}-${row.action}`} className="px-5 py-4 hover:bg-slate-50/50 transition-colors">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <p className="text-xs font-extrabold text-slate-800">{row.action}</p>
-                        <p className="text-[10px] font-semibold text-slate-400">{row.time}</p>
-                      </div>
-                      <p className="mt-1 text-xs font-semibold text-slate-600">{row.target}</p>
-                      <p className="mt-1 text-[11px] font-semibold text-slate-500">{row.actor} · {row.detail}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+
           </main>
         </div>
       </div>
@@ -641,102 +605,137 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* HR Accounts attached to this business */}
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <Users className="h-4 w-4 text-[#0052cc]" />
-                  <p className="text-sm font-extrabold text-slate-800">Tài khoản Nhân sự (HR)</p>
-                </div>
-                
-                {(() => {
-                  const hrForBusiness = hrAccounts.find(hr => hr.business === selectedBusiness.name) || {
-                    name: selectedBusiness.representative,
-                    email: selectedBusiness.email,
-                    status: selectedBusiness.status,
-                    lastLogin: 'Chưa xác định'
-                  };
+              {/* Tabs Navigation */}
+              <div className="flex items-center gap-4 border-b border-slate-200 bg-white px-2">
+                <button 
+                  onClick={() => setDetailTab('company')}
+                  className={`pb-3 pt-2 text-sm font-bold border-b-2 transition-colors cursor-pointer ${detailTab === 'company' ? 'border-[#0052cc] text-[#0052cc]' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
+                >
+                  Thông tin Công ty
+                </button>
+                <button 
+                  onClick={() => setDetailTab('hr')}
+                  className={`pb-3 pt-2 text-sm font-bold border-b-2 transition-colors cursor-pointer ${detailTab === 'hr' ? 'border-[#0052cc] text-[#0052cc]' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
+                >
+                  Đại diện HR
+                </button>
+              </div>
 
-                  return (
-                    <div className="flex items-center justify-between p-3 border border-slate-100 rounded-xl bg-slate-50">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
-                          {hrForBusiness.name?.charAt(0) || 'U'}
+              {/* TAB: HR */}
+              {detailTab === 'hr' && (
+                <div className="space-y-6">
+                  {/* HR Accounts attached to this business */}
+                  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Users className="h-4 w-4 text-[#0052cc]" />
+                      <p className="text-sm font-extrabold text-slate-800">Tài khoản Nhân sự (HR)</p>
+                    </div>
+                    
+                    {(() => {
+                      const hrForBusiness = hrAccounts.find(hr => hr.business === selectedBusiness.name) || {
+                        name: selectedBusiness.representative,
+                        email: selectedBusiness.email,
+                        status: selectedBusiness.status,
+                        lastLogin: 'Chưa xác định'
+                      };
+
+                      return (
+                        <div className="flex flex-col gap-3">
+                          <div className="flex items-center justify-between p-3 border border-slate-100 rounded-xl bg-slate-50">
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+                                {hrForBusiness.name?.charAt(0) || 'U'}
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-slate-800">{hrForBusiness.name}</p>
+                                <p className="text-xs text-slate-500 mt-0.5">{hrForBusiness.email}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                               <span className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold ${
+                                  hrForBusiness.status === 'ACTIVE'
+                                    ? 'border-emerald-200 bg-emerald-50 text-emerald-600'
+                                    : hrForBusiness.status === 'PENDING'
+                                      ? 'border-amber-200 bg-amber-50 text-amber-600'
+                                      : 'border-red-200 bg-red-50 text-red-600'
+                                }`}>
+                                 {hrForBusiness.status}
+                               </span>
+                               <p className="mt-1 text-[10px] text-slate-500">Lần cuối: {hrForBusiness.lastLogin}</p>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3 my-2">
+                            <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+                              <p className="text-[9px] font-bold uppercase text-slate-400">Chức vụ</p>
+                              <p className="text-xs font-bold text-slate-700 mt-0.5">{selectedBusiness.hrPosition || 'Chưa cập nhật'}</p>
+                            </div>
+                            <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+                              <p className="text-[9px] font-bold uppercase text-slate-400">Phòng ban</p>
+                              <p className="text-xs font-bold text-slate-700 mt-0.5">{selectedBusiness.hrDepartment || 'Chưa cập nhật'}</p>
+                            </div>
+                            <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 col-span-2">
+                              <p className="text-[9px] font-bold uppercase text-slate-400">Số điện thoại cá nhân</p>
+                              <p className="text-xs font-bold text-slate-700 mt-0.5">{selectedBusiness.hrPhone || 'Chưa cập nhật'}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex gap-2">
+                            <button className="flex-1 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-600 transition-colors cursor-pointer">
+                              Gửi email nhắc nhở
+                            </button>
+                            <button className="flex-1 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-600 transition-colors cursor-pointer">
+                              Reset mật khẩu
+                            </button>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-bold text-slate-800">{hrForBusiness.name}</p>
-                          <p className="text-xs text-slate-500 mt-0.5">{hrForBusiness.email}</p>
+                      );
+                    })()}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB: COMPANY */}
+              {detailTab === 'company' && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { icon: ShieldAlert, label: 'Mã số thuế (MST)', value: selectedBusiness.taxCode || 'Chưa có' },
+                      { icon: Building2, label: 'Loại hình DN', value: selectedBusiness.businessType || 'Chưa có' },
+                      { icon: Mail, label: 'Email công ty', value: selectedBusiness.email },
+                      { icon: Globe, label: 'Website', value: selectedBusiness.website },
+                      { icon: Phone, label: 'Số điện thoại', value: selectedBusiness.phone || 'Chưa có' },
+                      { icon: MapPin, label: 'Địa chỉ trụ sở', value: selectedBusiness.address ? `${selectedBusiness.address}${selectedBusiness.city ? `, ${selectedBusiness.city}` : ''}` : 'Chưa có' },
+                    ].map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <div key={item.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                          <Icon className="mb-3 h-4 w-4 text-[#0052cc]" />
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{item.label}</p>
+                          <p className="mt-1 text-xs font-bold text-slate-800">{item.value}</p>
                         </div>
-                      </div>
-                      <div className="text-right">
-                         <span className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold ${
-                            hrForBusiness.status === 'ACTIVE'
-                              ? 'border-emerald-200 bg-emerald-50 text-emerald-600'
-                              : hrForBusiness.status === 'PENDING'
-                                ? 'border-amber-200 bg-amber-50 text-amber-600'
-                                : 'border-red-200 bg-red-50 text-red-600'
-                          }`}>
-                           {hrForBusiness.status}
-                         </span>
-                         <p className="mt-1 text-[10px] text-slate-500">Lần cuối: {hrForBusiness.lastLogin}</p>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
+                      );
+                    })}
+                  </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { icon: Mail, label: 'Email HR', value: selectedBusiness.email },
-                  { icon: Globe, label: 'Website', value: selectedBusiness.website },
-                  { icon: Phone, label: 'Số điện thoại', value: selectedBusiness.phone || 'Chưa có' },
-                  { icon: MapPin, label: 'Địa chỉ', value: selectedBusiness.address || 'Chưa có' },
-                ].map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={item.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                      <Icon className="mb-3 h-4 w-4 text-[#0052cc]" />
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{item.label}</p>
-                      <p className="mt-1 text-xs font-bold text-slate-800">{item.value}</p>
-                    </div>
-                  );
-                })}
-              </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <p className="text-sm font-extrabold text-slate-800">Checklist xác minh</p>
-                <div className="mt-4 space-y-3">
-                  {[
-                    'Email HR dùng domain doanh nghiệp hoặc domain có thể xác minh',
-                    'Website doanh nghiệp hoạt động và có thông tin tuyển dụng/liên hệ',
-                    'Thông tin đại diện, số điện thoại và địa chỉ hợp lệ',
-                    'Không yêu cầu truy cập dữ liệu CV của doanh nghiệp khác',
-                  ].map((item) => (
-                    <div key={item} className="flex items-start gap-3">
-                      <FileCheck2 className="mt-0.5 h-4 w-4 text-emerald-500 shrink-0" />
-                      <p className="text-xs font-semibold leading-relaxed text-slate-600">{item}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Ghi chú kiểm duyệt</p>
-                  <p className="mt-1 text-xs font-semibold leading-relaxed text-slate-700">{selectedBusiness.riskNote}</p>
-                </div>
-              </div>
 
-              {selectedBusiness.status === 'PENDING' && (
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => setConfirm({ open: true, type: 'reject', id: selectedBusiness.id })}
-                    className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-extrabold text-red-600 hover:bg-red-100 cursor-pointer transition-colors"
-                  >
-                    Từ chối hồ sơ
-                  </button>
-                  <button
-                    onClick={() => setConfirm({ open: true, type: 'approve', id: selectedBusiness.id })}
-                    className="rounded-2xl bg-emerald-500 px-4 py-3 text-xs font-extrabold text-white hover:bg-emerald-600 cursor-pointer transition-colors shadow-sm shadow-emerald-500/20"
-                  >
-                    Duyệt doanh nghiệp
-                  </button>
+                  {selectedBusiness.status === 'PENDING' && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => setConfirm({ open: true, type: 'reject', id: selectedBusiness.id })}
+                        className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-extrabold text-red-600 hover:bg-red-100 cursor-pointer transition-colors"
+                      >
+                        Từ chối hồ sơ
+                      </button>
+                      <button
+                        onClick={() => setConfirm({ open: true, type: 'approve', id: selectedBusiness.id })}
+                        className="rounded-2xl bg-emerald-500 px-4 py-3 text-xs font-extrabold text-white hover:bg-emerald-600 cursor-pointer transition-colors shadow-sm shadow-emerald-500/20"
+                      >
+                        Duyệt doanh nghiệp
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
