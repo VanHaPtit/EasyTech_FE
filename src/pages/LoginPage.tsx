@@ -241,7 +241,7 @@ export const LoginPage: React.FC = () => {
                     
                     <div>
                       <label className={labelClassName}>Tên công ty (Pháp lý) *</label>
-                      <input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} placeholder="Công ty CP Công nghệ VTT..." className={inputClassName} required />
+                      <input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} placeholder="Công ty CP Công nghệ EasyTech..." className={inputClassName} required />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -363,7 +363,7 @@ export const LoginPage: React.FC = () => {
           <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-10 max-w-[440px] w-full shadow-[0_20px_60px_-15px_rgba(0,30,100,0.15)] relative z-10 border border-white">
             <div className="flex items-center gap-3.5 mb-6">
               <Share2 className="h-8 w-8 text-[#0052cc]" />
-              <h2 className="text-2xl font-bold text-slate-800">VTT Careers</h2>
+              <h2 className="text-2xl font-bold text-slate-800">EasyTech</h2>
             </div>
             
             <p className="text-[15px] text-slate-500 mb-10 leading-relaxed font-medium">
@@ -388,7 +388,7 @@ export const LoginPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="w-full bg-[#f4f7fb] py-5 px-8 md:px-16 flex flex-col md:flex-row items-center justify-between text-[12px] text-[#2c3e50] font-bold border-t border-slate-200 shrink-0">
-        <div>© 2024 VTT Careers. All rights reserved.</div>
+        <div>© 2024 EasyTech. All rights reserved.</div>
         <div className="flex items-center gap-8 mt-4 md:mt-0">
           <a href="#" className="hover:text-[#0052cc] transition-colors">Privacy Policy</a>
           <a href="#" className="hover:text-[#0052cc] transition-colors">Terms of Service</a>

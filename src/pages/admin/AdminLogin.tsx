@@ -30,7 +30,7 @@ export const AdminLogin: React.FC = () => {
             
             <h1 className="text-[32px] font-bold text-slate-900 mb-2 tracking-tight">System Admin</h1>
             <p className="text-[15px] text-slate-500 mb-8">
-              Khu vực hạn chế. Đăng nhập để truy cập hệ thống quản trị lõi của nền tảng VTT Careers.
+              Khu vực hạn chế. Đăng nhập để truy cập hệ thống quản trị lõi của nền tảng EasyTech.
             </p>
 
             {/* Form */}
@@ -41,7 +41,7 @@ export const AdminLogin: React.FC = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@vttcareers.com"
+                  placeholder="admin@easytech.vn"
                   className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-slate-700 bg-slate-50 focus:bg-white"
                   required
                 />
@@ -103,7 +103,7 @@ export const AdminLogin: React.FC = () => {
           <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-10 max-w-[440px] w-full shadow-[0_20px_60px_-15px_rgba(0,30,100,0.15)] relative z-10 border border-white">
             <div className="flex items-center gap-3.5 mb-6">
               <Server className="h-8 w-8 text-[#0052cc]" />
-              <h2 className="text-2xl font-bold text-slate-800">VTT Core Console</h2>
+              <h2 className="text-2xl font-bold text-slate-800">EasyTech Core Console</h2>
             </div>
             
             <p className="text-[15px] text-slate-500 mb-10 leading-relaxed font-medium">
@@ -136,7 +136,7 @@ export const AdminLogin: React.FC = () => {
 
       {/* Footer */}
       <footer className="w-full bg-[#f4f7fb] py-5 px-8 md:px-16 flex flex-col md:flex-row items-center justify-between text-[12px] text-[#2c3e50] font-bold border-t border-slate-200 shrink-0">
-        <div>© 2024 VTT Core Systems. Restricted Access.</div>
+        <div>© 2024 EasyTech Core Systems. Restricted Access.</div>
         <div className="flex items-center gap-8 mt-4 md:mt-0">
           <a href="#" className="hover:text-[#0052cc] transition-colors">Security Policy</a>
           <a href="#" className="hover:text-[#0052cc] transition-colors">Audit Logs</a>

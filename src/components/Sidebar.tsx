@@ -41,7 +41,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab: _currentTab, onTab
           <Rocket className="w-6 h-6" />
         </div>
         <div className="flex flex-col">
-          <h1 className="text-[17px] font-bold text-slate-900 leading-tight">VTT Careers</h1>
+          <h1 className="text-[17px] font-bold text-slate-900 leading-tight">EasyTech</h1>
           <span className="text-xs text-slate-500 font-medium">EasyTech Platform</span>
         </div>
       </div>

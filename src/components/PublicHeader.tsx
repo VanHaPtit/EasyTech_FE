@@ -12,7 +12,7 @@ export const PublicHeader: React.FC = () => {
             </svg>
           </div>
           <div>
-            <span className="text-base font-extrabold text-slate-800 tracking-tight block">VTT Careers</span>
+            <span className="text-base font-extrabold text-slate-800 tracking-tight block">EasyTech</span>
             <span className="text-[10px] font-semibold text-slate-400 block -mt-1 uppercase tracking-wider">EasyTech Platform</span>
           </div>
         </div>

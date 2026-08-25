@@ -14,7 +14,9 @@ import {
   Settings2,
   Plus,
   Filter,
-  Users
+  Users,
+  Eye,
+  Trash2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CandidateDrawer, type CandidateData } from './CandidateDrawer';
@@ -305,21 +307,26 @@ export const CandidatesList: React.FC = () => {
                 1.284 ứng viên
               </span>
             </div>
-            <p className="text-sm font-semibold text-slate-500 mt-1">
+            <p className="text-xs font-semibold text-slate-500 mt-1">
               Quản lý và đánh giá ứng viên hiệu quả
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors cursor-pointer">
-              <Settings2 className="w-4 h-4 text-slate-500" />
-              Tùy chỉnh cột
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors cursor-pointer">
+            {selectedIds.length > 0 && (
+              <button
+                onClick={() => setSelectedIds([])}
+                className="flex items-center gap-2 px-4 py-2 bg-red-50 border border-red-100 rounded-lg text-xs font-bold text-red-600 shadow-sm hover:bg-red-100 transition-colors cursor-pointer"
+              >
+                <Trash2 className="w-4 h-4" />
+                Xóa {selectedIds.length} ứng viên
+              </button>
+            )}
+            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors cursor-pointer">
               <Download className="w-4 h-4 text-slate-500" />
               Xuất Excel
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 border border-blue-600 rounded-lg text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition-colors cursor-pointer">
+            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 border border-blue-600 rounded-lg text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition-colors cursor-pointer">
               <Plus className="w-4 h-4" />
               Thêm ứng viên
             </button>
@@ -335,20 +342,20 @@ export const CandidatesList: React.FC = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tìm kiếm theo tên, email, SĐT, kỹ năng..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm font-medium text-slate-700 transition-colors placeholder:text-slate-400"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs font-medium text-slate-700 transition-colors placeholder:text-slate-400"
             />
           </div>
           
           <div className="flex items-center gap-4 flex-wrap lg:flex-nowrap w-full">
             <div className="relative w-full lg:w-auto flex-1">
-              <select className="w-full appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-blue-500 text-sm font-medium text-slate-700 transition-colors cursor-pointer">
+              <select className="w-full appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-blue-500 text-xs font-medium text-slate-700 transition-colors cursor-pointer">
                 <option>Vị trí ứng tuyển: Tất cả</option>
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
             </div>
 
             <div className="relative w-full lg:w-auto flex-1">
-              <select className="w-full appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-blue-500 text-sm font-medium text-slate-700 transition-colors cursor-pointer">
+              <select className="w-full appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-blue-500 text-xs font-medium text-slate-700 transition-colors cursor-pointer">
                 <option>Trạng thái: Tất cả</option>
                 <option>Mới</option>
                 <option>Sàng lọc</option>
@@ -358,7 +365,7 @@ export const CandidatesList: React.FC = () => {
             </div>
 
             <div className="relative w-full lg:w-auto flex-1">
-              <select className="w-full appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-blue-500 text-sm font-medium text-slate-700 transition-colors cursor-pointer">
+              <select className="w-full appearance-none pl-4 pr-9 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-blue-500 text-xs font-medium text-slate-700 transition-colors cursor-pointer">
                 <option>Kinh nghiệm: Tất cả</option>
                 <option>Dưới 1 năm</option>
                 <option>1 - 3 năm</option>
@@ -368,7 +375,7 @@ export const CandidatesList: React.FC = () => {
             </div>
             
             <div className="flex items-center h-[42px] w-full lg:w-auto">
-              <button className="flex items-center justify-center gap-1.5 px-4 py-2.5 border border-blue-100 bg-blue-50 text-blue-600 rounded-xl text-sm font-bold hover:bg-blue-100 transition-colors cursor-pointer shrink-0 w-full lg:w-auto">
+              <button className="flex items-center justify-center gap-1.5 px-4 py-2.5 border border-blue-100 bg-blue-50 text-blue-600 rounded-xl text-xs font-bold hover:bg-blue-100 transition-colors cursor-pointer shrink-0 w-full lg:w-auto">
                 <Filter className="w-4 h-4" />
                 Bộ lọc nâng cao
               </button>
@@ -386,10 +393,10 @@ export const CandidatesList: React.FC = () => {
                 </th>
                 <th className="px-4 py-4">Ứng viên</th>
                 <th className="px-4 py-4">Vị trí ứng tuyển</th>
-                <th className="px-4 py-4 w-40">Kỹ năng nổi bật</th>
-                <th className="px-4 py-4">Kinh nghiệm</th>
-                <th className="px-4 py-4">Trạng thái tuyển dụng</th>
-                <th className="px-4 py-4">Cập nhật gần nhất</th>
+                <th className="px-4 py-4">Số điện thoại</th>
+                <th className="px-4 py-4">Email</th>
+                <th className="px-4 py-4">Trạng thái</th>
+                <th className="px-4 py-4 w-24 text-center">Hành động</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100/50 bg-white">
@@ -402,95 +409,76 @@ export const CandidatesList: React.FC = () => {
                     onClick={() => openDrawer(c)}
                     className="hover:bg-slate-50 transition-colors cursor-pointer group"
                   >
-                    <td className="px-4 py-6 text-center" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-4 py-4 text-center" onClick={(e) => e.stopPropagation()}>
                        <input type="checkbox" checked={isSelected} onChange={(e) => toggleSelect(c.id, e as any)} className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
                     </td>
                     
                     {/* Candidate Info */}
-                    <td className="px-4 py-6">
+                    <td className="px-4 py-4">
                       <div className="flex items-start gap-3">
-                        <img
-                          src={c.avatar}
-                          alt={c.name}
-                          className="h-10 w-10 rounded-full object-cover shadow-sm shrink-0"
-                        />
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <p className="text-sm font-extrabold text-slate-900 hover:text-blue-600 transition-colors">
+                            <p className="text-xs font-extrabold text-slate-900 hover:text-blue-600 transition-colors">
                               {c.name}
                             </p>
-                            {c.verified && <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 fill-blue-50" />}
-                          </div>
-                          <div className="flex items-center gap-2 mt-2">
-                            {c.hasLinkedin && (
-                              <div className="w-5 h-5 rounded-md bg-slate-50 border border-slate-100 flex items-center justify-center text-[#0A66C2]">
-                                <Link className="w-3 h-3" />
-                              </div>
-                            )}
-                            {c.hasGithub && (
-                              <div className="w-5 h-5 rounded-md bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-800">
-                                <GitBranch className="w-3 h-3" />
-                              </div>
-                            )}
                           </div>
                         </div>
                       </div>
                     </td>
 
                     {/* Job Details */}
-                    <td className="px-4 py-6">
-                      <div className="text-sm font-bold text-slate-800 mb-1">{c.jobTitle}</div>
-                      <div className="text-[11px] font-semibold text-slate-500 mb-2">{c.location}</div>
-                      <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold border ${c.priorityColor}`}>
+                    <td className="px-4 py-4">
+                      <div className="text-xs font-bold text-slate-800 mb-1">{c.jobTitle}</div>
+                      <div className="text-xs font-semibold text-slate-500 mb-2">{c.location}</div>
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold border ${c.priorityColor}`}>
                         {c.priority}
                       </span>
                     </td>
 
-                    {/* Skills */}
-                    <td className="px-4 py-6">
-                      <div className="flex flex-wrap gap-1.5 max-w-[180px]">
-                        {c.skills.slice(0, 4).map((skill, i) => (
-                          <span key={i} className="px-2 py-1 rounded bg-slate-50 border border-slate-100 text-[10px] font-bold text-slate-600">
-                            {skill}
-                          </span>
-                        ))}
-                        {c.extraSkills > 0 && (
-                          <span className="px-2 py-1 rounded bg-blue-50 border border-blue-100 text-[10px] font-bold text-blue-600">
-                            +{c.extraSkills}
-                          </span>
-                        )}
-                      </div>
+                    {/* Phone */}
+                    <td className="px-4 py-4">
+                      <div className="text-xs font-bold text-slate-800">{c.phone}</div>
                     </td>
 
-                    {/* Experience */}
-                    <td className="px-4 py-6">
-                      <div className="text-sm font-bold text-slate-800 mb-1">{c.experience}</div>
-                      <div className="space-y-0.5">
-                        {c.companies.map((comp, i) => (
-                          <div key={i} className="text-[11px] font-semibold text-slate-500">{comp}</div>
-                        ))}
-                      </div>
+                    {/* Email */}
+                    <td className="px-4 py-4">
+                      <div className="text-xs font-semibold text-slate-500">{c.email}</div>
                     </td>
-
-
 
                     {/* Status */}
-                    <td className="px-4 py-6">
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-100 text-[11px] font-bold mb-1.5">
-                        <div className={`w-1.5 h-1.5 rounded-full ${statusCfg.dot}`} />
-                        <span className={statusCfg.textClass}>{statusCfg.label}</span>
-                      </div>
-                      <div className="text-[10px] font-semibold text-slate-500">
-                        {statusCfg.actionText}: {c.submittedAt}
-                      </div>
+                    <td className="px-4 py-4">
+                      {c.status === 'PASSED' || c.status === 'HIRED' ? (
+                        <span className="inline-flex px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded text-xs font-bold border border-emerald-100">
+                          Đạt (Pass)
+                        </span>
+                      ) : c.status === 'REJECTED' ? (
+                        <span className="inline-flex px-2.5 py-1 bg-red-50 text-red-500 rounded text-xs font-bold border border-red-100">
+                          Trượt
+                        </span>
+                      ) : (
+                        <span className="inline-flex px-2.5 py-1 bg-blue-50 text-blue-600 rounded text-xs font-bold border border-blue-100">
+                          Đạt {c.currentRound} / {c.totalRounds} vòng
+                        </span>
+                      )}
                     </td>
 
-
-
-                    {/* Last Updated */}
-                    <td className="px-4 py-6">
-                      <div className="text-[11px] font-semibold text-slate-500 whitespace-pre-line">
-                        {c.lastUpdated}
+                    {/* Actions */}
+                    <td className="px-4 py-4">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); openDrawer(c); }}
+                          className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors cursor-pointer"
+                          title="Xem chi tiết"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); }}
+                          className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors cursor-pointer"
+                          title="Xóa"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </td>
                   </tr>

@@ -310,7 +310,7 @@ export const AdminDashboard: React.FC = () => {
               <ShieldAlert className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-extrabold text-slate-800 tracking-wider">VTT Careers</p>
+              <p className="text-sm font-extrabold text-slate-800 tracking-wider">EasyTech</p>
               <p className="text-[9px] font-bold text-[#0052cc] uppercase tracking-widest -mt-0.5">Admin Command Panel</p>
             </div>
           </div>
