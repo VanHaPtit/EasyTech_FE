@@ -1,4 +1,4 @@
-# Task BE: API Create Interview
+﻿# Task BE: API Create Interview
 
 ## 0. Mô tả chức năng (Mục tiêu Task)
 > **Mục tiêu:** Lên lịch phỏng vấn cho ứng viên, tạo đường dẫn phòng họp online (Google Meet) và gửi email thông báo tự động.
@@ -30,23 +30,23 @@
     - **Thành công (`status = 1`):**
 
         ```json
-    {
-      "status": 1,
-      "message": "Lên lịch thành công",
-      "data": {
-        "interview_id": "uuid"
-      }
-    }
+        {
+          "status": 1,
+          "message": "Lên lịch thành công",
+          "data": {
+            "interview_id": "uuid"
+          }
+        }
         ```
 
     - **Thất bại (`status = 0`):**
 
         ```json
-    {
-      "status": 0,
-      "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-      "data": null
-    }
+        {
+          "status": 0,
+          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
+          "data": null
+        }
         ```
 
 ## 3. Cơ sở dữ liệu liên quan (DB Tables)

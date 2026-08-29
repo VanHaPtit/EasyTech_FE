@@ -1,4 +1,4 @@
-# Task BE: Google Button
+﻿# Task BE: Google Button
 
 ## 0. Mô tả chức năng (Mục tiêu Task)
 > **Mục tiêu:** Xác thực danh tính người dùng (Login/Register), cấp phát và quản lý JWT Token an toàn cho phiên làm việc.
@@ -27,27 +27,27 @@
     - **Thành công (`status = 1`):**
 
         ```json
-    {
-      "status": 1,
-      "message": "Đăng nhập thành công",
-      "data": {
-        "access_token": "eyJhbGci...",
-        "user": {
-          "id": "uuid",
-          "role": "HR"
+        {
+          "status": 1,
+          "message": "Đăng nhập thành công",
+          "data": {
+            "access_token": "eyJhbGci...",
+            "user": {
+              "id": "uuid",
+              "role": "HR"
+            }
+          }
         }
-      }
-    }
         ```
 
     - **Thất bại (`status = 0`):**
 
         ```json
-    {
-      "status": 0,
-      "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-      "data": null
-    }
+        {
+          "status": 0,
+          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
+          "data": null
+        }
         ```
 
 ## 3. Cơ sở dữ liệu liên quan (DB Tables)

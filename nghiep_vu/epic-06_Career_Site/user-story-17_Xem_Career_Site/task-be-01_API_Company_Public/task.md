@@ -1,4 +1,4 @@
-# Task BE: API Company Public
+﻿# Task BE: API Company Public
 
 ## 0. Mô tả chức năng (Mục tiêu Task)
 > **Mục tiêu:** Thực hiện xử lý nghiệp vụ chung cho Module tương ứng (CRUD).
@@ -26,21 +26,22 @@
     - **Thành công (`status = 1`):**
 
         ```json
-    {
-      "status": 1,
-      "message": "Thành công",
-      "data": {}
-    }
+        {
+          "status": 1,
+          "message": "Thành công",
+          "data": {
+            }
+        }
         ```
 
     - **Thất bại (`status = 0`):**
 
         ```json
-    {
-      "status": 0,
-      "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-      "data": null
-    }
+        {
+          "status": 0,
+          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
+          "data": null
+        }
         ```
 
 ## 3. Cơ sở dữ liệu liên quan (DB Tables)

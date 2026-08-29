@@ -1,4 +1,4 @@
-# Task BE: API AI Suggestions
+﻿# Task BE: API AI Suggestions
 
 ## 0. Mô tả chức năng (Mục tiêu Task)
 > **Mục tiêu:** Tích hợp dịch vụ AI để phân tích CV ứng viên, chấm điểm mức độ phù hợp (Matching Score) và gợi ý câu hỏi phỏng vấn.
@@ -27,26 +27,26 @@
     - **Thành công (`status = 1`):**
 
         ```json
-    {
-      "status": 1,
-      "message": "Phân tích AI hoàn tất",
-      "data": {
-        "matching_score": 85,
-        "strengths": [
-          "React"
-        ]
-      }
-    }
+        {
+          "status": 1,
+          "message": "Phân tích AI hoàn tất",
+          "data": {
+            "matching_score": 85,
+            "strengths": [
+              "React"
+            ]
+          }
+        }
         ```
 
     - **Thất bại (`status = 0`):**
 
         ```json
-    {
-      "status": 0,
-      "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-      "data": null
-    }
+        {
+          "status": 0,
+          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
+          "data": null
+        }
         ```
 
 ## 3. Cơ sở dữ liệu liên quan (DB Tables)

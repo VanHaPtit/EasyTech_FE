@@ -1,4 +1,4 @@
-# Task BE: API Apply
+﻿# Task BE: API Apply
 
 ## 0. Mô tả chức năng (Mục tiêu Task)
 > **Mục tiêu:** Thao tác với dữ liệu Ứng viên (Candidates) và Đơn ứng tuyển (Applications), bao gồm việc upload CV và hiển thị danh sách hồ sơ.
@@ -30,23 +30,23 @@
     - **Thành công (`status = 1`):**
 
         ```json
-    {
-      "status": 1,
-      "message": "Nộp hồ sơ thành công",
-      "data": {
-        "candidate_id": "uuid"
-      }
-    }
+        {
+          "status": 1,
+          "message": "Nộp hồ sơ thành công",
+          "data": {
+            "candidate_id": "uuid"
+          }
+        }
         ```
 
     - **Thất bại (`status = 0`):**
 
         ```json
-    {
-      "status": 0,
-      "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-      "data": null
-    }
+        {
+          "status": 0,
+          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
+          "data": null
+        }
         ```
 
 ## 3. Cơ sở dữ liệu liên quan (DB Tables)

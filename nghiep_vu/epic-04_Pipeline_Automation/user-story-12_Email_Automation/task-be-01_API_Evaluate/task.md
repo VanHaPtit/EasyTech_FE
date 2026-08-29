@@ -1,4 +1,4 @@
-# Task BE: API Evaluate
+﻿# Task BE: API Evaluate
 
 ## 0. Mô tả chức năng (Mục tiêu Task)
 > **Mục tiêu:** Quản lý các Mẫu email (Email Templates) của doanh nghiệp dùng để tự động hóa liên lạc với ứng viên.
@@ -28,23 +28,23 @@
     - **Thành công (`status = 1`):**
 
         ```json
-    {
-      "status": 1,
-      "message": "Lưu template thành công",
-      "data": {
-        "template_id": "uuid"
-      }
-    }
+        {
+          "status": 1,
+          "message": "Lưu template thành công",
+          "data": {
+            "template_id": "uuid"
+          }
+        }
         ```
 
     - **Thất bại (`status = 0`):**
 
         ```json
-    {
-      "status": 0,
-      "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-      "data": null
-    }
+        {
+          "status": 0,
+          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
+          "data": null
+        }
         ```
 
 ## 3. Cơ sở dữ liệu liên quan (DB Tables)

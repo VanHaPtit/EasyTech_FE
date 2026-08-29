@@ -1,4 +1,4 @@
-# Task BE: DB Job Rounds
+﻿# Task BE: DB Job Rounds
 
 ## 0. Mô tả chức năng (Mục tiêu Task)
 > **Mục tiêu:** Quản lý (Tạo/Sửa/Xóa/Xem) các bản ghi Tin tuyển dụng (Jobs) của doanh nghiệp trên hệ thống tuyển dụng.
@@ -32,23 +32,23 @@
     - **Thành công (`status = 1`):**
 
         ```json
-    {
-      "status": 1,
-      "message": "Thành công",
-      "data": {
-        "job_id": "uuid"
-      }
-    }
+        {
+          "status": 1,
+          "message": "Thành công",
+          "data": {
+            "job_id": "uuid"
+          }
+        }
         ```
 
     - **Thất bại (`status = 0`):**
 
         ```json
-    {
-      "status": 0,
-      "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-      "data": null
-    }
+        {
+          "status": 0,
+          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
+          "data": null
+        }
         ```
 
 ## 3. Cơ sở dữ liệu liên quan (DB Tables)
