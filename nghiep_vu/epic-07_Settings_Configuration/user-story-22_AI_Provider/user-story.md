@@ -1,14 +1,34 @@
-# HƯỚNG DẪN VIẾT TÀI LIỆU USER STORY (user-story.md)
+# 📋 User Story 22: AI Provider Configuration (Cấu Hình Dịch Vụ AI)
 
-## 1. MÔ TẢ USER STORY (Story Description)
-- **Story:** Là một người dùng, tôi muốn thực hiện `AI Provider`, để hoàn thành quy trình nghiệp vụ hệ thống.
+## 1. MÔ TẢ USER STORY
+- **As a** Quản trị viên Công ty (Company Admin),
+- **I want to** cấu hình và kết nối hệ thống với các nhà cung cấp dịch vụ AI (như OpenAI, Gemini),
+- **So that** tôi có thể chủ động sử dụng các API Key của riêng mình (Bring Your Own Key - BYOK) thay vì phụ thuộc vào quota của hệ thống EasyTech, giúp tôi kiểm soát tốt hơn chi phí AI.
 - **Story Points:** 3
 
-## 2. ACCEPTANCE CRITERIA (Tiêu Chí Nghiệm Thu)
-- **Scenario 1:** Thực hiện thành công
-  - **GIVEN** hệ thống hoạt động bình thường.
-  - **WHEN** người dùng thao tác chức năng `AI Provider`.
-  - **THEN** hệ thống xử lý thành công, lưu thông tin và hiển thị kết quả.
+## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
-## 3. OUT OF SCOPE (Ngoài Phạm Vi)
-- [x] KHÔNG xử lý các tính năng nằm ngoài phạm vi mô tả của `AI Provider`.
+- **Scenario 1: HR Admin thiết lập API Key mới**
+  - **GIVEN** HR có quyền Admin truy cập `/dashboard/settings/ai-provider`.
+  - **WHEN** HR chọn nhà cung cấp "OpenAI", nhập `api_key` vào trường văn bản bảo mật (dạng `***`) và nhấn "Kết nối".
+  - **THEN** Backend mã hóa (encrypt) key này trước khi lưu vào bảng `ai_providers` liên kết với `company_id`.
+  - Hiển thị trạng thái "Đã kết nối". Hệ thống sẽ ưu tiên sử dụng Key này cho mọi tính năng AI của công ty.
+
+- **Scenario 2: Chuyển đổi giữa Key mặc định và Custom Key**
+  - **GIVEN** HR Admin ở trang cài đặt AI.
+  - **WHEN** bật/tắt (toggle) tùy chọn "Sử dụng API Key riêng".
+  - **THEN** hệ thống lập tức thay đổi chính sách. Nếu chọn mặc định, hệ thống dùng Key chung của server (bị giới hạn quota). Nếu dùng Custom Key, giới hạn được dỡ bỏ.
+
+- **Scenario 3: Xử lý lỗi API Key không hợp lệ**
+  - **GIVEN** HR nhập một API Key sai.
+  - **WHEN** nhấn "Kết nối".
+  - **THEN** Backend gọi một lệnh test (ping) nhẹ sang provider (vd: liệt kê models của OpenAI). Nếu nhận lỗi 401 Unauthorized, trả về lỗi "API Key không hợp lệ, vui lòng kiểm tra lại" và không lưu vào DB.
+
+- **Scenario 4: Ẩn/hiện API Key đã lưu**
+  - **GIVEN** API Key đã được lưu thành công.
+  - **WHEN** trang được load lại.
+  - **THEN** form hiển thị API key dưới dạng che khuất một phần (ví dụ: `sk-proj-****abc`). Không hiển thị full key để bảo mật. HR chỉ có thể ghi đè (overwrite) bằng key mới.
+
+## 3. NGOÀI PHẠM VI (Out of Scope)
+- **KHÔNG** theo dõi hoặc hiển thị chi phí/lượng token đã tiêu thụ (Billing tracking) tại Dashboard này. Quản lý quota do phía hệ thống Provider (OpenAI platform) đảm nhận.
+- **KHÔNG** hỗ trợ cấu hình các model nội bộ tự host (chỉ hỗ trợ cloud providers lớn).
