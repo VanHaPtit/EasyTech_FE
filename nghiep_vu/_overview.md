@@ -36,14 +36,14 @@
 
 | # | Epic | Ưu tiên | SP | Mô tả |
 |---|------|---------|-----|-------|
-| [EP-01](./EP-01_Authentication_Onboarding/EPIC.md) | Authentication & Onboarding | 🔴 Must | 9 | Đăng nhập, đăng ký, phân quyền HR/Admin |
-| [EP-02](./EP-02_Admin_Area/EPIC.md) | Admin Area | 🔴 Must | 5 | Admin kiểm duyệt doanh nghiệp |
-| [EP-03](./EP-03_HR_Dashboard_Job_Management/EPIC.md) | HR Dashboard & Job Management | 🔴 Must | 15 | CRUD job, AI JD Writer, publish |
-| [EP-04](./EP-04_Pipeline_Automation/EPIC.md) | Pipeline & Automation | 🔴 Must | 13 | Vòng tuyển dụng, email tự động, Pass/Fail |
-| [EP-05](./EP-05_Candidate_Application_Management/EPIC.md) | Candidate & Application Management | 🔴 Must | 13 | Kanban, List view, CandidateDrawer |
-| [EP-06](./EP-06_Career_Site/EPIC.md) | Career Site (Public) | 🔴 Must | 11 | Trang công khai cho ứng viên nộp CV |
-| [EP-07](./EP-07_Settings_Configuration/EPIC.md) | Settings & Configuration | 🟡 Should | 8 | Thông tin DN, Email Template, AI Provider |
-| [EP-08](./EP-08_AI_Features/EPIC.md) | AI Features | 🟡 Should | 8 | CV Scoring, AI Suggestions, AI JD Writer |
+| [EP-01](./epic-01/brief.md) | Authentication & Onboarding | 🔴 Must | 9 | Đăng nhập, đăng ký, phân quyền HR/Admin |
+| [EP-02](./epic-02/brief.md) | Admin Area | 🔴 Must | 5 | Admin kiểm duyệt doanh nghiệp |
+| [EP-03](./epic-03/brief.md) | HR Dashboard & Job Management | 🔴 Must | 15 | CRUD job, AI JD Writer, publish |
+| [EP-04](./epic-04/brief.md) | Pipeline & Automation | 🔴 Must | 13 | Vòng tuyển dụng, email tự động, Pass/Fail |
+| [EP-05](./epic-05/brief.md) | Candidate & Application Management | 🔴 Must | 13 | Kanban, List view, CandidateDrawer |
+| [EP-06](./epic-06/brief.md) | Career Site (Public) | 🔴 Must | 11 | Trang công khai cho ứng viên nộp CV |
+| [EP-07](./epic-07/brief.md) | Settings & Configuration | 🟡 Should | 8 | Thông tin DN, Email Template, AI Provider |
+| [EP-08](./epic-08/brief.md) | AI Features | 🟡 Should | 8 | CV Scoring, AI Suggestions, AI JD Writer |
 | [INFRA](./INFRA/) | Infrastructure & Foundation | — | 18 | Setup kỹ thuật nền tảng |
 
 ---
@@ -54,14 +54,14 @@
 |------|---------|-----------|---------|
 | EP-01 Auth & Onboarding | 7 | 2 | **9** |
 | EP-02 Admin | 5 | — | **5** |
-| EP-03 Job Management | 12 | 3 | **15** |
-| EP-04 Pipeline & Automation | 10 | 3 | **13** |
-| EP-05 Candidates | 8 | 5 | **13** |
-| EP-06 Career Site | 8 | 3 | **11** |
+| EP-03 Job Management | 15 | 3 | **18** |
+| EP-04 Pipeline & Automation | 13 | 5 | **18** |
+| EP-05 Candidates | 11 | 5 | **16** |
+| EP-06 Career Site | 12 | 3 | **15** |
 | EP-07 Settings | 3 | 5 | **8** |
 | EP-08 AI Features | — | 8 | **8** |
 | INFRA | — | — | **18** |
-| **TỔNG** | | | **~100 SP** |
+| **TỔNG** | | | **~115 SP** |
 
 ---
 

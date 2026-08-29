@@ -12,7 +12,14 @@ import { OnboardingPage } from './pages/OnboardingPage';
 import { JobCreateWizard } from './pages/hr/JobCreateWizard';
 import { JobDetail } from './pages/hr/JobDetail';
 import { RoundsConfig } from './pages/hr/RoundsConfig';
-import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { AdminLayout } from './layouts/AdminLayout';
+import { AdminOverview } from './pages/admin/AdminOverview';
+import { AdminCompanies } from './pages/admin/AdminCompanies';
+import { AdminJobCategories } from './pages/admin/AdminJobCategories';
+import { AdminAuditLogs } from './pages/admin/AdminAuditLogs';
+import { AdminUsers } from './pages/admin/AdminUsers';
+import { NotificationsPage } from './pages/hr/NotificationsPage';
+
 import { AdminLogin } from './pages/admin/AdminLogin';
 import { CareerLayout } from './layouts/CareerLayout';
 import { CareerHome } from './pages/career/CareerHome';
@@ -97,6 +104,7 @@ export const router = createBrowserRouter([
       { path: 'applications/kanban', element: <Kanban /> },
       { path: 'applications/list', element: <CandidatesList /> },
       { path: 'settings', element: <Settings /> },
+      { path: 'notifications', element: <NotificationsPage /> },
     ],
   },
 
@@ -107,7 +115,14 @@ export const router = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <AdminDashboard />,
+    element: <AdminLayout />,
+    children: [
+      { path: '', element: <AdminOverview /> },
+      { path: 'companies', element: <AdminCompanies /> },
+      { path: 'categories', element: <AdminJobCategories /> },
+      { path: 'logs', element: <AdminAuditLogs /> },
+      { path: 'users', element: <AdminUsers /> },
+    ],
   },
 
   // ── Career Site (Candidate) ──

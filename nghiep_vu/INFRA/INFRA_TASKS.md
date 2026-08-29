@@ -23,3 +23,5 @@
 | [T-INF-12](./T-INF-12_Sidebar_Inbox.md) | Thêm Inbox vào Sidebar | `[FE]` | 1 | |
 | [T-INF-13](./T-INF-13_Docker_Compose.md) | Docker Compose: FE + BE + DB + Redis | `[INFRA]` | 2 | |
 | [T-INF-14](./T-INF-14_README.md) | README: hướng dẫn setup local | `[INFRA]` | 1 | |
+
+- [ ] **T-INF-15_Soft_Delete.md**: Áp dụng cơ chế Soft Delete (is_deleted = false) cho Jobs, Candidates, Hiring Rounds.
