@@ -1,15 +1,34 @@
-# Tên Task: Thiết kế và tích hợp UI Quản lý Danh Mục Job
+﻿# Task FE: UI Job Categories
 
-## Mô tả (Mục đích)
-Xây dựng giao diện cho Admin để thêm, sửa, khóa/xóa các danh mục công việc (Job Categories). Các danh mục này sẽ được dùng chung cho toàn hệ thống khi HR tạo Job mới.
+## Mục đích
+Xây dựng screen/component phục vụ US-30 - Admin quản lý Job Categories, tập trung vào hành vi người dùng và trạng thái UI.
 
-## Luồng đi
-- Truy cập vào `/admin/categories` từ Sidebar Admin.
-- Xem danh sách categories (Tên, Slug, Số lượng tin đang dùng, Trạng thái).
-- Click "Thêm danh mục" -> Mở Modal nhập liệu.
-- Validate và gọi API tạo mới. Tương tự cho sửa/khóa.
+## Screen/Component
+- Component chính: $title.
+- Hiển thị trong đúng route/layout của epic hiện tại.
+- Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
-## Acceptance Criteria
-- Phân trang hoặc tải lướt danh sách.
-- Không cho xóa nếu `jobsCount` > 0 (Chỉ cho chuyển trạng thái Inactive).
-- Đảm bảo Slug tự động sinh ra từ Tên danh mục.
+## Hành động của user
+- Người dùng mở màn hình và thực hiện hành động chính của component.
+- Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
+
+## Hành vi UI
+- Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
+- Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
+
+## Validation
+- Validate trường bắt buộc ngay trên FE để cải thiện UX.
+- Không coi FE validation là source-of-truth; BE vẫn phải validate lại.
+- Hiển thị lỗi gần trường nhập liệu và không xóa dữ liệu user đã nhập khi validation không đạt.
+
+## Phản hồi thành công
+- Hiển thị toast hoặc trạng thái xác nhận sau khi hành động thành công.
+- Điều hướng theo flow cụ thể của user story.
+
+## Xử lý lỗi
+- Hiển thị lỗi có thể hành động được: điều gì sai và user cần sửa gì.
+- Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
+
+## API dependency cụ thể
+- `GET /api/v1/admin/companies`, `GET /api/v1/admin/companies/{companyId}`, `PATCH /api/v1/admin/companies/{companyId}/status`.

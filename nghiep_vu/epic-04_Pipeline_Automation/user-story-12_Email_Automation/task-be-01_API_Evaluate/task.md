@@ -1,55 +1,43 @@
-﻿# Task BE: API Evaluate
+﻿# Task BE API: API Evaluate
 
-## 0. Mô tả chức năng (Mục tiêu Task)
-> **Mục tiêu:** Quản lý các Mẫu email (Email Templates) của doanh nghiệp dùng để tự động hóa liên lạc với ứng viên.
+## Mục đích
+Cung cấp API backend phục vụ US-12 - Email automation với contract rõ ràng và validate tại server.
 
-## 1. Luồng xử lý (Flow)
-- **Bước 1:** Nhận request từ Client thông qua Endpoint đã định nghĩa.
-- **Bước 2:** Middleware chặn request để xác thực JWT Token, lấy `company_id` của tài khoản hiện tại (Multi-tenant).
-- **Bước 3:** Parse và validate cấu trúc HTML của template. Đảm bảo hỗ trợ chính xác các biến nội suy (variables) như {{candidate_name}}, {{job_title}}.
-- **Bước 4:** Tương tác với cơ sở dữ liệu để thực hiện nghiệp vụ chính.
-- **Bước 5:** Xử lý các tác vụ nền (Gửi Email, Kích hoạt AI Insight, Ghi Log) nếu có.
-- **Bước 6:** Đóng gói kết quả dưới dạng `BaseResponse` và trả về HTTP Status phù hợp.
+## User Story liên quan
+- US-12 - Email Automation.
 
-## 2. API & Data Contract (BaseResponse)
-- **Method:** `POST/PUT/GET`
-- **Endpoint:** `/api/v1/email-templates`
-- **Input (Request Payload / Params):**
+## Điều kiện tiên quyết
+- User đã authentication nếu endpoint thuộc workspace/admin.
+- User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
+- Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
-    ```json
-    {
-      "template_name": "Thư Mời",
-      "subject": "Phỏng vấn - {{job_title}}",
-      "body_html": "<p>Chào {{candidate_name}}...</p>"
-    }
-    ```
+## HTTP Method
+- `POST`
 
-- **Output (BaseResponse):**
-    - **Thành công (`status = 1`):**
+## Endpoint
+- `/api/v1/applications/{applicationId}/rounds/{roundId}/evaluate`
 
-        ```json
-        {
-          "status": 1,
-          "message": "Lưu template thành công",
-          "data": {
-            "template_id": "uuid"
-          }
-        }
-        ```
+## Request
+- Điểm, nhận xét và `result = PASSED|FAILED`.
 
-    - **Thất bại (`status = 0`):**
+## Validation
+- Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
+- Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
+- Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
-        ```json
-        {
-          "status": 0,
-          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-          "data": null
-        }
-        ```
+## Response
+- Thành công: BaseResponse(status = 1, message, data); Round status sau đánh giá.
+- Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
-## 3. Cơ sở dữ liệu liên quan (DB Tables)
-- **Bảng `ai_suggestions`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `email_templates`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `cv_insights`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `hiring_rounds`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `email_logs`**: Truy vấn/Cập nhật dữ liệu tương ứng.
+## State Transition
+- Round Result = PASSED/FAILED; Application Status chỉ đổi sang REJECTED khi nghiệp vụ reject rõ ràng, không tự HIRED khi final PASSED.
+
+## Side Effects
+- Ghi evaluation history và kích hoạt email automation nếu cấu hình.
+
+## Các trường hợp lỗi
+- 400: request không hợp lệ hoặc enum/status sai.
+- 401: chưa đăng nhập hoặc token không hợp lệ.
+- 403: không đủ quyền hoặc workspace bị hạn chế.
+- 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
+- 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.

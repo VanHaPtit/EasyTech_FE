@@ -1,14 +1,34 @@
-# Tên Task: Xây dựng màn hình tra cứu Audit Logs
+﻿# Task FE: UI Audit Logs
 
-## Mô tả (Mục đích)
-Trang cho phép Admin hệ thống theo dõi toàn bộ các hoạt động truy xuất (nhật ký hệ thống) để đảm bảo tính minh bạch và an ninh (VD: Ai vừa duyệt công ty, Ai đăng nhập sai nhiều lần).
+## Mục đích
+Xây dựng screen/component phục vụ US-31 - Admin xem Audit Logs, tập trung vào hành vi người dùng và trạng thái UI.
 
-## Luồng đi
-- Truy cập `/admin/logs` từ Sidebar Admin.
-- Hiển thị danh sách Log với các cột: Thời gian, Actor, Hành động, Đối tượng, IP, Kết quả.
-- Hỗ trợ thanh Filter nâng cao (lọc theo khoảng thời gian, theo Actor email, theo kết quả Success/Failed).
+## Screen/Component
+- Component chính: $title.
+- Hiển thị trong đúng route/layout của epic hiện tại.
+- Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
-## Acceptance Criteria
-- Không cho phép Sửa/Xóa dữ liệu (Read-only strictly).
-- Phải có phân trang.
-- Bôi màu nổi bật cho các log FAILED hoặc ACTION nguy hiểm (VD: BLOCK_COMPANY, DELETE_USER).
+## Hành động của user
+- Người dùng mở màn hình và thực hiện hành động chính của component.
+- Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
+
+## Hành vi UI
+- Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
+- Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
+
+## Validation
+- Validate trường bắt buộc ngay trên FE để cải thiện UX.
+- Không coi FE validation là source-of-truth; BE vẫn phải validate lại.
+- Hiển thị lỗi gần trường nhập liệu và không xóa dữ liệu user đã nhập khi validation không đạt.
+
+## Phản hồi thành công
+- Hiển thị toast hoặc trạng thái xác nhận sau khi hành động thành công.
+- Điều hướng theo flow cụ thể của user story.
+
+## Xử lý lỗi
+- Hiển thị lỗi có thể hành động được: điều gì sai và user cần sửa gì.
+- Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
+
+## API dependency cụ thể
+- `GET /api/v1/admin/companies`, `GET /api/v1/admin/companies/{companyId}`, `PATCH /api/v1/admin/companies/{companyId}/status`.

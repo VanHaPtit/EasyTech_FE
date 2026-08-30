@@ -1,27 +1,76 @@
-# HƯỚNG DẪN VIẾT TÀI LIỆU EPIC BRIEF (epic-01/brief.md)
+﻿# EPIC 01 — Authentication & Onboarding
 
-## 1. TÓM TẮT YÊU CẦU (Executive Summary)
-- **Nghiệp vụ:** Nghiệp vụ Đăng nhập, Đăng ký và Thiết lập hồ sơ ban đầu cho doanh nghiệp.
-- **Prerequisites:** Hệ thống Database đã sẵn sàng, tích hợp Google OAuth.
+## 1. Tóm tắt
+- **Nghiệp vụ:** Đăng ký, duyệt doanh nghiệp, login, onboarding và khởi tạo hồ sơ công ty cho HR.
+- **Luồng MVP chuẩn:**
+  Đăng ký
+  → Company = PENDING
+  → User = PENDING
+  → Chờ duyệt Approval
+  → Admin xem xét
+  → Duyệt: Company = ACTIVE, User = ACTIVE
+  → Từ chối: Company = REJECTED, User = PENDING (restricted)
+  → HR Login
+  → Onboarding (3 steps)
+  → Dashboard
+- **Google OAuth:** `Future Enhancement` hoặc phương thức auth bổ sung; không thay thế flow phê duyệt hiện tại.
 
-## 2. GIÁ TRỊ DOANH NGHIỆP & CHỈ SỐ ĐO LƯỜNG (Business Value & Metrics)
-- **Business Value:** Giúp doanh nghiệp dễ dàng tiếp cận hệ thống một cách an toàn.
-- **Metrics:** Tỷ lệ đăng ký thành công > 95%.
+## 2. Giá trị nghiệp vụ và chỉ số
+- **Giá trị nghiệp vụ:** Đảm bảo doanh nghiệp chỉ được sử dụng hệ thống sau khi được admin kiểm duyệt; giảm spam và tài khoản giả mạo.
+- **Chỉ số:**
+  - Tỷ lệ đăng ký thành công > 95%
+  - Tỷ lệ company được duyệt trong SLA nội bộ đạt > 90%
+  - Tỷ lệ HR hoàn thành onboarding trong 7 ngày >= 80%
 
-## 3. QUY TRÌNH NGHIỆP VỤ (Business Process)
+## 3. Quy trình nghiệp vụ
 ```mermaid
 graph TD
-  A[Đăng nhập Google] --> B{Lần đầu?}
-  B -- Có --> C[Onboarding Form]
-  B -- Không --> D[Dashboard]
-  C --> E[Chờ Admin duyệt]
+  A[HR đăng ký] --> B[Company = PENDING, User = PENDING]
+  B --> C[Chờ duyệt Page]
+  C --> D[Admin xem xét]
+  D --> E{Duyệt?}
+  E -- Yes --> F[Company = ACTIVE, User = ACTIVE]
+  F --> G[HR Login]
+  G --> H[Onboarding: Company Info → Branding → Contact]
+  H --> I[Dashboard]
+  E -- No --> J[Company = REJECTED, User = PENDING]
+  J --> K[HR xem lý do]
+  K --> L[Edit + Resubmit]
+  L --> C
 ```
 
-## 4. PHÂN CHIA USER STORY (Scope & Backlog)
-| ID | Tên Story | Loại | Priority (MoSCoW) | Trạng thái |
-|---|---|---|---|---|
-| US-01 | HR Dang nhap | Feature | Must Have | To-do |
-| US-02 | HR Dang ky | Feature | Must Have | To-do |
-| US-03 | HR Onboarding | Feature | Must Have | To-do |
-| US-04 | Admin Dang nhap | Feature | Must Have | To-do |
+## 4. Phạm vi và Backlog
+| ID | Tên Story | Ưu tiên | Trạng thái |
+|---|---|---|---|
+| US-01 | HR đăng nhập | Must Have | To-do |
+| US-02 | HR đăng ký | Must Have | To-do |
+| US-03 | HR onboarding | Must Have | To-do |
+| US-04 | Admin đăng nhập | Must Have | To-do |
+| US-05 | Admin duyệt doanh nghiệp | Must Have | In related epic |
+
+## 5. Business Rules
+
+### Authentication vs Authorization
+- **Authentication:** Credentials của HR hợp lệ → login thành công. Credentials sai → trả lỗi đăng nhập.
+- **Authorization:** 
+  - Company = ACTIVE, User = ACTIVE → workspace unrestricted → dashboard
+  - Company = PENDING → xác thực thành công, nhưng bị chặn truy cập workspace → trang `/pending`
+  - Company = REJECTED → xác thực thành công, nhưng bị chặn truy cập workspace → trang `/registration/rejected`
+  - User = INACTIVE/BLOCKED → access denied, login rejected
+
+### Registration & Approval Flow
+- HR không được truy cập workspace nếu `company.status = PENDING`, `company.status = REJECTED` hoặc `user.status = INACTIVE/BLOCKED`.
+- Người dùng chưa được duyệt sẽ vào Chờ duyệt Page / Rejected Page thay vì Dashboard.
+- Company REJECTED không phải ngõ cụt: HR có quyền đăng nhập, xem lý do, chỉnh sửa và gửi lại.
+- Khi HR gửi lại hồ sơ: Company Status = PENDING, User Status = PENDING và luồng duyệt được lặp lại.
+
+### Onboarding
+- Onboarding không được bắt user nhập lại dữ liệu đã biết từ bước đăng ký.
+- Nếu HR bỏ qua onboarding, hệ thống lưu `onboardingCompleted = true` nhưng vẫn hiển thị nhắc nhở và progress indicator.
+- Google OAuth chỉ là phương thức đăng nhập bổ sung, không thay đổi luồng duyệt của Admin.
+
+## 6. Ngoài phạm vi và cải tiến trong tương lai
+- Google OAuth chính thức trong MVP: cải tiến trong tương lai nếu chưa được phê duyệt riêng.
+- Manual verification external tax code system.
+- Email verification OTP không phải yêu cầu bắt buộc trong MVP.
 

@@ -1,22 +1,34 @@
-# Task FE: Redirect Logic
+﻿# Task FE: Redirect Logic
 
-## 0. Mô tả chức năng (Mục tiêu Task)
-> **Mục tiêu:** Xác thực danh tính người dùng (Login/Register), cấp phát và quản lý JWT Token an toàn cho phiên làm việc.
+## Mục đích
+Xây dựng screen/component phục vụ US-02 - HR đăng ký, tập trung vào hành vi người dùng và trạng thái UI.
 
-## 1. Luồng xử lý (UI Flow)
-- **Bước 1:** Người dùng điều hướng tới tính năng và tương tác trên giao diện Component.
-- **Bước 2:** Render UI (kèm Skeleton Loading nếu đang fetch dữ liệu từ API).
-- **Bước 3:** So sánh mật khẩu (Bcrypt). Khởi tạo Access Token và Refresh Token bảo mật. Trích xuất thông tin User Profile cơ bản trả về Client.
-- **Bước 4:** Bắt sự kiện (Submit form, Kéo thả Kanban, Click) và Validate dữ liệu Client-side bằng Zod/React Hook Form.
-- **Bước 5:** Đẩy dữ liệu qua API lên Backend thông qua Axios/TanStack Query.
-- **Bước 6:** Dựa vào BaseResponse (`status=1` hoặc `status=0`), Component hiển thị Toast Message và cập nhật lại giao diện (Reset form, Refresh data list).
+## Screen/Component
+- Component chính: $title.
+- Hiển thị trong đúng route/layout của epic hiện tại.
+- Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
-## 2. Component & API Integration
-- **Component đảm nhiệm chính:** `LoginPage.tsx / AdminLogin.tsx`
-- **Quản lý Trạng thái (State/Props):** Sử dụng `AuthContext (Context API) / Redux`.
-- **API Endpoints Tích hợp:** Kích hoạt request tới `POST /api/v1/auth/login` với cấu trúc JSON tương ứng.
+## Hành động của user
+- Người dùng mở màn hình và thực hiện hành động chính của component.
+- Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
 
-## 3. Dữ liệu liên quan (Data Models)
-- **Bảng `users`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `companies`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `company_profiles`**: Truy vấn/Cập nhật dữ liệu tương ứng.
+## Hành vi UI
+- Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
+- Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
+
+## Validation
+- Validate trường bắt buộc ngay trên FE để cải thiện UX.
+- Không coi FE validation là source-of-truth; BE vẫn phải validate lại.
+- Hiển thị lỗi gần trường nhập liệu và không xóa dữ liệu user đã nhập khi validation không đạt.
+
+## Phản hồi thành công
+- Hiển thị toast hoặc trạng thái xác nhận sau khi hành động thành công.
+- Điều hướng theo flow cụ thể của user story.
+
+## Xử lý lỗi
+- Hiển thị lỗi có thể hành động được: điều gì sai và user cần sửa gì.
+- Nếu lỗi authz: Company = PENDING + User = PENDING redirect /pending; Company = REJECTED + User = PENDING redirect /registration/rejected; User = INACTIVE/BLOCKED thì từ chối truy cập.
+
+## API dependency cụ thể
+- `POST /api/v1/auth/login`, `POST /api/v1/auth/register`, `GET /api/v1/auth/me`, `POST /api/v1/auth/refresh` tùy màn hình.

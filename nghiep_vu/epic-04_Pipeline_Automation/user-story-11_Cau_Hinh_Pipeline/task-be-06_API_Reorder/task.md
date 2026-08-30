@@ -1,48 +1,43 @@
-﻿# Task BE: API Reorder
+﻿# Task BE API: API Reorder
 
-## 0. Mô tả chức năng (Mục tiêu Task)
-> **Mục tiêu:** Thực hiện xử lý nghiệp vụ chung cho Module tương ứng (CRUD).
+## Mục đích
+Cung cấp API backend phục vụ US-11 - Cấu hình Pipeline với contract rõ ràng và validate tại server.
 
-## 1. Luồng xử lý (Flow)
-- **Bước 1:** Nhận request từ Client thông qua Endpoint đã định nghĩa.
-- **Bước 2:** Middleware chặn request để xác thực JWT Token, lấy `company_id` của tài khoản hiện tại (Multi-tenant).
-- **Bước 3:** Kiểm tra phân quyền (RBAC), validate tham số đầu vào, tiến hành lưu hoặc trích xuất dữ liệu từ Database.
-- **Bước 4:** Tương tác với cơ sở dữ liệu để thực hiện nghiệp vụ chính.
-- **Bước 5:** Xử lý các tác vụ nền (Gửi Email, Kích hoạt AI Insight, Ghi Log) nếu có.
-- **Bước 6:** Đóng gói kết quả dưới dạng `BaseResponse` và trả về HTTP Status phù hợp.
+## User Story liên quan
+- US-11 - Cau Hinh Pipeline.
 
-## 2. API & Data Contract (BaseResponse)
-- **Method:** `GET/POST/PUT/DELETE`
-- **Endpoint:** `/api/v1/module`
-- **Input (Request Payload / Params):**
+## Điều kiện tiên quyết
+- User đã authentication nếu endpoint thuộc workspace/admin.
+- User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
+- Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
-    ```json
-    {
-      "id": "uuid"
-    }
-    ```
+## HTTP Method
+- `PATCH`
 
-- **Output (BaseResponse):**
-    - **Thành công (`status = 1`):**
+## Endpoint
+- `/api/v1/jobs/{jobId}/rounds/reorder`
 
-        ```json
-        {
-          "status": 1,
-          "message": "Thành công",
-          "data": {
-            }
-        }
-        ```
+## Request
+- Danh sách `roundId` theo thứ tự mới.
 
-    - **Thất bại (`status = 0`):**
+## Validation
+- Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
+- Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
+- Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
-        ```json
-        {
-          "status": 0,
-          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-          "data": null
-        }
-        ```
+## Response
+- Thành công: BaseResponse(status = 1, message, data); Danh sách rounds sau reorder.
+- Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
-## 3. Cơ sở dữ liệu liên quan (DB Tables)
-- **Bảng `hiring_rounds`**: Truy vấn/Cập nhật dữ liệu tương ứng.
+## State Transition
+- Không có state transition trực tiếp.
+
+## Side Effects
+- Ghi audit log nếu task tạo/cập nhật/xóa dữ liệu nghiệp vụ.
+
+## Các trường hợp lỗi
+- 400: request không hợp lệ hoặc enum/status sai.
+- 401: chưa đăng nhập hoặc token không hợp lệ.
+- 403: không đủ quyền hoặc workspace bị hạn chế.
+- 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
+- 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.

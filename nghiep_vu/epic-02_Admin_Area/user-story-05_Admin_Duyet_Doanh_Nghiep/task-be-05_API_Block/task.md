@@ -1,53 +1,43 @@
-﻿# Task BE: API Block
+﻿# Task BE API: API Block
 
-## 0. Mô tả chức năng (Mục tiêu Task)
-> **Mục tiêu:** Chức năng dành riêng cho Super Admin hệ thống để phê duyệt (Approve) hoặc từ chối (Reject) doanh nghiệp mới đăng ký.
+## Mục đích
+Cung cấp API backend phục vụ US-05 - Admin duyệt doanh nghiệp với contract rõ ràng và validate tại server.
 
-## 1. Luồng xử lý (Flow)
-- **Bước 1:** Nhận request từ Client thông qua Endpoint đã định nghĩa.
-- **Bước 2:** Middleware chặn request để xác thực JWT Token, lấy `company_id` của tài khoản hiện tại (Multi-tenant).
-- **Bước 3:** Kiểm tra Role Super Admin. Thay đổi `status` của bảng Companies. Tự động gửi email thông báo kết quả cho HR đã đăng ký.
-- **Bước 4:** Tương tác với cơ sở dữ liệu để thực hiện nghiệp vụ chính.
-- **Bước 5:** Xử lý các tác vụ nền (Gửi Email, Kích hoạt AI Insight, Ghi Log) nếu có.
-- **Bước 6:** Đóng gói kết quả dưới dạng `BaseResponse` và trả về HTTP Status phù hợp.
+## User Story liên quan
+- US-05 - Admin Duyet Doanh Nghiep.
 
-## 2. API & Data Contract (BaseResponse)
-- **Method:** `PUT`
-- **Endpoint:** `/api/v1/admin/companies/status`
-- **Input (Request Payload / Params):**
+## Điều kiện tiên quyết
+- User đã authentication nếu endpoint thuộc workspace/admin.
+- User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
+- Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
-    ```json
-    {
-      "company_id": "uuid",
-      "status": "REJECTED",
-      "rejection_reason": "Thiếu thông tin giấy phép"
-    }
-    ```
+## HTTP Method
+- `PATCH`
 
-- **Output (BaseResponse):**
-    - **Thành công (`status = 1`):**
+## Endpoint
+- `/api/v1/admin/companies/{companyId}/status`
 
-        ```json
-        {
-          "status": 1,
-          "message": "Cập nhật thành công",
-          "data": {
-            "company_id": "uuid"
-          }
-        }
-        ```
+## Request
+- `status = BLOCKED` hoặc trạng thái khóa tương ứng nếu domain bật tính năng này.
 
-    - **Thất bại (`status = 0`):**
+## Validation
+- Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
+- Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
+- Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
-        ```json
-        {
-          "status": 0,
-          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-          "data": null
-        }
-        ```
+## Response
+- Thành công: BaseResponse(status = 1, message, data); Company detail sau khi khóa/mở khóa.
+- Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
-## 3. Cơ sở dữ liệu liên quan (DB Tables)
-- **Bảng `users`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `companies`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `company_profiles`**: Truy vấn/Cập nhật dữ liệu tương ứng.
+## State Transition
+- Tài khoản liên quan bị hạn chế truy cập theo chính sách admin.
+
+## Side Effects
+- Ghi audit log và ngắt quyền truy cập workspace.
+
+## Các trường hợp lỗi
+- 400: request không hợp lệ hoặc enum/status sai.
+- 401: chưa đăng nhập hoặc token không hợp lệ.
+- 403: không đủ quyền hoặc workspace bị hạn chế.
+- 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
+- 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.

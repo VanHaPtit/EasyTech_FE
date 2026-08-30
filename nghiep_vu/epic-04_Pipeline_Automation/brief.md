@@ -1,27 +1,45 @@
-# HƯỚNG DẪN VIẾT TÀI LIỆU EPIC BRIEF (epic-04/brief.md)
+﻿# EPIC 04 — Pipeline & Automation
 
-## 1. TÓM TẮT YÊU CẦU (Executive Summary)
-- **Nghiệp vụ:** Tự động hóa luồng chuyển vòng phỏng vấn và gửi email.
-- **Prerequisites:** Job đã được tạo.
+## 1. Tóm tắt
+- **Nghiệp vụ:** Thiết lập pipeline tuyển dụng, tự động hóa email và lịch phỏng vấn cho ứng viên.
+- **Điều kiện tiên quyết:** Job đã `ACTIVE` hoặc `DRAFT` với default pipeline đã được gán.
+- **Luồng chính:** HR publish Job → default pipeline sẵn sàng → ứng viên đi qua các stage → email automation chỉ gửi thư mời/cập nhật sau khi HR xác nhận side effect.
 
-## 2. GIÁ TRỊ DOANH NGHIỆP & CHỈ SỐ ĐO LƯỜNG (Business Value & Metrics)
-- **Business Value:** Tiết kiệm 80% thời gian gửi email thủ công.
-- **Metrics:** 100% email gửi đúng trạng thái.
+## 2. Giá trị nghiệp vụ và chỉ số
+- **Giá trị nghiệp vụ:** Giảm thao tác thủ công, đảm bảo candidate nhận email đúng thời điểm và HR không phải gửi email tay từng vòng.
+- **Chỉ số:**
+  - 100% action trạng thái có confirmation before email side effect
+  - Tỷ lệ email gửi thành công > 95%
 
-## 3. QUY TRÌNH NGHIỆP VỤ (Business Process)
+## 3. Quy trình nghiệp vụ
 ```mermaid
 graph TD
-  A[Chuyển vòng] --> B{Có Email Template?}
-  B -- Có --> C[Gửi Email Tự động]
-  B -- Không --> D[Kết thúc]
+  A[HR publish job] --> B[Hệ thống gán pipeline mặc định]
+  B --> C[Candidate nộp hồ sơ ứng tuyển]
+  C --> D[HR chuyển Candidate sang stage]
+  D --> E{Kích hoạt email automation?}
+  E -- Yes --> F[Hiển thị confirmation modal]
+  F --> G[Gửi email + cập nhật status]
+  E -- No --> H[Chỉ cập nhật stage]
 ```
 
-## 4. PHÂN CHIA USER STORY (Scope & Backlog)
-| ID | Tên Story | Loại | Priority (MoSCoW) | Trạng thái |
-|---|---|---|---|---|
-| US-11 | Cau Hinh Pipeline | Feature | Must Have | To-do |
-| US-12 | Email Automation | Feature | Must Have | To-do |
-| US-13 | Dat Lich Phong Van | Feature | Must Have | To-do |
-| US-26 | Evaluation Form | Feature | Must Have | To-do |
-| US-27 | Email Logs | Feature | Must Have | To-do |
+## 4. Phạm vi và Backlog
+| ID | Tên Story | Ưu tiên | Trạng thái |
+|---|---|---|---|
+| US-11 | Config pipeline | Must Have | To-do |
+| US-12 | Email automation | Must Have | To-do |
+| US-13 | Đặt lịch phỏng vấn | Must Have | To-do |
+| US-26 | Evaluation form | Must Have | To-do |
+| US-27 | Email logs | Must Have | To-do |
+
+## 5. Business Rules
+- Pipeline default phải sẵn sàng khi Job mới tạo; không yêu cầu HR tự tạo từ đầu.
+- Nếu HR xóa một round đang có ứng viên, phải hiện cảnh báo rõ ràng và có CTA xem ứng viên hoặc chuyển họ đi.
+- Email automation luôn cần confirmation nếu có side effect gửi email.
+- Không có hidden side effect: mọi action ảnh hưởng candidate phải được báo trước.
+
+## 6. Cải tiến trong tương lai và quyết định sản phẩm
+- Các vòng tuyển dụng song song và round template nâng cao là cải tiến trong tương lai.
+- Tự động đặt lịch phỏng vấn khi chưa có xác nhận của HR là cải tiến trong tương lai, tùy quyết định sản phẩm.
+
 

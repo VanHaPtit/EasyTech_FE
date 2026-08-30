@@ -1,56 +1,43 @@
-﻿# Task BE: Refresh Token
+﻿# Task BE API: Refresh Token
 
-## 0. Mô tả chức năng (Mục tiêu Task)
-> **Mục tiêu:** Xác thực danh tính người dùng (Login/Register), cấp phát và quản lý JWT Token an toàn cho phiên làm việc.
+## Mục đích
+Cung cấp API backend phục vụ US-01 - HR đăng nhập với contract rõ ràng và validate tại server.
 
-## 1. Luồng xử lý (Flow)
-- **Bước 1:** Nhận request từ Client thông qua Endpoint đã định nghĩa.
-- **Bước 2:** Middleware chặn request để xác thực JWT Token, lấy `company_id` của tài khoản hiện tại (Multi-tenant).
-- **Bước 3:** So sánh mật khẩu (Bcrypt). Khởi tạo Access Token và Refresh Token bảo mật. Trích xuất thông tin User Profile cơ bản trả về Client.
-- **Bước 4:** Tương tác với cơ sở dữ liệu để thực hiện nghiệp vụ chính.
-- **Bước 5:** Xử lý các tác vụ nền (Gửi Email, Kích hoạt AI Insight, Ghi Log) nếu có.
-- **Bước 6:** Đóng gói kết quả dưới dạng `BaseResponse` và trả về HTTP Status phù hợp.
+## User Story liên quan
+- US-01 - HR Dang nhap.
 
-## 2. API & Data Contract (BaseResponse)
-- **Method:** `POST`
-- **Endpoint:** `/api/v1/auth/login`
-- **Input (Request Payload / Params):**
+## Điều kiện tiên quyết
+- User đã authentication nếu endpoint thuộc workspace/admin.
+- Workspace authorization kiểm tra riêng: Company = ACTIVE và User = ACTIVE mới vào HR Workspace; Company = PENDING + User = PENDING redirect /pending; Company = REJECTED + User = PENDING redirect /registration/rejected; User = INACTIVE/BLOCKED bị từ chối truy cập.
+- Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
-    ```json
-    {
-      "email": "hr@easytech.com",
-      "password": "***"
-    }
-    ```
+## HTTP Method
+- `POST`
 
-- **Output (BaseResponse):**
-    - **Thành công (`status = 1`):**
+## Endpoint
+- `/api/v1/auth/refresh`
 
-        ```json
-        {
-          "status": 1,
-          "message": "Đăng nhập thành công",
-          "data": {
-            "access_token": "eyJhbGci...",
-            "user": {
-              "id": "uuid",
-              "role": "HR"
-            }
-          }
-        }
-        ```
+## Request
+- Refresh token lấy từ HttpOnly cookie.
 
-    - **Thất bại (`status = 0`):**
+## Validation
+- Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
+- Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
+- Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
-        ```json
-        {
-          "status": 0,
-          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-          "data": null
-        }
-        ```
+## Response
+- Thành công: BaseResponse(status = 1, message, data); Access token mới được set lại bằng HttpOnly cookie.
+- Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
-## 3. Cơ sở dữ liệu liên quan (DB Tables)
-- **Bảng `users`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `companies`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `company_profiles`**: Truy vấn/Cập nhật dữ liệu tương ứng.
+## State Transition
+- Không đổi trạng thái nghiệp vụ.
+
+## Side Effects
+- Gia hạn phiên đăng nhập hợp lệ.
+
+## Các trường hợp lỗi
+- 400: request không hợp lệ hoặc enum/status sai.
+- 401: chưa đăng nhập hoặc token không hợp lệ.
+- 403: không đủ quyền hoặc workspace bị hạn chế.
+- 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
+- 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.

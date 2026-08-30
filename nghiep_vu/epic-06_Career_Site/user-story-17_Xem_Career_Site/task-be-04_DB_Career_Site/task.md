@@ -1,48 +1,30 @@
-﻿# Task BE: DB Career Site
+﻿# Task DB: DB Career Site
 
-## 0. Mô tả chức năng (Mục tiêu Task)
-> **Mục tiêu:** Thực hiện xử lý nghiệp vụ chung cho Module tương ứng (CRUD).
+## Mục đích
+Chuẩn hóa schema/database phục vụ US-17 - Xem Career Site. Task này không cung cấp HTTP endpoint.
 
-## 1. Luồng xử lý (Flow)
-- **Bước 1:** Nhận request từ Client thông qua Endpoint đã định nghĩa.
-- **Bước 2:** Middleware chặn request để xác thực JWT Token, lấy `company_id` của tài khoản hiện tại (Multi-tenant).
-- **Bước 3:** Kiểm tra phân quyền (RBAC), validate tham số đầu vào, tiến hành lưu hoặc trích xuất dữ liệu từ Database.
-- **Bước 4:** Tương tác với cơ sở dữ liệu để thực hiện nghiệp vụ chính.
-- **Bước 5:** Xử lý các tác vụ nền (Gửi Email, Kích hoạt AI Insight, Ghi Log) nếu có.
-- **Bước 6:** Đóng gói kết quả dưới dạng `BaseResponse` và trả về HTTP Status phù hợp.
+## Bảng/entity liên quan
+- Bảng chính: `career_sites`, `jobs`, `candidates`, `applications`, `interview_responses`.
+- Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
+- Các bảng thuộc tenant phải có company_id và index theo company_id.
 
-## 2. API & Data Contract (BaseResponse)
-- **Method:** `GET/POST/PUT/DELETE`
-- **Endpoint:** `/api/v1/module`
-- **Input (Request Payload / Params):**
+## Column và kiểu dữ liệu
+- Dùng UUID cho khóa chính/khóa ngoại.
+- Dùng VARCHAR cho mã, email, slug, enum dạng text.
+- Dùng TEXT cho nội dung dài như mô tả, lý do từ chối, email body hoặc AI explanation.
+- Dùng TIMESTAMP cho thời điểm tạo/cập nhật/gửi email/đánh giá.
+- - Enum/status liên quan: chỉ hiển thị Job Status = `ACTIVE` trên Career Site public.
 
-    ```json
-    {
-      "id": "uuid"
-    }
-    ```
+## Khóa và ràng buộc
+- Primary Key: id.
+- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, ound_id, user_id.
+- Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
+- Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
 
-- **Output (BaseResponse):**
-    - **Thành công (`status = 1`):**
+## Migration
+- Tạo migration idempotent theo thứ tự triển khai.
+- Có giá trị mặc định rõ ràng cho status và boolean flag.
 
-        ```json
-        {
-          "status": 1,
-          "message": "Thành công",
-          "data": {
-            }
-        }
-        ```
-
-    - **Thất bại (`status = 0`):**
-
-        ```json
-        {
-          "status": 0,
-          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-          "data": null
-        }
-        ```
-
-## 3. Cơ sở dữ liệu liên quan (DB Tables)
-- **Bảng `(Tùy chỉnh theo yêu cầu cụ thể)`**: Truy vấn/Cập nhật dữ liệu tương ứng.
+## Relationship
+- Dữ liệu phải giữ đúng multi-tenant boundary theo company_id.
+- Xóa mềm không được làm mất audit/history cần phục vụ báo cáo hoặc truy vết.

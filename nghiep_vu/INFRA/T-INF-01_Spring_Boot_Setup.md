@@ -1,4 +1,4 @@
-﻿# T-INF-01 · Setup Spring Boot + Spring Security + JWT
+# T-INF-01 · Setup Spring Boot + Spring Security + JWT
 
 > **Tag:** `[BE]` · **SP:** 3
 
@@ -10,7 +10,7 @@ Khởi tạo Spring Boot project với đầy đủ dependency và cấu hình S
 
 ---
 
-## Dependencies (pom.xml)
+## Phụ thuộc (`pom.xml`)
 
 ```xml
 <dependencies>

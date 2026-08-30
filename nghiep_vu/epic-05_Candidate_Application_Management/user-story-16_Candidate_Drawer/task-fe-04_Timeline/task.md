@@ -1,21 +1,34 @@
-# Task FE: Timeline
+﻿# Task FE: Timeline
 
-## 0. Mô tả chức năng (Mục tiêu Task)
-> **Mục tiêu:** Thao tác với dữ liệu Ứng viên (Candidates) và Đơn ứng tuyển (Applications), bao gồm việc upload CV và hiển thị danh sách hồ sơ.
+## Mục đích
+Xây dựng screen/component phục vụ US-16 - Candidate Drawer, tập trung vào hành vi người dùng và trạng thái UI.
 
-## 1. Luồng xử lý (UI Flow)
-- **Bước 1:** Người dùng điều hướng tới tính năng và tương tác trên giao diện Component.
-- **Bước 2:** Render UI (kèm Skeleton Loading nếu đang fetch dữ liệu từ API).
-- **Bước 3:** Xử lý file upload lên Cloud Storage để lưu trữ CV. Cập nhật thông tin ứng viên và gắn vào Pipeline của Job tương ứng.
-- **Bước 4:** Bắt sự kiện (Submit form, Kéo thả Kanban, Click) và Validate dữ liệu Client-side bằng Zod/React Hook Form.
-- **Bước 5:** Đẩy dữ liệu qua API lên Backend thông qua Axios/TanStack Query.
-- **Bước 6:** Dựa vào BaseResponse (`status=1` hoặc `status=0`), Component hiển thị Toast Message và cập nhật lại giao diện (Reset form, Refresh data list).
+## Screen/Component
+- Component chính: $title.
+- Hiển thị trong đúng route/layout của epic hiện tại.
+- Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
-## 2. Component & API Integration
-- **Component đảm nhiệm chính:** `CandidateDrawer.tsx / CandidatesList.tsx`
-- **Quản lý Trạng thái (State/Props):** Sử dụng `Zod Form Validation, TanStack Query`.
-- **API Endpoints Tích hợp:** Kích hoạt request tới `POST/GET /api/v1/candidates` với cấu trúc JSON tương ứng.
+## Hành động của user
+- Người dùng mở màn hình và thực hiện hành động chính của component.
+- Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
 
-## 3. Dữ liệu liên quan (Data Models)
-- **Bảng `applications`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `candidates`**: Truy vấn/Cập nhật dữ liệu tương ứng.
+## Hành vi UI
+- Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
+- Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
+
+## Validation
+- Validate trường bắt buộc ngay trên FE để cải thiện UX.
+- Không coi FE validation là source-of-truth; BE vẫn phải validate lại.
+- Hiển thị lỗi gần trường nhập liệu và không xóa dữ liệu user đã nhập khi validation không đạt.
+
+## Phản hồi thành công
+- Hiển thị toast hoặc trạng thái xác nhận sau khi hành động thành công.
+- Điều hướng theo flow cụ thể của user story.
+
+## Xử lý lỗi
+- Hiển thị lỗi có thể hành động được: điều gì sai và user cần sửa gì.
+- Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
+
+## API dependency cụ thể
+- `GET /api/v1/jobs/{jobId}/applications`, `GET /api/v1/applications/{applicationId}`.

@@ -1,61 +1,52 @@
-﻿# Task BE: API CRUD Templates
+# Task BE API: CRUD Email Templates
 
-## 0. Mô tả chức năng (Mục tiêu Task)
-> **Mục tiêu:** Quản lý (Tạo/Sửa/Xóa/Xem) các bản ghi Tin tuyển dụng (Jobs) của doanh nghiệp trên hệ thống tuyển dụng.
+## Mục đích
+Cung cấp API để HR quản lý Email Template trong phạm vi company hiện tại.
 
-## 1. Luồng xử lý (Flow)
-- **Bước 1:** Nhận request từ Client thông qua Endpoint đã định nghĩa.
-- **Bước 2:** Middleware chặn request để xác thực JWT Token, lấy `company_id` của tài khoản hiện tại (Multi-tenant).
-- **Bước 3:** Validate các trường dữ liệu bắt buộc (title, description, salary). Đảm bảo công việc thuộc quyền sở hữu của company_id tương ứng.
-- **Bước 4:** Tương tác với cơ sở dữ liệu để thực hiện nghiệp vụ chính.
-- **Bước 5:** Xử lý các tác vụ nền (Gửi Email, Kích hoạt AI Insight, Ghi Log) nếu có.
-- **Bước 6:** Đóng gói kết quả dưới dạng `BaseResponse` và trả về HTTP Status phù hợp.
+## User Story liên quan
+- US-20 - Email Templates.
 
-## 2. API & Data Contract (BaseResponse)
-- **Method:** `POST/PUT/GET`
-- **Endpoint:** `/api/v1/jobs`
-- **Input (Request Payload / Params):**
+## Điều kiện tiên quyết
+- User đã đăng nhập và có quyền quản lý Email Template.
+- Backend kiểm tra ownership theo company_id.
+- Template phải dùng đúng danh sách biến nội suy được hỗ trợ.
 
-    ```json
-    {
-      "title": "Senior React Developer",
-      "description": "...",
-      "salary_min": 1000,
-      "salary_max": 2500,
-      "location": "Hà Nội",
-      "job_type": "FULL_TIME",
-      "status": "DRAFT"
-    }
-    ```
+## API contract
 
-- **Output (BaseResponse):**
-    - **Thành công (`status = 1`):**
+### GET /api/v1/email-templates
+- Mục đích: lấy danh sách Email Template của company hiện tại.
+- Request: query params keyword, 	ype, page, size nếu cần.
+- Response: danh sách template và metadata phân trang.
 
-        ```json
-        {
-          "status": 1,
-          "message": "Thành công",
-          "data": {
-            "job_id": "uuid"
-          }
-        }
-        ```
+### POST /api/v1/email-templates
+- Mục đích: tạo Email Template mới.
+- Request: 	emplateName, subject, odyHtml, 	ype, danh sách variables.
+- Response: Email Template vừa tạo.
 
-    - **Thất bại (`status = 0`):**
+### PATCH /api/v1/email-templates/{templateId}
+- Mục đích: cập nhật Email Template.
+- Request: các field được phép sửa như subject, odyHtml, isActive.
+- Response: Email Template sau khi cập nhật.
 
-        ```json
-        {
-          "status": 0,
-          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-          "data": null
-        }
-        ```
+### DELETE /api/v1/email-templates/{templateId}
+- Mục đích: xóa mềm Email Template.
+- Request: path variable 	emplateId.
+- Response: kết quả xóa mềm.
 
-## 3. Cơ sở dữ liệu liên quan (DB Tables)
-- **Bảng `ai_suggestions`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `email_templates`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `is_deleted`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `cv_insights`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `company_id`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `jobs`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `email_logs`**: Truy vấn/Cập nhật dữ liệu tương ứng.
+## Validation
+- 	emplateName và subject không được rỗng.
+- odyHtml phải hợp lệ và không chứa biến ngoài danh sách cho phép.
+- Không cho xóa template đang được round/job sử dụng nếu chưa có fallback hợp lệ.
+
+## State Transition
+- Không đổi trạng thái Company/User/Job/Application.
+
+## Side Effects
+- Ghi audit log khi tạo, cập nhật hoặc xóa template.
+
+## Các trường hợp lỗi
+- 400: request không hợp lệ hoặc biến nội suy sai.
+- 401: chưa đăng nhập.
+- 403: không có quyền quản lý Email Template.
+- 404: không tìm thấy template trong company hiện tại.
+- 409: template đang được sử dụng và không thể xóa.

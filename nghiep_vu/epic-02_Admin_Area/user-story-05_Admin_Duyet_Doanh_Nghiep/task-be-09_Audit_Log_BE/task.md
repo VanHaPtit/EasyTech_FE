@@ -1,53 +1,31 @@
-﻿# Task BE: Audit Log BE
+﻿# Task BE Service: Audit Log BE
 
-## 0. Mô tả chức năng (Mục tiêu Task)
-> **Mục tiêu:** Chức năng dành riêng cho Super Admin hệ thống để phê duyệt (Approve) hoặc từ chối (Reject) doanh nghiệp mới đăng ký.
+## Mục đích
+Xử lý logic backend nội bộ phục vụ US-05 - Admin Duyet Doanh Nghiep. Task này không cung cấp HTTP endpoint riêng.
 
-## 1. Luồng xử lý (Flow)
-- **Bước 1:** Nhận request từ Client thông qua Endpoint đã định nghĩa.
-- **Bước 2:** Middleware chặn request để xác thực JWT Token, lấy `company_id` của tài khoản hiện tại (Multi-tenant).
-- **Bước 3:** Kiểm tra Role Super Admin. Thay đổi `status` của bảng Companies. Tự động gửi email thông báo kết quả cho HR đã đăng ký.
-- **Bước 4:** Tương tác với cơ sở dữ liệu để thực hiện nghiệp vụ chính.
-- **Bước 5:** Xử lý các tác vụ nền (Gửi Email, Kích hoạt AI Insight, Ghi Log) nếu có.
-- **Bước 6:** Đóng gói kết quả dưới dạng `BaseResponse` và trả về HTTP Status phù hợp.
+## Đầu vào
+- Entity hoặc DTO đã được validate từ API/service gọi vào.
+- Context tenant gồm company_id, user_id, role và trạng thái truy cập nếu có.
+- Cấu hình hệ thống cần thiết như SMTP, AI provider, template hoặc storage.
 
-## 2. API & Data Contract (BaseResponse)
-- **Method:** `PUT`
-- **Endpoint:** `/api/v1/admin/companies/status`
-- **Input (Request Payload / Params):**
+## Xử lý
+- Thực hiện nghiệp vụ chính theo domain hiện tại, không tự thêm feature ngoài phạm vi story.
+- Kiểm tra quyền theo workspace authorization, không trộn với authentication.
 
-    ```json
-    {
-      "company_id": "uuid",
-      "status": "REJECTED",
-      "rejection_reason": "Thiếu thông tin giấy phép"
-    }
-    ```
+## Kết quả đầu ra
+- Kết quả xử lý dạng object/service result để API layer đóng gói BaseResponse.
+- Thông tin lỗi rõ nguyên nhân và hành động user/admin cần làm tiếp.
 
-- **Output (BaseResponse):**
-    - **Thành công (`status = 1`):**
+## Phụ thuộc
+- Repository/database liên quan.
+- Email/AI/storage/provider config nếu task cần tích hợp ngoài.
+- Audit/logging service khi có thay đổi dữ liệu hoặc side effect quan trọng.
 
-        ```json
-        {
-          "status": 1,
-          "message": "Cập nhật thành công",
-          "data": {
-            "company_id": "uuid"
-          }
-        }
-        ```
+## Side Effects
+- Gửi email, ghi audit log, lưu file, lưu AI result hoặc dispatch notification nếu nghiệp vụ yêu cầu.
+- Không gửi lặp khi retry nếu action đã thành công trước đó.
 
-    - **Thất bại (`status = 0`):**
-
-        ```json
-        {
-          "status": 0,
-          "message": "Lỗi (VD: Không tìm thấy bản ghi, Dữ liệu không hợp lệ)",
-          "data": null
-        }
-        ```
-
-## 3. Cơ sở dữ liệu liên quan (DB Tables)
-- **Bảng `users`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `companies`**: Truy vấn/Cập nhật dữ liệu tương ứng.
-- **Bảng `company_profiles`**: Truy vấn/Cập nhật dữ liệu tương ứng.
+## Xử lý lỗi
+- Log lỗi đủ context nhưng không log secret/token/API key.
+- Retry có kiểm soát cho lỗi tạm thời như SMTP/AI provider.
+- Trả lỗi nghiệp vụ có thể hiểu được cho API layer.
