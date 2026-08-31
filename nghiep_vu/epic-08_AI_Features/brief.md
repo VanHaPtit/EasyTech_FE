@@ -1,4 +1,4 @@
-﻿# EPIC 08 — AI Features
+# EPIC 08 — AI Features
 
 ## 1. Tóm tắt
 - **Nghiệp vụ:** AI hỗ trợ chấm điểm CV và gợi ý câu hỏi phỏng vấn để HR xem trước thay vì tự ra quyết định tuyển dụng.
@@ -28,7 +28,7 @@ graph TD
 ## 5. Business Rules
 - AI không được tự động reject hoặc hire ứng viên.
 - Mọi recommendation phải có explanation rõ ràng: điểm mạnh, điểm yếu, khoảng trống kỹ năng.
-- Nếu provider không được cấu hình, hệ thống phải fallback về default AI service hoặc disable chức năng mà không làm hỏng flow chính.
+- AI Provider chốt sử dụng: ChatGPT hoặc Gemini. Chi phí API do hệ thống (Admin) chi trả trong giai đoạn MVP. Nếu provider cấu hình bị lỗi, phải fallback về default service hoặc disable chức năng mà không làm hỏng flow chính.
 
 ## 6. Cải tiến trong tương lai
 - Cài đặt AI provider tùy chỉnh theo từng company

@@ -6,6 +6,17 @@
 - **Để** dữ liệu công ty luôn chính xác, các báo cáo hoặc hóa đơn hiển thị đúng thông tin, và cài đặt hệ thống phù hợp với khu vực hoạt động.
 - **Story Points:** 2
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 21 Thong Tin DN] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR Admin xem và cập nhật thông tin công ty**

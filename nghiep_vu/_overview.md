@@ -1,4 +1,4 @@
-﻿# 📋 Product Backlog — EasyTech Recruitment Platform
+# 📋 Product Backlog — EasyTech Recruitment Platform
 
 > Phiên bản: v1.1 · Cập nhật: 2026-08-30
 > Stack FE: React 19 + Vite + TypeScript + TailwindCSS v4
@@ -34,7 +34,7 @@ Mục tiêu chính của MVP:
 → Từ chối: Company = REJECTED, User = PENDING (restricted)
 → Gửi lại: Company = PENDING, User = PENDING
 → HR đăng nhập
-→ Onboarding (3 bước, có thể bỏ qua kèm nhắc nhở) bằng `onboardingCompleted`
+→ Onboarding (Thiết lập Branding, Lời chào) bằng `onboardingCompleted`
 → Dashboard
 → Tạo Job
 → Pipeline mặc định + form ứng tuyển mặc định + email template mặc định
@@ -218,8 +218,12 @@ Các item dưới đây không nằm trong MVP và phải được đánh dấu 
 
 Các điểm cần Product Owner xác nhận:
 - SLA duyệt Company sau khi đăng ký
-- Thời hạn Magic Link: 7/30/90 ngày
-- Định dạng tax code được hỗ trợ
-- Candidate đổi lịch hoặc chỉnh sửa phản hồi phỏng vấn
+
+Các quyết định sản phẩm (Đã chốt):
+- Thời hạn Magic Link: 30 ngày (Hết hạn yêu cầu gửi lại).
+- Candidate ĐƯỢC PHÉP đề xuất đổi lịch phỏng vấn (tối đa 1 lần).
+- Storage: Sử dụng AWS S3 làm nơi lưu trữ CV, Portfolio của ứng viên.
+- AI Features: Sử dụng ChatGPT hoặc Gemini làm AI Provider (Chi phí API do hệ thống chi trả trong MVP).
+- Bảo mật Magic Link: Bắt buộc ứng viên nhập lại Email ứng tuyển để verify.
 
 > Tài liệu này là tài liệu sống. Mọi thay đổi scope cần cập nhật tại đây trước khi triển khai.

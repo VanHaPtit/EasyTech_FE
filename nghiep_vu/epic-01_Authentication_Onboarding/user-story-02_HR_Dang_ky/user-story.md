@@ -6,6 +6,20 @@
 - **Để** tôi có thể bắt đầu sử dụng hệ thống sau khi được Admin phê duyệt và không cần hiểu các khái niệm kỹ thuật.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở form Đăng ký] --> B{Điền thông tin}
+    B -- Thiếu/Sai --> C[Lỗi Validation]
+    B -- Hợp lệ --> D[Submit API]
+    D --> E{Kiểm tra trùng Email/MST}
+    E -- Trùng --> F[Báo lỗi đã tồn tại]
+    E -- Không trùng --> G[Tạo DB: Company=PENDING]
+    G --> H[Gửi Email thông báo Admin]
+    H --> I[Chuyển hướng trang Chờ duyệt]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Đăng ký thành công với thông tin hợp lệ**

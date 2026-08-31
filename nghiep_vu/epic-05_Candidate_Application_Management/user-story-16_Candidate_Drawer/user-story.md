@@ -6,6 +6,18 @@
 - **Để** tôi không bị chuyển trang liên tục, có thể thao tác nhanh với ứng viên và giữ nguyên ngữ cảnh của danh sách (Kanban/List).
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Click vào Card Ứng viên] --> B[Mở Drawer bên phải]
+    B --> C[Tải chi tiết CV, Thông tin, Đánh giá]
+    C --> D[Hiển thị UI Tabs]
+    D --> E{Tương tác}
+    E -- Đọc CV --> F[Mở PDF Viewer]
+    E -- Đánh giá --> G[Lưu nhận xét]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR mở xem Drawer của một ứng viên**

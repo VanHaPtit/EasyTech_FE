@@ -6,6 +6,17 @@
 - **Để** tôi có thể kiểm soát ai được phép xem/chỉnh sửa thông tin tuyển dụng, đảm bảo dữ liệu nội bộ an toàn và phù hợp trách nhiệm từng người.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 33 HR Quan Ly Phan Quyen] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR Admin xem danh sách thành viên trong công ty**

@@ -6,6 +6,18 @@
 - **Để** tôi có thể phê duyệt doanh nghiệp mới, quản lý người dùng và giám sát hoạt động toàn hệ thống.
 - **Story Points:** 2
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở form Login Admin] --> B[Nhập Credentials]
+    B --> C{Kiểm tra thông tin}
+    C -- Sai --> D[Báo lỗi]
+    C -- Đúng --> E{Kiểm tra Role}
+    E -- Không phải Admin --> F[Từ chối truy cập 403]
+    E -- System Admin --> G[Vào Admin Dashboard]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Admin đăng nhập thành công và được redirect đúng dashboard**

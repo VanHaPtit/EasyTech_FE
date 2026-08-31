@@ -6,6 +6,18 @@
 - **Để** tôi có thể tự tra cứu trạng thái hồ sơ của mình mà không cần phải đăng ký tài khoản hoặc mật khẩu trên hệ thống.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Ứng viên bấm vào Magic Link] --> B{Verify Token}
+    B -- Hết hạn (Sau 30 ngày) --> C[Lỗi 401/403]
+    B -- Hợp lệ --> D[Yêu cầu nhập Email xác thực]
+    D --> E{Kiểm tra Email}
+    E -- Sai --> F[Báo lỗi không khớp]
+    E -- Đúng --> G[Cấp quyền truy cập xem trạng thái]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Ứng viên truy cập bằng Magic Link hợp lệ**

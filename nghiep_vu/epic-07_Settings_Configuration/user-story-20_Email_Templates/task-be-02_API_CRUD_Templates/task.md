@@ -50,3 +50,26 @@ Cung cấp API để HR quản lý Email Template trong phạm vi company hiện
 - 403: không có quyền quản lý Email Template.
 - 404: không tìm thấy template trong company hiện tại.
 - 409: template đang được sử dụng và không thể xóa.
+
+## 3. API JSON Contract
+**Endpoint:** `POST /api/v1/email-templates`
+### Request Body
+```json
+{
+  "name": "Default Pass Template",
+  "type": "PASS",
+  "subject": "Congratulations {{candidate_name}}",
+  "body": "Dear {{candidate_name}}, you passed!"
+}
+```
+### Response (201 Created)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "type": "PASS"
+  }
+}
+```
+

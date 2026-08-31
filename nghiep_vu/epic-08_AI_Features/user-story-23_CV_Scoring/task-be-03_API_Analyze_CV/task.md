@@ -41,3 +41,26 @@ Cung cấp API backend phục vụ user-story-23 CV Scoring với contract rõ r
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+**Endpoint:** `POST /api/v1/applications/{application_id}/analyze-cv`
+### Request Body
+```json
+{}
+```
+### Response (200 OK)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "matching_score": 85.5,
+    "matched_skills": ["Java", "Spring Boot"],
+    "missing_skills": ["AWS"],
+    "strengths": ["Strong backend exp"],
+    "provider": "OPENAI"
+  }
+}
+```
+

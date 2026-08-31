@@ -41,3 +41,22 @@ Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràn
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+**Endpoint:** `GET /api/v1/auth/me`
+### Response (200 OK)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "email": "hr@techa.com",
+    "full_name": "Nguyen Van A",
+    "role": "HR",
+    "status": "ACTIVE",
+    "company_id": "uuid"
+  }
+}
+```
+

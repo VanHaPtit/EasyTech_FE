@@ -41,3 +41,35 @@ Cung cấp API backend phục vụ US-08 - Tạo Job bằng AI JD với contract
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+**Endpoint:** `POST /api/v1/jobs`
+### Request Body
+```json
+{
+  "title": "Senior Frontend Developer",
+  "category_id": 1,
+  "description": "JD details...",
+  "requirements": "ReactJS...",
+  "salary_min": 1500,
+  "salary_max": 2500,
+  "currency": "USD",
+  "working_type": "HYBRID",
+  "employment_type": "FULL_TIME",
+  "experience_level": "SENIOR"
+}
+```
+### Response (201 Created)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "title": "Senior Frontend Developer",
+    "slug": "senior-frontend-developer",
+    "status": "DRAFT"
+  }
+}
+```
+

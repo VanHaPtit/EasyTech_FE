@@ -41,3 +41,26 @@ Cung cấp API backend phục vụ US-05 - Admin duyệt doanh nghiệp với co
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+**Endpoint:** `GET /api/v1/admin/companies?status=PENDING&page=1&limit=20`
+### Response (200 OK)
+```json
+{
+  "status": "success",
+  "data": {
+    "items": [
+      {
+        "id": "uuid",
+        "name": "TechA Solutions",
+        "tax_code": "0123456789",
+        "status": "PENDING",
+        "created_at": "2026-08-31T10:00:00Z"
+      }
+    ],
+    "total": 1
+  }
+}
+```
+

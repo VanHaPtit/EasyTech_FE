@@ -6,6 +6,17 @@
 - **Để** tôi có thể kiểm soát thời điểm ứng viên nhìn thấy tin tuyển dụng và nộp đơn mà không cần dùng các trạng thái không rõ nghĩa.
 - **Story Points:** 2
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Chọn Job (DRAFT)] --> B[Nhấn Publish]
+    B --> C{Validate đầy đủ thông tin?}
+    C -- Lỗi --> D[Báo lỗi các trường còn thiếu]
+    C -- OK --> E[Đổi Job Status = PUBLISHED]
+    E --> F[Hiển thị Public Link cho Job]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR publish một Job đang là Draft**

@@ -6,6 +6,16 @@
 - **Để** tôi có thể sử dụng custom BYOK khi cần, còn nếu không cấu hình thì hệ thống vẫn dùng EasyTech default AI service mà không bắt buộc người dùng phải hiểu API key.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[System Admin vào Cài đặt AI] --> B[Xem các Provider hiện có]
+    B --> C[Nhập API Key cho OpenAI/Gemini]
+    C --> D[Lưu Key mã hóa vào DB]
+    D --> E[Dùng Key này cho các feature AI toàn hệ thống]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR Admin thiết lập API Key mới**

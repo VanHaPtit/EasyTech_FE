@@ -6,6 +6,18 @@
 - **Để** tôi có thể cập nhật nội dung JD, thay đổi mức lương hoặc ngày hết hạn nếu có sự thay đổi từ yêu cầu tuyển dụng.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Vào chi tiết Job] --> B[Hiển thị dữ liệu hiện tại]
+    B --> C{Thao tác chỉnh sửa}
+    C -- Sửa form --> D[Lưu thay đổi]
+    C -- Đổi trạng thái --> E[Draft/Closed/Published]
+    D --> F[Lưu Database]
+    E --> F
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR xem chi tiết Job**

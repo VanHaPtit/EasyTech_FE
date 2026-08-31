@@ -6,6 +6,17 @@
 - **Để** tôi có thể hỗ trợ xử lý sự cố tài khoản, vô hiệu hóa tài khoản vi phạm và giám sát tổng thể hoạt động người dùng.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 32 Admin Users Management] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Admin xem danh sách tất cả người dùng**

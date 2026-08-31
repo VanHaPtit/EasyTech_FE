@@ -6,6 +6,18 @@
 - **Để** tôi có thể ứng tuyển nhanh, biết là hồ sơ của mình đã được nhận và không cần qua nhiều bước kỹ thuật.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Ứng viên bấm Apply] --> B[Mở form điền thông tin]
+    B --> C[Upload CV (PDF)]
+    C --> D[Submit Form]
+    D --> E[Lưu DB: Tạo Application]
+    E --> F[Tạo Magic Link cho ứng viên]
+    F --> G[Gửi Email xác nhận kèm Magic Link]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Ứng viên điền form ứng tuyển hợp lệ**

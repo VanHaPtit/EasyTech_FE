@@ -1,4 +1,4 @@
-﻿# EPIC 04 — Pipeline & Automation
+# EPIC 04 — Pipeline & Automation
 
 ## 1. Tóm tắt
 - **Nghiệp vụ:** Thiết lập pipeline tuyển dụng, tự động hóa email và lịch phỏng vấn cho ứng viên.
@@ -41,5 +41,31 @@ graph TD
 ## 6. Cải tiến trong tương lai và quyết định sản phẩm
 - Các vòng tuyển dụng song song và round template nâng cao là cải tiến trong tương lai.
 - Tự động đặt lịch phỏng vấn khi chưa có xác nhận của HR là cải tiến trong tương lai, tùy quyết định sản phẩm.
+
+## 7. API JSON Contracts (Tham khảo)
+
+### 7.1. API Lên lịch phỏng vấn (Schedule Interview)
+- **Endpoint:** `POST /api/v1/hr/interviews`
+- **Request Body:** (Tham chiếu bảng `interviews`)
+```json
+{
+  "application_id": "app-uuid-5678",
+  "round_id": "round-uuid-9999",
+  "interview_time": "2026-09-05T09:00:00Z",
+  "duration": 60,
+  "location": "https://meet.google.com/abc-xyz",
+  "note": "Phỏng vấn kỹ thuật vòng 1",
+  "candidate_note": "Vui lòng chuẩn bị laptop có cài sẵn IDE."
+}
+```
+- **Response (201 Created):**
+```json
+{
+  "id": "interview-uuid-1111",
+  "status": "SCHEDULED",
+  "secure_token": "token-for-magic-link-123",
+  "token_expiry_at": "2026-09-04T09:00:00Z"
+}
+```
 
 

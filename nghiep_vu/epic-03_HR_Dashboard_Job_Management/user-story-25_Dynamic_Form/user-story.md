@@ -6,6 +6,17 @@
 - **Để** tôi có thể thu thập đúng thông tin cần thiết từ ứng viên phù hợp với từng vị trí công việc cụ thể.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 25 Dynamic Form] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR thêm câu hỏi tùy chỉnh khi tạo Job**

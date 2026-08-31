@@ -6,6 +6,21 @@
 - **Để** tôi có thể tiết kiệm thời gian soạn thảo JD mà vẫn có một tin tuyển dụng chuyên nghiệp, đầy đủ ý.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở form Tạo Job] --> B[Nhập Title & Vài từ khóa]
+    B --> C{Dùng AI hỗ trợ?}
+    C -- Không --> D[Tự nhập mô tả thủ công]
+    C -- Có --> E[Gọi API AI Provider]
+    E --> F[AI sinh nội dung JD]
+    F --> G[Review và Edit]
+    G --> H[Nhập cấu hình Pipeline, Email, v.v.]
+    D --> H
+    H --> I[Lưu DRAFT hoặc PUBLISH]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR điền thông tin cơ bản để tạo Job**

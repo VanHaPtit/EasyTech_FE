@@ -6,6 +6,19 @@
 - **Để** tôi có thể nắm bắt nhanh tình hình tuyển dụng của công ty và biết mình cần ưu tiên xử lý việc gì trong ngày.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Đăng nhập HR] --> B[Tải Dashboard]
+    B --> C[Fetch Stats: Ứng viên, Job]
+    B --> D[Fetch Biểu đồ]
+    B --> E[Fetch To-do list]
+    C --> F[Hiển thị UI tổng quan]
+    D --> F
+    E --> F
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR xem các thẻ số liệu thống kê (Metric Cards)**

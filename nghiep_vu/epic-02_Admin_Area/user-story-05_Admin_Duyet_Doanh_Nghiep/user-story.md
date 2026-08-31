@@ -6,6 +6,21 @@
 - **Để** chỉ những doanh nghiệp hợp lệ mới được cấp quyền sử dụng hệ thống và HR không bị rơi vào dead-end khi đơn bị từ chối.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở trang Quản lý Doanh nghiệp] --> B[Xem danh sách PENDING]
+    B --> C[Xem chi tiết công ty]
+    C --> D{Quyết định?}
+    D -- Duyệt --> E[Company=ACTIVE]
+    E --> F[Gửi Email thông báo HR]
+    D -- Từ chối --> G[Nhập lý do từ chối]
+    G --> H[Company=REJECTED]
+    H --> F
+    D -- Block --> I[Company=BLOCKED]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Admin xem danh sách công ty chờ phê duyệt**

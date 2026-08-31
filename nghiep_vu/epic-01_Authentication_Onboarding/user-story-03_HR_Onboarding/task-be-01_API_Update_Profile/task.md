@@ -41,3 +41,28 @@ Cung cấp API backend phục vụ US-03 - HR onboarding với contract rõ ràn
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+**Endpoint:** `PUT /api/v1/companies/profile`
+### Request Body
+```json
+{
+  "description": "Company description...",
+  "primary_color": "#47b1de",
+  "benefits": "BHXH, Remote...",
+  "social_links": {"facebook": "url"}
+}
+```
+### Response (200 OK)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "company_id": "uuid",
+    "primary_color": "#47b1de"
+  }
+}
+```
+

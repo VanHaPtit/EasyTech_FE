@@ -6,6 +6,17 @@
 - **Để** trang tuyển dụng của công ty phản ánh đúng nhận diện thương hiệu (Brand Identity) và tạo ấn tượng tốt với ứng viên tiềm năng.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 35 Career Site Settings] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR cấu hình thông tin cơ bản Career Site**

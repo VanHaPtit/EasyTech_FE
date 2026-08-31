@@ -41,3 +41,28 @@ Cung cấp API backend phục vụ US-11 - Cấu hình Pipeline với contract r
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+
+**Endpoint:** `GET /api/v1/resource/02_api_get_rounds`
+**Mô tả:** Đặc tả API cho thao tác task-be-02_API_Get_Rounds (Auto-generated fallback).
+
+### Request Body
+```json
+{
+  "example_field": "string_value"
+}
+```
+
+### Response (200 OK)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "message": "Operation successful"
+  }
+}
+```
+

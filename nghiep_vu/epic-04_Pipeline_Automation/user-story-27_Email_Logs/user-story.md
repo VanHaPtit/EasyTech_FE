@@ -6,6 +6,17 @@
 - **Để** tôi có thể kiểm tra xem ứng viên đã được thông báo chưa, phát hiện email gửi lỗi và gửi lại nếu cần thiết.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 27 Email Logs] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR xem lịch sử email từ Candidate Drawer**

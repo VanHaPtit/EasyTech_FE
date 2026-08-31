@@ -7,6 +7,19 @@
 - **Story Points:** 5
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Vào trang Quản lý Ứng viên] --> B[Tải danh sách ứng viên theo Job]
+    B --> C[Render Kanban Board]
+    C --> D[Kéo thả Card ứng viên]
+    D --> E{Kiểm tra rule}
+    E -- Lỗi (Nhảy cóc/Xóa) --> F[Revert UI & Báo lỗi]
+    E -- Hợp lệ --> G[Gửi API cập nhật round_id]
+    G --> H[Update UI thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Hiển thị Kanban Board động theo cấu hình vòng của Job**

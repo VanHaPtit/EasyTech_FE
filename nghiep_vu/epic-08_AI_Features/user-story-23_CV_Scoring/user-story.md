@@ -6,6 +6,17 @@
 - **Để** tôi có thể nhanh chóng lọc ra những ứng viên tiềm năng nhất mà không cần phải đọc thủ công từng CV một, tiết kiệm thời gian sàng lọc ban đầu.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[HR Mở chi tiết Ứng viên] --> B[Nhấn Nút Chấm điểm CV]
+    B --> C[Gửi CV Text + JD Text cho AI]
+    C --> D[AI phân tích Matching Score, Skills]
+    D --> E[Lưu kết quả phân tích vào DB]
+    E --> F[Hiển thị điểm số & Nhận xét cho HR]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Hệ thống tự động chấm điểm CV mới**

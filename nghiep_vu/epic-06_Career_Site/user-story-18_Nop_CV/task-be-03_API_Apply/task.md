@@ -41,3 +41,24 @@ Cung cấp API backend phục vụ US-18 - Nộp CV với contract rõ ràng và
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+**Endpoint:** `POST /api/v1/public/jobs/{job_slug}/apply`
+### Request Body (Multipart Form-Data)
+- `full_name`: "Tran B"
+- `email`: "candidate@gmail.com"
+- `phone`: "0901234567"
+- `cv_file`: [File PDF]
+### Response (201 Created)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "status": "ACTIVE",
+    "secure_token": "magic_link_token"
+  }
+}
+```
+

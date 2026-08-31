@@ -6,6 +6,17 @@
 - **Để** tôi có thể chuẩn bị tốt hơn cho buổi phỏng vấn, xoáy sâu vào các kỹ năng hoặc kinh nghiệm chưa rõ ràng của ứng viên.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 24 AI Goi Y Cau Hoi] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR xem gợi ý câu hỏi trong Candidate Drawer**

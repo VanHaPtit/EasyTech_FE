@@ -41,3 +41,29 @@ Cung cấp API backend phục vụ US-13 - Đặt lịch phỏng vấn với con
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+**Endpoint:** `POST /api/v1/applications/{application_id}/interviews`
+### Request Body
+```json
+{
+  "round_id": "uuid",
+  "interview_time": "2026-09-05T09:00:00Z",
+  "duration": 60,
+  "location": "Google Meet Link",
+  "candidate_note": "Prepare portfolio"
+}
+```
+### Response (201 Created)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "status": "SCHEDULED",
+    "secure_token": "random_magic_link"
+  }
+}
+```
+

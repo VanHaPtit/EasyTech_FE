@@ -1,4 +1,4 @@
-﻿# EPIC 02 — Admin Area
+# EPIC 02 — Admin Area
 
 ## 1. Tóm tắt
 - **Nghiệp vụ:** Admin EasyTech xem danh sách doanh nghiệp mới đăng ký, review và phê duyệt hoặc từ chối.

@@ -6,6 +6,17 @@
 - **Để** tôi có thể dễ dàng sắp xếp, tìm kiếm, lọc dữ liệu hàng loạt và xem các thông tin chi tiết (Email, Số ĐT, Ngày nộp) mà Kanban Board không hiển thị hết.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 15 List View] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR chuyển đổi giữa Kanban và List View**

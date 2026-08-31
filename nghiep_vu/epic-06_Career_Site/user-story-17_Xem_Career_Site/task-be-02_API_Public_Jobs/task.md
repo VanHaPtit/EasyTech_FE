@@ -41,3 +41,25 @@ Cung cấp API backend phục vụ US-17 - Xem Career Site với contract rõ r�
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+**Endpoint:** `GET /api/v1/public/companies/{company_slug}/jobs`
+### Response (200 OK)
+```json
+{
+  "status": "success",
+  "data": {
+    "items": [
+      {
+        "id": "uuid",
+        "title": "Frontend Dev",
+        "slug": "frontend-dev",
+        "location": "HCM",
+        "working_type": "HYBRID"
+      }
+    ]
+  }
+}
+```
+

@@ -41,3 +41,23 @@ Cung cấp API backend phục vụ US-10 - Publish Job với contract rõ ràng 
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+**Endpoint:** `POST /api/v1/jobs/{job_id}/publish`
+### Request Body
+```json
+{}
+```
+### Response (200 OK)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "status": "ACTIVE",
+    "published_at": "2026-08-31T10:00:00Z"
+  }
+}
+```
+

@@ -6,6 +6,17 @@
 - **Để** tôi có thể kiểm tra, điều tra sự cố, phát hiện hành vi bất thường và đảm bảo tuân thủ quy định bảo mật dữ liệu.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 31 Admin Xem Audit Logs] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Admin xem danh sách Audit Logs**

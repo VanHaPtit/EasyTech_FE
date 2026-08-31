@@ -6,6 +6,17 @@
 - **Để** ứng viên nhận được thông tin lịch hẹn đầy đủ qua email và có thể xác nhận/từ chối nhanh chóng mà không cần giao tiếp qua các kênh ngoài hệ thống.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở Card Ứng viên] --> B[Chuyển sang Vòng Phỏng vấn]
+    B --> C[Mở modal Đặt lịch]
+    C --> D[Nhập Ngày/Giờ/Link Meet]
+    D --> E[Lưu Interview DB]
+    E --> F[Tự động gửi Email Mời phỏng vấn cho ứng viên]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR tạo lịch phỏng vấn cho ứng viên**

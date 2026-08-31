@@ -6,6 +6,20 @@
 - **Để** tôi có thể truy cập đúng workspace tương ứng với trạng thái doanh nghiệp của mình.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở form Đăng nhập] --> B{Điền Email & Password}
+    B -- Thiếu thông tin --> C[Lỗi Validation]
+    B -- Hợp lệ --> D[Gửi Request API]
+    D -- Sai thông tin --> E[Báo lỗi thông tin]
+    D -- Đúng thông tin --> F{Kiểm tra Trạng thái Company}
+    F -- ACTIVE --> G[Lưu Token & Vào Dashboard]
+    F -- PENDING --> H[Chuyển hướng trang Chờ duyệt]
+    F -- REJECTED --> I[Chuyển hướng trang Bị từ chối]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Đăng nhập thành công với company ACTIVE**

@@ -6,6 +6,17 @@
 - **Để** tôi có thể tái sử dụng nguồn lực ứng viên cũ, tối ưu chi phí và thời gian tuyển dụng thay vì luôn phải chờ ứng viên mới nộp đơn.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 34 AI Match Ung Vien] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: AI đề xuất ứng viên khi Job được Publish**

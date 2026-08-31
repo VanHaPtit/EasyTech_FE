@@ -41,3 +41,28 @@ Cung cấp API backend phục vụ US-09 - Xem và chỉnh sửa Job với contr
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+
+## 3. API JSON Contract
+
+**Endpoint:** `POST /api/v1/resource/02_api_update_job`
+**Mô tả:** Đặc tả API cho thao tác task-be-02_API_Update_Job (Auto-generated fallback).
+
+### Request Body
+```json
+{
+  "example_field": "string_value"
+}
+```
+
+### Response (200 OK)
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "message": "Operation successful"
+  }
+}
+```
+

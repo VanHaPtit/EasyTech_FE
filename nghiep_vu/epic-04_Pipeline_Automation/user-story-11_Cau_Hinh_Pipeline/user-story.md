@@ -6,6 +6,19 @@
 - **Để** tôi có thể thiết kế quy trình phỏng vấn linh hoạt phù hợp với đặc thù từng vị trí (ví dụ: vị trí kỹ thuật cần thêm vòng Technical Test, vị trí senior cần thêm vòng Culture Fit).
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Vào mục cấu hình Job] --> B[Mở tab Hiring Pipeline]
+    B --> C[Xem các Round hiện tại]
+    C --> D{Thao tác}
+    D -- Thêm Round --> E[Tạo mới DB]
+    D -- Kéo thả (Drag&Drop) --> F[Gửi API Reorder]
+    D -- Sửa/Xóa --> G[Cập nhật DB]
+    F --> H[Cập nhật UI]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR thêm vòng tuyển dụng cho Job**

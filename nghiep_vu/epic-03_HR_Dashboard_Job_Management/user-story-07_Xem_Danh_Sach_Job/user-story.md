@@ -6,6 +6,19 @@
 - **Để** tôi có thể dễ dàng tìm kiếm, lọc, và theo dõi trạng thái của từng chiến dịch tuyển dụng.
 - **Story part:** 2
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở trang Danh sách Job] --> B[Gửi GET API kèm Filter]
+    B --> C[BE Query DB theo company_id]
+    C --> D[Trả về Pagination Data]
+    D --> E[Render Table/Card UI]
+    E --> F{Hành động}
+    F -- Tìm kiếm/Filter --> B
+    F -- Bấm vào Job --> G[Chuyển trang Job Detail]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR xem danh sách Job mặc định**

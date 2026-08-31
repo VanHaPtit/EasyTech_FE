@@ -1,4 +1,4 @@
-﻿# EPIC 03 — HR Dashboard & Job Management
+# EPIC 03 — HR Dashboard & Job Management
 
 ## 1. Tóm tắt
 - **Nghiệp vụ:** HR quản lý dashboard, job list, tạo và publish tin tuyển dụng.

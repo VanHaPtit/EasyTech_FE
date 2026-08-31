@@ -6,6 +6,17 @@
 - **Để** tôi có thể phản hồi kịp thời với ứng viên mới, không bỏ lỡ phản hồi lịch phỏng vấn, và luôn nắm bắt được tiến độ tuyển dụng mà không cần liên tục reload trang.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Mở giao diện 36 Notifications] --> B[Thực hiện thao tác]
+    B --> C{Hệ thống xử lý}
+    C -- Lỗi --> D[Báo lỗi]
+    C -- Thành công --> E[Cập nhật CSDL]
+    E --> F[Phản hồi giao diện thành công]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR nhận thông báo khi có ứng viên mới nộp đơn**

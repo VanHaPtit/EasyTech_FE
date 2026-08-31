@@ -6,6 +6,20 @@
 - **Để** HR của các công ty có thể chọn đúng ngành nghề khi tạo Job, và ứng viên có thể lọc Job theo lĩnh vực quan tâm trên Career Site.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Vào trang Job Categories] --> B[Xem danh sách Categories]
+    B --> C{Hành động}
+    C -- Thêm mới --> D[Nhập tên Category]
+    C -- Sửa --> E[Cập nhật thông tin]
+    C -- Xóa (Soft) --> F[Đổi is_deleted=1]
+    D --> G[Lưu Database]
+    E --> G
+    F --> G
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Admin xem danh sách Job Categories**

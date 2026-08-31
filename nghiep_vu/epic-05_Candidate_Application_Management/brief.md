@@ -1,4 +1,4 @@
-﻿# EPIC 05 — Candidate & Application Management
+# EPIC 05 — Candidate & Application Management
 
 ## 1. Tóm tắt
 - **Nghiệp vụ:** HR quản lý hồ sơ ứng viên qua Kanban, list view và candidate drawer.
@@ -31,10 +31,50 @@ graph TD
 - Candidate list phải thể hiện trạng thái rõ ràng và hiển thị time-to-stage logic nếu phù hợp.
 - HR không cần mặc định AI score để review; AI chỉ hỗ trợ recommendation.
 - Khi move candidate tới một vòng mới, UI phải hiển thị rõ action và email side effect nếu có.
-- Candidate status không được mơ hồ: phải có `APPLIED`, `SCREENING`, `INTERVIEW`, `REJECTED`, `HIRED` và các trạng thái tương ứng tại round level.
+- Application status (Hồ sơ) chỉ bao gồm: `ACTIVE`, `REJECTED`, `HIRED`. Tuyệt đối không được dùng tên pipeline stage (như Applied, Screening, Interview) làm Application Status để tránh mâu thuẫn dữ liệu.
 
 ## 6. Cải tiến trong tương lai
 - Thao tác hàng loạt với Candidate
 - Cột / tag Candidate tùy chỉnh
 - Bộ lọc nâng cao và view đã lưu
+
+## 7. API JSON Contracts (Tham khảo)
+
+### 7.1. API Cập nhật trạng thái vòng (Move Candidate)
+- **Endpoint:** `PUT /api/v1/hr/applications/{application_id}/progress`
+- **Request Body:** (Cập nhật điểm đánh giá cho bảng `application_progress`)
+```json
+{
+  "round_id": "round-uuid-9999",
+  "status": "PASSED",
+  "score": 85.5,
+  "note": "Ứng viên trả lời tốt các câu hỏi React.",
+  "send_automation_email": true
+}
+```
+- **Response (200 OK):**
+```json
+{
+  "id": "progress-uuid-2222",
+  "application_id": "app-uuid-5678",
+  "status": "PASSED",
+  "application_global_status": "ACTIVE"
+}
+```
+
+### 7.2. API Chốt Quyết Định (Hire / Reject)
+- **Endpoint:** `PUT /api/v1/hr/applications/{application_id}/status`
+- **Request Body:**
+```json
+{
+  "status": "HIRED"
+}
+```
+- **Response (200 OK):**
+```json
+{
+  "application_id": "app-uuid-5678",
+  "status": "HIRED"
+}
+```
 

@@ -6,6 +6,16 @@
 - **Để** tôi có thể tìm hiểu về công ty, văn hóa và tìm kiếm vị trí công việc phù hợp để nộp đơn.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Ứng viên truy cập link Career Site] --> B[BE Query Public Company Data]
+    B --> C[Render Branding (Logo, Colors)]
+    C --> D[Render Danh sách Job (PUBLISHED)]
+    D --> E[Ứng viên xem chi tiết Job]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Ứng viên truy cập Career Site của công ty**

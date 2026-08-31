@@ -6,6 +6,21 @@
 - **Để** tôi có thể bắt đầu tuyển dụng mà không mất thời gian điền lại dữ liệu đã biết và không bị mất hướng dẫn khi chưa hoàn tất hồ sơ.
 - **Story Points:** 3
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[Đăng nhập lần đầu] --> B{Kiểm tra Onboarding?}
+    B -- Đã làm --> C[Vào Dashboard]
+    B -- Chưa làm --> D[Hiển thị màn hình Onboarding]
+    D --> E[Bước 1: Branding Logo/Color]
+    E --> F[Bước 2: Thông tin công ty]
+    F --> G[Hoàn thành Onboarding]
+    G --> C
+    D -- Bỏ qua (Skip) --> H[Lưu trạng thái bỏ qua]
+    H --> C
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR đăng nhập lần đầu sau khi được approve**

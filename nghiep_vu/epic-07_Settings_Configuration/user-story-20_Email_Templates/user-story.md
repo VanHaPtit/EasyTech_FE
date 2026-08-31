@@ -6,6 +6,18 @@
 - **Để** tôi có thể thống nhất thông điệp giao tiếp, giữ văn phong chuyên nghiệp và tiết kiệm thời gian soạn lại nội dung mỗi lần gửi.
 - **Story Points:** 5
 
+## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+```mermaid
+graph TD
+    A[HR vào Cài đặt Email] --> B[Xem danh sách Templates]
+    B --> C{Hành động}
+    C -- Tạo mới --> D[Mở Editor]
+    C -- Chỉnh sửa --> E[Load Dữ liệu lên Editor]
+    D --> F[Chèn Biến (Variables) {{name}}]
+    F --> G[Lưu Template]
+```
+
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: HR xem danh sách Template mặc định**

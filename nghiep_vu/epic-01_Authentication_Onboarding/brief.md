@@ -1,4 +1,4 @@
-﻿# EPIC 01 — Authentication & Onboarding
+# EPIC 01 — Authentication & Onboarding
 
 ## 1. Tóm tắt
 - **Nghiệp vụ:** Đăng ký, duyệt doanh nghiệp, login, onboarding và khởi tạo hồ sơ công ty cho HR.
@@ -25,13 +25,13 @@
 ## 3. Quy trình nghiệp vụ
 ```mermaid
 graph TD
-  A[HR đăng ký] --> B[Company = PENDING, User = PENDING]
+  A[HR đăng ký: Nhập Tên Cty + Mã số thuế] --> B[Company = PENDING, User = PENDING]
   B --> C[Chờ duyệt Page]
-  C --> D[Admin xem xét]
+  C --> D[Admin xem xét & Kiểm chứng Mã số thuế]
   D --> E{Duyệt?}
   E -- Yes --> F[Company = ACTIVE, User = ACTIVE]
   F --> G[HR Login]
-  G --> H[Onboarding: Company Info → Branding → Contact]
+  G --> H[Onboarding: Branding → Contact]
   H --> I[Dashboard]
   E -- No --> J[Company = REJECTED, User = PENDING]
   J --> K[HR xem lý do]
@@ -47,6 +47,8 @@ graph TD
 | US-03 | HR onboarding | Must Have | To-do |
 | US-04 | Admin đăng nhập | Must Have | To-do |
 | US-05 | Admin duyệt doanh nghiệp | Must Have | In related epic |
+| US-06 | HR quên mật khẩu | Must Have | To-do |
+| US-07 | HR đổi mật khẩu | Must Have | To-do |
 
 ## 5. Business Rules
 
@@ -59,9 +61,10 @@ graph TD
   - User = INACTIVE/BLOCKED → access denied, login rejected
 
 ### Registration & Approval Flow
+- Khi đăng ký, HR BẮT BUỘC phải cung cấp Tên công ty, Email domain và Mã số thuế chính xác để Admin có cơ sở kiểm chứng.
 - HR không được truy cập workspace nếu `company.status = PENDING`, `company.status = REJECTED` hoặc `user.status = INACTIVE/BLOCKED`.
 - Người dùng chưa được duyệt sẽ vào Chờ duyệt Page / Rejected Page thay vì Dashboard.
-- Company REJECTED không phải ngõ cụt: HR có quyền đăng nhập, xem lý do, chỉnh sửa và gửi lại.
+- Company REJECTED không phải ngõ cụt: HR có quyền đăng nhập, xem lý do, chỉnh sửa thông tin/Mã số thuế và gửi lại.
 - Khi HR gửi lại hồ sơ: Company Status = PENDING, User Status = PENDING và luồng duyệt được lặp lại.
 
 ### Onboarding
