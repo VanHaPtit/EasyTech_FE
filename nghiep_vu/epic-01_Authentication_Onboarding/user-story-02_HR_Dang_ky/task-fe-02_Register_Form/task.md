@@ -1,4 +1,4 @@
-﻿# Task FE: Đăng ký Form
+# Task FE: Đăng ký Form
 
 ## Mục đích
 Xây dựng screen/component phục vụ US-02 - HR đăng ký, tập trung vào hành vi người dùng và trạng thái UI.
@@ -9,13 +9,15 @@ Xây dựng screen/component phục vụ US-02 - HR đăng ký, tập trung vào
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user
-- Người dùng mở màn hình và thực hiện hành động chính của component.
-- Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
+- Người dùng mở màn hình và hoàn thành form đăng ký gồm 2 bước:
+  - Bước 1: Nhập thông tin tài khoản HR (Họ tên, Email, Mật khẩu).
+  - Bước 2: Nhập thông tin doanh nghiệp (Tên công ty, MST, Số điện thoại, Địa chỉ, Subdomain).
 
 ## Hành vi UI
-- Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
-- Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
-- Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
+- Hiển thị Form theo luồng 2 bước (Stepper/Wizard).
+- Vô hiệu hóa nút "Tiếp tục" hoặc "Đăng ký" nếu form validation chưa vượt qua, hiển thị inline error màu đỏ.
+- Vô hiệu hóa nút submit trong lúc request đang chạy để tránh gửi lặp.
+- Tự động gợi ý Subdomain từ Tên công ty khi người dùng nhập xong tên công ty.
 
 ## Validation
 - Validate trường bắt buộc ngay trên FE để cải thiện UX.

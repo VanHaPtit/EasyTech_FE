@@ -1,4 +1,4 @@
-﻿# 📋 User Story 02: HR Đăng Ký (Company Registration)
+# 📋 User Story 02: HR Đăng Ký (Company Registration)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR) chưa có tài khoản,
@@ -10,24 +10,35 @@
 
 ```mermaid
 graph TD
-    A[Mở form Đăng ký] --> B{Điền thông tin}
-    B -- Thiếu/Sai --> C[Lỗi Validation]
-    B -- Hợp lệ --> D[Submit API]
-    D --> E{Kiểm tra trùng Email/MST}
-    E -- Trùng --> F[Báo lỗi đã tồn tại]
-    E -- Không trùng --> G[Tạo DB: Company=PENDING, User=HR_ADMIN/PENDING]
-    G --> H[Gửi Email thông báo Admin]
-    H --> I[Chuyển hướng trang Chờ duyệt]
+    A[Mở form Đăng ký] --> B[Bước 1: Điền thông tin HR]
+    B --> C[Bước 2: Điền thông tin Doanh nghiệp]
+    C --> D[Submit Form]
+    D --> E{Hệ thống Validate}
+    
+    E -- Thiếu/Sai --> F[Báo lỗi Validation tại field]
+    E -- Hợp lệ --> G[Gọi API Đăng ký]
+    
+    G --> H{Kiểm tra trùng lặp DB}
+    H -- Trùng Email HR --> I[Lỗi: Email đã được sử dụng]
+    H -- Trùng Mã số thuế --> J[Lỗi: Mã số thuế đã tồn tại]
+    H -- Trùng Subdomain --> K[Lỗi: Subdomain đã có người dùng]
+    
+    H -- Hợp lệ --> L[Tạo DB: Company=PENDING, User=HR_ADMIN/PENDING]
+    L --> M[Gửi Email xác nhận & Thông báo Admin]
+    M --> N[Chuyển hướng trang Chờ duyệt]
 ```
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
-- **Kịch bản 1: Đăng ký thành công với thông tin hợp lệ**
+- **Kịch bản 1: Đăng ký thành công với thông tin hợp lệ (Form 2 bước)**
   - **VỚI ĐIỀU KIỆN** người dùng chưa có tài khoản trên hệ thống.
-  - **KHI** người dùng điền đầy đủ form: Họ tên, Email công ty, Mật khẩu (≥ 8 ký tự, có chữ hoa + số), Tên công ty, Mã số thuế, và nhấn "Đăng ký".
-  - **THÌ** hệ thống tạo bản ghi trong bảng `companies` với `status = PENDING` và `users` với `role = HR_ADMIN`, `status = PENDING`.
+  - **KHI** người dùng điền đầy đủ form:
+    - **Bước 1 (Tài khoản HR):** Họ tên, Email đăng nhập, Mật khẩu (≥ 8 ký tự, có chữ hoa + số).
+    - **Bước 2 (Doanh nghiệp):** Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ, Subdomain mong muốn (Website & Email liên hệ công ty là tùy chọn).
+  - **VÀ** nhấn "Đăng ký".
+  - **THÌ** hệ thống tạo bản ghi trong bảng `companies` với `status = PENDING` và `users` với `role = HR`, `status = PENDING` (liên kết qua `company_id`).
   - Hệ thống gửi email xác nhận đến HR và gửi yêu cầu phê duyệt đến Admin.
-  - HR được chuyển đến trang Chờ duyệt với trạng thái đã tiếp nhận đơn đăng ký.
+  - HR được chuyển đến trang Chờ duyệt.
 
 - **Kịch bản 2: Trang chờ duyệt**
   - **VỚI ĐIỀU KIỆN** đăng ký đã được tạo thành công.
@@ -35,33 +46,35 @@ graph TD
   - **THÌ** màn hình hiển thị: đơn đăng ký đã được tiếp nhận, doanh nghiệp đang chờ review, trạng thái hiện tại, email nhận thông báo, CTA kiểm tra lại trạng thái, và nút đăng xuất.
   - Không hiển thị màn hình rỗng chỉ có câu "Đang chờ phê duyệt" mà không có thông tin rõ ràng.
 
-- **Kịch bản 3: Email đã tồn tại**
-  - **VỚI ĐIỀU KIỆN** email người dùng nhập đã được đăng ký bởi tài khoản khác.
+- **Kịch bản 3: Validation lỗi trực tiếp (Inline Validation)**
+  - **VỚI ĐIỀU KIỆN** người dùng bỏ trống trường bắt buộc hoặc nhập sai định dạng (vd: mật khẩu yếu, email sai định dạng, số điện thoại không hợp lệ).
+  - **KHI** người dùng chuyển bước (Next) hoặc nhấn "Đăng ký".
+  - **THÌ** form hiển thị lỗi màu đỏ tại từng trường bị sai và chặn không cho sang bước tiếp theo hoặc không cho submit.
+
+- **Kịch bản 4: Xử lý lỗi dữ liệu trùng lặp (Email / MST / Subdomain)**
+  - **VỚI ĐIỀU KIỆN** Email HR, Mã số thuế, hoặc Subdomain đã tồn tại trên hệ thống.
   - **KHI** người dùng nhấn "Đăng ký".
-  - **THÌ** hệ thống hiển thị lỗi inline: _"Email này đã được sử dụng. Vui lòng đăng nhập hoặc dùng email khác."_
+  - **THÌ** hệ thống hiển thị thông báo lỗi rõ ràng tương ứng:
+    - _"Email này đã được sử dụng. Vui lòng đăng nhập hoặc dùng email khác."_
+    - _"Mã số thuế này đã được đăng ký. Vui lòng liên hệ hỗ trợ nếu có nhầm lẫn."_
+    - _"Subdomain này đã được sử dụng. Vui lòng chọn một subdomain khác."_
 
-- **Kịch bản 4: Validation**
-  - **VỚI ĐIỀU KIỆN** người dùng bỏ trống trường bắt buộc hoặc nhập mật khẩu không đủ điều kiện.
-  - **KHI** người dùng nhấn "Đăng ký".
-  - **THÌ** form hiển thị lỗi tại từng trường và không clear toàn bộ form.
-
-- **Kịch bản 5: Mã số thuế đã được đăng ký**
-  - **VỚI ĐIỀU KIỆN** một công ty khác đã đăng ký với cùng mã số thuế.
-  - **KHI** người dùng submit form.
-  - **THÌ** hệ thống hiển thị lỗi rõ ràng: _"Mã số thuế này đã được đăng ký. Vui lòng liên hệ hỗ trợ nếu có nhầm lẫn."_
-
-- **Kịch bản 6: Bị từ chối → chỉnh sửa + gửi lại**
+- **Kịch bản 5: Bị từ chối → chỉnh sửa + gửi lại**
   - **VỚI ĐIỀU KIỆN** company đã bị Admin từ chối.
   - **KHI** HR click "Chỉnh sửa và gửi lại".
-  - **THÌ** hệ thống cho phép sửa thông tin cần bổ sung và gửi lại đơn. Company trở về `PENDING` sau khi resubmit.
+  - **THÌ** hệ thống cho phép sửa thông tin (ngoại trừ Email HR) và gửi lại đơn. Trạng thái Company và User trở về `PENDING`.
 
 ## 3. BUSINESS RULES
 
 ### Company & User Creation
-- Registration tạo **Company** với `status = PENDING` và **User** (HR_ADMIN) với `status = PENDING`.
+- Quá trình đăng ký phải tạo **Company** (`status = PENDING`) và **User** (`role = HR`, `status = PENDING`) trong cùng một Transaction (nếu lỗi thì rollback toàn bộ).
 - Cả Company và User phải cùng được Admin duyệt trước khi activate.
 - Khi Admin approve: Company = ACTIVE, User = ACTIVE.
 - Khi Admin reject: Company = REJECTED, User = PENDING (restricted).
+
+### Auto-fill & Gợi ý dữ liệu
+- Subdomain có thể tự động tạo (auto-suggest) dựa trên Tên công ty khi người dùng nhập xong tên, HR vẫn có thể chỉnh sửa lại.
+- Email liên hệ của công ty nếu để trống sẽ tự động lấy Email đăng nhập của HR.
 
 ### Approval & Resubmit
 - Đăng ký phải đi qua kênh duyệt; không được cho phép company vào Dashboard ngay sau khi đăng ký.

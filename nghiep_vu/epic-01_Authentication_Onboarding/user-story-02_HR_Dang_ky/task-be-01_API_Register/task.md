@@ -1,4 +1,4 @@
-﻿# Task BE API: API Đăng ký
+# Task BE API: API Đăng ký
 
 ## Mục đích
 Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràng và validate tại server.
@@ -18,7 +18,7 @@ Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràn
 - `/api/v1/auth/register`
 
 ## Request
-- Thông tin HR, công ty, email, password, taxCode và các field đăng ký bắt buộc.
+- Thông tin HR (Họ tên, email, password) và Thông tin công ty (Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ, Subdomain).
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -52,7 +52,11 @@ Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràn
   "password": "SecurePassword123!",
   "fullName": "Nguyen Van A",
   "companyName": "TechA Solutions",
-  "taxCode": "0123456789"
+  "taxCode": "0123456789",
+  "phone": "0987654321",
+  "address": "123 Tech Street, HN",
+  "subdomain": "techa",
+  "website": "https://techa.com"
 }
 ```
 ### Response (201 Created)
