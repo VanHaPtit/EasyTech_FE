@@ -48,14 +48,21 @@ Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràn
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy thông tin người dùng thành công",
   "data": {
-    "id": "uuid",
+    "id": 1,
     "email": "hr@techa.com",
-    "full_name": "Nguyen Van A",
-    "role": "HR",
+    "fullName": "Nguyen Van A",
+    "role": "HR_ADMIN",
     "status": "ACTIVE",
-    "company_id": "uuid"
+    "companyId": 10,
+    "companyName": "TechA Solutions",
+    "companySlug": "techa-solutions",
+    "companyStatus": "ACTIVE",
+    "onboardingCompleted": false,
+    "profileCompleted": false,
+    "createdAt": "2026-08-31T10:00:00"
   }
 }
 ```

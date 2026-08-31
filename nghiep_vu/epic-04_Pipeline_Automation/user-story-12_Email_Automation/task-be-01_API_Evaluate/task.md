@@ -45,23 +45,32 @@ Cung cấp API backend phục vụ US-12 - Email automation với contract rõ r
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/01_api_evaluate`
-**Mô tả:** Đặc tả API cho thao tác task-be-01_API_Evaluate (Auto-generated fallback).
+**Endpoint:** `POST /api/v1/applications/{applicationId}/rounds/{roundId}/evaluate`
+**Mô tả:** Lưu kết quả đánh giá một vòng và kích hoạt email automation nếu cấu hình yêu cầu.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "result": "PASSED",
+  "score": 85,
+  "note": "Ứng viên đạt yêu cầu vòng kỹ thuật.",
+  "sendEmail": true
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lưu đánh giá vòng tuyển dụng thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "applicationId": 301,
+    "roundId": 202,
+    "roundResult": "PASSED",
+    "applicationStatus": "ACTIVE",
+    "nextRoundId": 203,
+    "emailQueued": true,
+    "evaluatedAt": "2026-08-31T10:00:00"
   }
 }
 ```

@@ -45,23 +45,29 @@ Cung cấp API backend phục vụ US-11 - Cấu hình Pipeline với contract r
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/02_api_get_rounds`
-**Mô tả:** Đặc tả API cho thao tác task-be-02_API_Get_Rounds (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/jobs/{jobId}/rounds`
+**Mô tả:** Lấy danh sách vòng tuyển dụng/pipeline rounds của job thuộc company hiện tại.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy danh sách vòng tuyển dụng thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "items": [
+      {
+        "id": 201,
+        "name": "CV Screening",
+        "order": 1,
+        "type": "CV_SCREENING",
+        "isRequired": true,
+        "createdAt": "2026-08-31T10:00:00"
+      }
+    ],
+    "total": 1
   }
 }
 ```

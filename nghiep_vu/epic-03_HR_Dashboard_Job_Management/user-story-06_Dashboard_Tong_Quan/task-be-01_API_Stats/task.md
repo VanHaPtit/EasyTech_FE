@@ -45,23 +45,24 @@ Cung cấp API backend phục vụ US-06 - Dashboard tổng quan với contract 
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/01_api_stats`
-**Mô tả:** Đặc tả API cho thao tác task-be-01_API_Stats (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/dashboard/stats`
+**Mô tả:** Lấy các chỉ số tổng quan tuyển dụng của company hiện tại.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy thống kê dashboard thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "totalApplications": 1284,
+    "processingApplications": 312,
+    "passedApplications": 487,
+    "rejectedApplications": 485,
+    "conversionRate": 38,
+    "averageHiringDays": 21
   }
 }
 ```

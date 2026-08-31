@@ -18,7 +18,7 @@ Cung cấp API backend phục vụ US-05 - Admin duyệt doanh nghiệp với co
 - `/api/v1/admin/companies`
 
 ## Request
-- Query params: status, keyword, page, size.
+- Query params: `status`, `searchText`, `page`, `limit`.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -48,18 +48,22 @@ Cung cấp API backend phục vụ US-05 - Admin duyệt doanh nghiệp với co
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy danh sách doanh nghiệp thành công",
   "data": {
-    "items": [
+    "current_page": 1,
+    "last_page": 1,
+    "total": 1,
+    "data": [
       {
-        "id": "uuid",
+        "id": 1,
         "name": "TechA Solutions",
-        "tax_code": "0123456789",
+        "email": "hr@techa.vn",
+        "taxCode": "0123456789",
         "status": "PENDING",
-        "created_at": "2026-08-31T10:00:00Z"
+        "createdAt": "2026-08-31T10:00:00"
       }
-    ],
-    "total": 1
+    ]
   }
 }
 ```

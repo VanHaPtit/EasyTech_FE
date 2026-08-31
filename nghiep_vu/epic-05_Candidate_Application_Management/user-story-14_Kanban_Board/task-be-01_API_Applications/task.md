@@ -44,20 +44,31 @@ Cung cấp API backend phục vụ US-14 - Kanban Board với contract rõ ràng
 
 
 ## 3. API JSON Contract
-**Endpoint:** `GET /api/v1/jobs/{job_id}/applications?status=ACTIVE`
+**Endpoint:** `GET /api/v1/jobs/{jobId}/applications?status=ACTIVE&stageId=201&page=1&limit=20`
+
+### Request Body
+Không có request body.
+
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy danh sách ứng viên thành công",
   "data": {
-    "items": [
+    "current_page": 1,
+    "last_page": 1,
+    "total": 1,
+    "data": [
       {
-        "id": "uuid",
-        "candidate_id": "uuid",
-        "full_name": "Tran B",
-        "current_round_id": "uuid",
+        "id": 301,
+        "candidateId": 501,
+        "fullName": "Tran B",
+        "email": "tranb@example.com",
+        "phone": "0901234567",
+        "currentRoundId": 201,
+        "currentRoundName": "CV Screening",
         "status": "ACTIVE",
-        "applied_at": "2026-08-31T10:00:00Z"
+        "appliedAt": "2026-08-31T10:00:00"
       }
     ]
   }

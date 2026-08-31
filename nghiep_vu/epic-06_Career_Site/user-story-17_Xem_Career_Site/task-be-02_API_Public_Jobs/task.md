@@ -44,19 +44,31 @@ Cung cấp API backend phục vụ US-17 - Xem Career Site với contract rõ r�
 
 
 ## 3. API JSON Contract
-**Endpoint:** `GET /api/v1/public/companies/{company_slug}/jobs`
+**Endpoint:** `GET /api/v1/public/companies/{companySlug}/jobs?keyword=frontend&location=HCM&page=1&limit=20`
+
+### Request Body
+Không có request body.
+
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy danh sách tin tuyển dụng public thành công",
   "data": {
-    "items": [
+    "current_page": 1,
+    "last_page": 1,
+    "total": 1,
+    "data": [
       {
-        "id": "uuid",
+        "id": 201,
         "title": "Frontend Dev",
         "slug": "frontend-dev",
         "location": "HCM",
-        "working_type": "HYBRID"
+        "workingType": "HYBRID",
+        "employmentType": "FULL_TIME",
+        "salaryMin": 15000000,
+        "salaryMax": 30000000,
+        "publishedAt": "2026-08-31T09:00:00"
       }
     ]
   }

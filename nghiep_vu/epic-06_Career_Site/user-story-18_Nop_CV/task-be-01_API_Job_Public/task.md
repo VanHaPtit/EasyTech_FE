@@ -45,23 +45,40 @@ Cung cấp API backend phục vụ US-18 - Nộp CV với contract rõ ràng và
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/01_api_job_public`
-**Mô tả:** Đặc tả API cho thao tác task-be-01_API_Job_Public (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/public/jobs/{jobSlug}`
+**Mô tả:** Lấy chi tiết tin tuyển dụng public để candidate xem và nộp CV.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy chi tiết tin tuyển dụng thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 201,
+    "title": "Frontend Dev",
+    "slug": "frontend-dev",
+    "description": "Tham gia phát triển sản phẩm EasyTech HRM.",
+    "requirements": "Có kinh nghiệm React và TypeScript.",
+    "benefits": "Lương cạnh tranh, môi trường linh hoạt.",
+    "location": "HCM",
+    "workingType": "HYBRID",
+    "employmentType": "FULL_TIME",
+    "salaryMin": 15000000,
+    "salaryMax": 30000000,
+    "company": {
+      "id": 101,
+      "companyName": "EasyTech",
+      "companySlug": "easytech",
+      "logoUrl": "https://storage.easytech.vn/logos/easytech.png"
+    },
+    "applicationForm": {
+      "requirePhone": true,
+      "requireCoverLetter": false,
+      "questions": []
+    }
   }
 }
 ```

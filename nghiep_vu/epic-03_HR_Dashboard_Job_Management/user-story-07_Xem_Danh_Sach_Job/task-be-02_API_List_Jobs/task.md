@@ -45,23 +45,32 @@ Cung cấp API backend phục vụ US-07 - Xem danh sách Job với contract rõ
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/02_api_list_jobs`
-**Mô tả:** Đặc tả API cho thao tác task-be-02_API_List_Jobs (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/jobs?keyword=frontend&status=ACTIVE&page=1&limit=20`
+**Mô tả:** Lấy danh sách job thuộc company hiện tại.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy danh sách job thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "current_page": 1,
+    "last_page": 1,
+    "total": 1,
+    "data": [
+      {
+        "id": 101,
+        "title": "Senior Frontend Developer",
+        "slug": "senior-frontend-developer",
+        "status": "ACTIVE",
+        "location": "TP. HCM",
+        "applicationCount": 86,
+        "createdAt": "2026-08-31T10:00:00"
+      }
+    ]
   }
 }
 ```

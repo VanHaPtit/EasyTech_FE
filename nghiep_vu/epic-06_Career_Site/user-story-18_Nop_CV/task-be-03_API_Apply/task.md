@@ -44,20 +44,27 @@ Cung cấp API backend phục vụ US-18 - Nộp CV với contract rõ ràng và
 
 
 ## 3. API JSON Contract
-**Endpoint:** `POST /api/v1/public/jobs/{job_slug}/apply`
+**Endpoint:** `POST /api/v1/public/jobs/{jobId}/applications`
+
 ### Request Body (Multipart Form-Data)
-- `full_name`: "Tran B"
+- `fullName`: "Tran B"
 - `email`: "candidate@gmail.com"
 - `phone`: "0901234567"
-- `cv_file`: [File PDF]
+- `coverLetter`: "Tôi quan tâm đến vị trí này."
+- `cvFile`: [File PDF]
+- `answers`: "[{\"questionId\":1,\"answer\":\"React 4 năm\"}]"
+- `consentAccepted`: true
+
 ### Response (201 Created)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Nộp CV thành công",
   "data": {
-    "id": "uuid",
-    "status": "ACTIVE",
-    "secure_token": "magic_link_token"
+    "id": 301,
+    "applicationStatus": "ACTIVE",
+    "trackingToken": "magic_link_token",
+    "submittedAt": "2026-08-31T10:00:00"
   }
 }
 ```

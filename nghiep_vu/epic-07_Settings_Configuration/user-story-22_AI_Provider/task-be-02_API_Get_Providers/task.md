@@ -45,23 +45,39 @@ Cung cấp API backend phục vụ user-story-22 AI Provider với contract rõ 
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/02_api_get_providers`
-**Mô tả:** Đặc tả API cho thao tác task-be-02_API_Get_Providers (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/ai-providers`
+**Mô tả:** Lấy danh sách AI Provider khả dụng và trạng thái cấu hình trong company hiện tại.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy danh sách AI Provider thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "activeProviderId": 1,
+    "providers": [
+      {
+        "id": 1,
+        "providerCode": "OPENAI",
+        "providerName": "OpenAI",
+        "isActive": true,
+        "isConfigured": true,
+        "maskedKey": "sk-****abcd",
+        "updatedAt": "2026-08-31T10:00:00"
+      },
+      {
+        "id": 2,
+        "providerCode": "GEMINI",
+        "providerName": "Google Gemini",
+        "isActive": false,
+        "isConfigured": false,
+        "maskedKey": null,
+        "updatedAt": null
+      }
+    ]
   }
 }
 ```

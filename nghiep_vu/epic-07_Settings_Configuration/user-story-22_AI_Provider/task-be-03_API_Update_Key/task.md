@@ -45,23 +45,30 @@ Cung cấp API backend phục vụ user-story-22 AI Provider với contract rõ 
 
 ## 3. API JSON Contract
 
-**Endpoint:** `POST /api/v1/resource/03_api_update_key`
-**Mô tả:** Đặc tả API cho thao tác task-be-03_API_Update_Key (Auto-generated fallback).
+**Endpoint:** `PATCH /api/v1/ai-providers/{providerId}/key`
+**Mô tả:** Cập nhật API key hoặc trạng thái kích hoạt của AI Provider; backend không trả lại secret thô.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "apiKey": "sk-live-new-secret",
+  "isActive": true
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Cập nhật AI Provider thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 1,
+    "providerCode": "OPENAI",
+    "providerName": "OpenAI",
+    "isActive": true,
+    "isConfigured": true,
+    "maskedKey": "sk-****abcd",
+    "updatedAt": "2026-08-31T10:00:00"
   }
 }
 ```

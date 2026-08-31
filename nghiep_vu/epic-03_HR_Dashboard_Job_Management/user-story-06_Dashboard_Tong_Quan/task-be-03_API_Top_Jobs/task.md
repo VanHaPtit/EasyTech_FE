@@ -45,23 +45,29 @@ Cung cấp API backend phục vụ US-06 - Dashboard tổng quan với contract 
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/03_api_top_jobs`
-**Mô tả:** Đặc tả API cho thao tác task-be-03_API_Top_Jobs (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/dashboard/top-jobs?limit=5&range=6m`
+**Mô tả:** Lấy danh sách job nổi bật/hiệu quả nhất của company hiện tại.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy danh sách job nổi bật thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "items": [
+      {
+        "id": 101,
+        "title": "Senior Frontend Developer",
+        "department": "Engineering",
+        "location": "TP. HCM",
+        "applicationCount": 86,
+        "status": "ACTIVE"
+      }
+    ],
+    "total": 1
   }
 }
 ```

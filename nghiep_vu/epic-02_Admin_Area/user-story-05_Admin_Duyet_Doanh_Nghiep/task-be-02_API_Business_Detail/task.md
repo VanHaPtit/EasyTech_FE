@@ -45,23 +45,27 @@ Cung cấp API backend phục vụ US-05 - Admin duyệt doanh nghiệp với co
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/02_api_business_detail`
-**Mô tả:** Đặc tả API cho thao tác task-be-02_API_Business_Detail (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/admin/companies/{companyId}`
+**Mô tả:** Lấy chi tiết doanh nghiệp để Admin xem xét phê duyệt.
 
 ### Request Body
 ```json
-{
-  "example_field": "string_value"
-}
+Không có request body.
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy chi tiết doanh nghiệp thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 1,
+    "name": "TechA Solutions",
+    "email": "hr@techa.vn",
+    "taxCode": "0123456789",
+    "status": "PENDING",
+    "createdAt": "2026-08-31T10:00:00",
+    "duplicateWarnings": []
   }
 }
 ```

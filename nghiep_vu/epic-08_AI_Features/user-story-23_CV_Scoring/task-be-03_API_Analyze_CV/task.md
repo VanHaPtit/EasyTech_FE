@@ -44,21 +44,38 @@ Cung cấp API backend phục vụ user-story-23 CV Scoring với contract rõ r
 
 
 ## 3. API JSON Contract
-**Endpoint:** `POST /api/v1/applications/{application_id}/analyze-cv`
+**Endpoint:** `POST /api/v1/applications/{applicationId}/cv-analysis`
+
 ### Request Body
 ```json
-{}
+{
+  "rerun": false
+}
 ```
+
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Phân tích CV thành công",
   "data": {
-    "id": "uuid",
-    "matching_score": 85.5,
-    "matched_skills": ["Java", "Spring Boot"],
-    "missing_skills": ["AWS"],
-    "strengths": ["Strong backend exp"],
+    "id": 701,
+    "applicationId": 301,
+    "matchingScore": 85.5,
+    "matchedSkills": [
+      "Java",
+      "Spring Boot"
+    ],
+    "missingSkills": [
+      "AWS"
+    ],
+    "strengths": [
+      "Kinh nghiệm backend tốt"
+    ],
+    "weaknesses": [
+      "Chưa có nhiều kinh nghiệm cloud"
+    ],
+    "summary": "Ứng viên phù hợp với yêu cầu backend Java.",
     "provider": "OPENAI"
   }
 }

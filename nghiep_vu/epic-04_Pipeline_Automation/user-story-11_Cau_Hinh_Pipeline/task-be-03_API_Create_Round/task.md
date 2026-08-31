@@ -44,24 +44,30 @@ Cung cấp API backend phục vụ US-11 - Cấu hình Pipeline với contract r
 
 
 ## 3. API JSON Contract
-**Endpoint:** `POST /api/v1/jobs/{job_id}/rounds`
+**Endpoint:** `POST /api/v1/jobs/{jobId}/rounds`
 ### Request Body
 ```json
 {
   "name": "HR Interview",
-  "order_index": 1,
-  "pass_email_template_id": "uuid",
-  "fail_email_template_id": "uuid"
+  "order": 1,
+  "type": "INTERVIEW",
+  "passEmailTemplateId": 301,
+  "failEmailTemplateId": 302,
+  "isRequired": true
 }
 ```
 ### Response (201 Created)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Tạo vòng tuyển dụng thành công",
   "data": {
-    "id": "uuid",
+    "id": 202,
     "name": "HR Interview",
-    "order_index": 1
+    "order": 1,
+    "type": "INTERVIEW",
+    "isRequired": true,
+    "createdAt": "2026-08-31T10:00:00"
   }
 }
 ```

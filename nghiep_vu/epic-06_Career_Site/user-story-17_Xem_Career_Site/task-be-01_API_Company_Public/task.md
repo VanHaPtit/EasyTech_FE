@@ -45,23 +45,28 @@ Cung cấp API backend phục vụ US-17 - Xem Career Site với contract rõ r�
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/01_api_company_public`
-**Mô tả:** Đặc tả API cho thao tác task-be-01_API_Company_Public (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/public/companies/{companySlug}`
+**Mô tả:** Lấy thông tin công ty public và cấu hình branding cho Career Site.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy thông tin Career Site thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 101,
+    "companyName": "EasyTech",
+    "companySlug": "easytech",
+    "logoUrl": "https://storage.easytech.vn/logos/easytech.png",
+    "bannerUrl": "https://storage.easytech.vn/banners/easytech.png",
+    "description": "Môi trường công nghệ năng động",
+    "website": "https://easytech.vn",
+    "publicEmail": "hr@easytech.vn",
+    "publicPhone": "0901234567",
+    "primaryColor": "#0EA5E9"
   }
 }
 ```

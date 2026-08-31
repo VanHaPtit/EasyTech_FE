@@ -15,7 +15,7 @@ Cung cấp API backend phục vụ US-07 - Xem danh sách Job với contract rõ
 - `GET`
 
 ## Endpoint
-- `/api/v1/resources`
+- `/api/v1/jobs/stats`
 
 ## Request
 - Query params hoặc JSON payload theo nghiệp vụ của task.
@@ -45,23 +45,22 @@ Cung cấp API backend phục vụ US-07 - Xem danh sách Job với contract rõ
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/03_api_job_stats`
-**Mô tả:** Đặc tả API cho thao tác task-be-03_API_Job_Stats (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/jobs/stats`
+**Mô tả:** Lấy thống kê nhanh cho danh sách job của company hiện tại.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy thống kê job thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "totalJobs": 12,
+    "draftJobs": 3,
+    "activeJobs": 8,
+    "closedJobs": 1
   }
 }
 ```

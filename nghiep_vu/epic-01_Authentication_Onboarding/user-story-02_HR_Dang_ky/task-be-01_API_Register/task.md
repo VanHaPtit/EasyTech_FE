@@ -50,19 +50,20 @@ Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràn
 {
   "email": "hr@techa.com",
   "password": "SecurePassword123!",
-  "full_name": "Nguyen Van A",
-  "company_name": "TechA Solutions",
-  "company_slug": "techa-solutions",
-  "tax_code": "0123456789"
+  "fullName": "Nguyen Van A",
+  "companyName": "TechA Solutions",
+  "taxCode": "0123456789"
 }
 ```
 ### Response (201 Created)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Đăng ký thành công, hồ sơ đang chờ Admin phê duyệt",
   "data": {
-    "user": { "id": "uuid", "role": "HR", "status": "PENDING" },
-    "company": { "id": "uuid", "name": "TechA Solutions", "status": "PENDING", "tax_code": "0123456789" }
+    "email": "hr@techa.com",
+    "companyName": "TechA Solutions",
+    "companyStatus": "PENDING"
   }
 }
 ```

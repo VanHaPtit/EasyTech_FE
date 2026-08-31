@@ -45,23 +45,24 @@ Cung cấp API backend phục vụ US-05 - Admin duyệt doanh nghiệp với co
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/05_api_block`
-**Mô tả:** Đặc tả API cho thao tác task-be-05_API_Block (Auto-generated fallback).
+**Endpoint:** `PATCH /api/v1/admin/companies/{companyId}/status`
+**Mô tả:** Khóa doanh nghiệp theo quyền System Admin.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "status": "BLOCKED"
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Khóa doanh nghiệp thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 1,
+    "status": "BLOCKED"
   }
 }
 ```

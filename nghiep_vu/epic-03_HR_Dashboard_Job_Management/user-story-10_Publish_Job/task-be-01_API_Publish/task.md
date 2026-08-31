@@ -44,19 +44,19 @@ Cung cấp API backend phục vụ US-10 - Publish Job với contract rõ ràng 
 
 
 ## 3. API JSON Contract
-**Endpoint:** `POST /api/v1/jobs/{job_id}/publish`
+**Endpoint:** `POST /api/v1/jobs/{jobId}/publish`
 ### Request Body
-```json
-{}
-```
+Không có request body.
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Publish job thành công",
   "data": {
-    "id": "uuid",
+    "id": 101,
+    "title": "Senior Frontend Developer",
     "status": "ACTIVE",
-    "published_at": "2026-08-31T10:00:00Z"
+    "publishedAt": "2026-08-31T10:00:00"
   }
 }
 ```

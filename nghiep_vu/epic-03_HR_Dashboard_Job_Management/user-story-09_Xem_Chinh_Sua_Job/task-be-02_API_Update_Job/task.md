@@ -45,23 +45,35 @@ Cung cấp API backend phục vụ US-09 - Xem và chỉnh sửa Job với contr
 
 ## 3. API JSON Contract
 
-**Endpoint:** `POST /api/v1/resource/02_api_update_job`
-**Mô tả:** Đặc tả API cho thao tác task-be-02_API_Update_Job (Auto-generated fallback).
+**Endpoint:** `PATCH /api/v1/jobs/{jobId}`
+**Mô tả:** Cập nhật các field được phép chỉnh sửa của job thuộc company hiện tại.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "title": "Senior Frontend Developer",
+  "description": "JD details updated...",
+  "requirements": "ReactJS, TypeScript",
+  "salaryMin": 1800,
+  "salaryMax": 2800,
+  "currency": "USD",
+  "workingType": "HYBRID",
+  "employmentType": "FULL_TIME",
+  "experienceLevel": "SENIOR"
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Cập nhật job thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 101,
+    "title": "Senior Frontend Developer",
+    "slug": "senior-frontend-developer",
+    "status": "DRAFT",
+    "updatedAt": "2026-08-31T10:30:00"
   }
 }
 ```

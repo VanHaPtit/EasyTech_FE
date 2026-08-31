@@ -44,25 +44,30 @@ Cung cấp API backend phục vụ US-13 - Đặt lịch phỏng vấn với con
 
 
 ## 3. API JSON Contract
-**Endpoint:** `POST /api/v1/applications/{application_id}/interviews`
+**Endpoint:** `POST /api/v1/applications/{applicationId}/interviews`
 ### Request Body
 ```json
 {
-  "round_id": "uuid",
-  "interview_time": "2026-09-05T09:00:00Z",
-  "duration": 60,
+  "roundId": 202,
+  "interviewTime": "2026-09-05T09:00:00",
+  "durationMinutes": 60,
   "location": "Google Meet Link",
-  "candidate_note": "Prepare portfolio"
+  "candidateNote": "Prepare portfolio"
 }
 ```
 ### Response (201 Created)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Tạo lịch phỏng vấn thành công",
   "data": {
-    "id": "uuid",
+    "id": 401,
+    "applicationId": 301,
+    "roundId": 202,
     "status": "SCHEDULED",
-    "secure_token": "random_magic_link"
+    "interviewTime": "2026-09-05T09:00:00",
+    "durationMinutes": 60,
+    "magicLink": "https://easytech.vn/interview/abc"
   }
 }
 ```

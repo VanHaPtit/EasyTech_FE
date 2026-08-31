@@ -49,26 +49,28 @@ Cung cấp API backend phục vụ US-08 - Tạo Job bằng AI JD với contract
 ```json
 {
   "title": "Senior Frontend Developer",
-  "category_id": 1,
+  "categoryId": 1,
   "description": "JD details...",
   "requirements": "ReactJS...",
-  "salary_min": 1500,
-  "salary_max": 2500,
+  "salaryMin": 1500,
+  "salaryMax": 2500,
   "currency": "USD",
-  "working_type": "HYBRID",
-  "employment_type": "FULL_TIME",
-  "experience_level": "SENIOR"
+  "workingType": "HYBRID",
+  "employmentType": "FULL_TIME",
+  "experienceLevel": "SENIOR"
 }
 ```
 ### Response (201 Created)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Tạo job thành công",
   "data": {
-    "id": "uuid",
+    "id": 101,
     "title": "Senior Frontend Developer",
     "slug": "senior-frontend-developer",
-    "status": "DRAFT"
+    "status": "DRAFT",
+    "createdAt": "2026-08-31T10:00:00"
   }
 }
 ```

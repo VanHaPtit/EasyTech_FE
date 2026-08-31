@@ -45,23 +45,27 @@ Cung cấp API backend phục vụ US-03 - HR onboarding với contract rõ ràn
 
 ## 3. API JSON Contract
 
-**Endpoint:** `POST /api/v1/resource/02_api_upload_logo`
-**Mô tả:** Đặc tả API cho thao tác task-be-02_API_Upload_Logo (Auto-generated fallback).
+**Endpoint:** `POST /api/v1/company-profiles/me/logo`
+**Mô tả:** Upload logo công ty trong onboarding. Logo là optional.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+`multipart/form-data` với field `file`.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Tải logo công ty thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 10,
+    "name": "TechA Solutions",
+    "status": "ACTIVE",
+    "profile": {
+      "id": 5,
+      "logoUrl": "/uploads/company-logos/10/logo.webp",
+      "onboardingCompleted": false,
+      "profileCompleted": false
+    }
   }
 }
 ```

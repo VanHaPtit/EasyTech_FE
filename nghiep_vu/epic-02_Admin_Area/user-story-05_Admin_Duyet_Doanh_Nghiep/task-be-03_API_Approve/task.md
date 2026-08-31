@@ -44,19 +44,22 @@ Cung cấp API backend phục vụ US-05 - Admin duyệt doanh nghiệp với co
 
 
 ## 3. API JSON Contract
-**Endpoint:** `POST /api/v1/admin/companies/{company_id}/approve`
+**Endpoint:** `PATCH /api/v1/admin/companies/{companyId}/status`
 ### Request Body
 ```json
-{}
+{
+  "status": "ACTIVE"
+}
 ```
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Phê duyệt doanh nghiệp thành công",
   "data": {
-    "id": "uuid",
+    "id": 1,
     "status": "ACTIVE",
-    "approved_at": "2026-08-31T10:00:00Z"
+    "approvedAt": "2026-08-31T10:00:00"
   }
 }
 ```

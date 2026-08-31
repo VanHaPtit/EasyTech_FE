@@ -45,23 +45,29 @@ Cung cấp API backend phục vụ US-11 - Cấu hình Pipeline với contract r
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/06_api_reorder`
-**Mô tả:** Đặc tả API cho thao tác task-be-06_API_Reorder (Auto-generated fallback).
+**Endpoint:** `PATCH /api/v1/jobs/{jobId}/rounds/reorder`
+**Mô tả:** Cập nhật thứ tự các vòng tuyển dụng của job.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "rounds": [
+    { "roundId": 201, "order": 1 },
+    { "roundId": 202, "order": 2 }
+  ]
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Cập nhật thứ tự vòng tuyển dụng thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "items": [
+      { "id": 201, "name": "CV Screening", "order": 1 },
+      { "id": 202, "name": "Technical Interview", "order": 2 }
+    ]
   }
 }
 ```

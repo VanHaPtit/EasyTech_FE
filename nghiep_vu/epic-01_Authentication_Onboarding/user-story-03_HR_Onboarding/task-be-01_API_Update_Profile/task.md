@@ -44,24 +44,46 @@ Cung cấp API backend phục vụ US-03 - HR onboarding với contract rõ ràn
 
 
 ## 3. API JSON Contract
-**Endpoint:** `PUT /api/v1/companies/profile`
+**Endpoint:** `PATCH /api/v1/company-profiles/me`
 ### Request Body
 ```json
 {
+  "industry": "Information Technology",
+  "companySize": "51-200",
+  "website": "https://techa.vn",
   "description": "Company description...",
-  "primary_color": "#47b1de",
+  "phone": "0901234567",
+  "address": "123 Nguyen Hue, TP. HCM",
+  "logoUrl": "/uploads/company-logos/10/logo.webp",
+  "primaryColor": "#47b1de",
   "benefits": "BHXH, Remote...",
-  "social_links": {"facebook": "url"}
+  "businessType": "Software"
 }
 ```
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Cập nhật hồ sơ công ty thành công",
   "data": {
-    "id": "uuid",
-    "company_id": "uuid",
-    "primary_color": "#47b1de"
+    "id": 10,
+    "name": "TechA Solutions",
+    "taxCode": "0123456789",
+    "phone": "0901234567",
+    "email": "hr@techa.com",
+    "website": "https://techa.vn",
+    "address": "123 Nguyen Hue, TP. HCM",
+    "status": "ACTIVE",
+    "profile": {
+      "id": 5,
+      "industry": "Information Technology",
+      "companySize": "51-200",
+      "description": "Company description...",
+      "logoUrl": "/uploads/company-logos/10/logo.webp",
+      "primaryColor": "#47b1de",
+      "onboardingCompleted": false,
+      "profileCompleted": false
+    }
   }
 }
 ```

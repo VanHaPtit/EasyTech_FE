@@ -45,23 +45,31 @@ Cung cấp API backend phục vụ US-08 - Tạo Job bằng AI JD với contract
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/02_api_jd_writer_proxy`
-**Mô tả:** Đặc tả API cho thao tác task-be-02_API_JD_Writer_Proxy (Auto-generated fallback).
+**Endpoint:** `POST /api/v1/ai/job-description/suggest`
+**Mô tả:** Sinh gợi ý JD bằng AI để HR review/chỉnh sửa trước khi lưu job.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "title": "Senior Frontend Developer",
+  "categoryId": 1,
+  "experienceLevel": "SENIOR",
+  "workingType": "HYBRID",
+  "prompt": "Nhấn mạnh kinh nghiệm ReactJS và TypeScript."
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Tạo gợi ý JD thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "suggestedDescription": "Mô tả công việc do AI đề xuất...",
+    "suggestedRequirements": "Yêu cầu ứng viên do AI đề xuất...",
+    "suggestedBenefits": "Phúc lợi đề xuất...",
+    "provider": "SYSTEM_DEFAULT",
+    "model": "gpt-or-gemini"
   }
 }
 ```

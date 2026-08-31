@@ -45,23 +45,45 @@ Cung cấp API backend phục vụ user-story-24 AI Goi Y Cau Hoi với contract
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/01_api_ai_suggestions`
-**Mô tả:** Đặc tả API cho thao tác task-be-01_API_AI_Suggestions (Auto-generated fallback).
+**Endpoint:** `POST /api/v1/ai/interview-questions/suggest`
+**Mô tả:** Sinh danh sách câu hỏi phỏng vấn gợi ý theo job, round, competency và context ứng viên.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "jobId": 201,
+  "roundId": 301,
+  "applicationId": 401,
+  "competencies": [
+    "Java",
+    "Spring Boot",
+    "System Design"
+  ],
+  "difficulty": "SENIOR",
+  "questionCount": 5
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Gợi ý câu hỏi phỏng vấn thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "provider": "OPENAI",
+    "suggestions": [
+      {
+        "id": 1,
+        "competency": "System Design",
+        "question": "Bạn sẽ thiết kế hệ thống xử lý 10.000 hồ sơ ứng viên mỗi ngày như thế nào?",
+        "expectedSignals": [
+          "Biết phân tách service",
+          "Có tư duy scale",
+          "Có phương án quan sát hệ thống"
+        ],
+        "difficulty": "SENIOR"
+      }
+    ]
   }
 }
 ```

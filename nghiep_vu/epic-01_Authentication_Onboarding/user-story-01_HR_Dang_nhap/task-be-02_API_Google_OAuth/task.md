@@ -45,23 +45,38 @@ Cung cấp API backend phục vụ US-01 - HR đăng nhập với contract rõ r
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/02_api_google_oauth`
-**Mô tả:** Đặc tả API cho thao tác task-be-02_API_Google_OAuth (Auto-generated fallback).
+**Endpoint:** `POST /api/v1/auth/google`
+**Mô tả:** Xác thực Google ID token cho tài khoản HR đã tồn tại. Google OAuth là phương thức bổ sung/future enhancement, không thay thế luồng duyệt doanh nghiệp.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "idToken": "google_id_token_string"
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Đăng nhập Google thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "tokenType": "Bearer",
+    "expiresIn": 86400,
+    "user": {
+      "id": 1,
+      "email": "hr@techa.com",
+      "fullName": "Nguyen Van A",
+      "role": "HR_ADMIN",
+      "status": "ACTIVE",
+      "companyId": 10,
+      "companyName": "TechA Solutions",
+      "companySlug": "techa-solutions",
+      "companyStatus": "ACTIVE",
+      "onboardingCompleted": false,
+      "profileCompleted": false,
+      "createdAt": "2026-08-31T10:00:00"
+    }
   }
 }
 ```

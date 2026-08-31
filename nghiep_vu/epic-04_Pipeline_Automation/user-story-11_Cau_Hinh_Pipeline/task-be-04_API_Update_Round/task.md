@@ -45,23 +45,33 @@ Cung cấp API backend phục vụ US-11 - Cấu hình Pipeline với contract r
 
 ## 3. API JSON Contract
 
-**Endpoint:** `POST /api/v1/resource/04_api_update_round`
-**Mô tả:** Đặc tả API cho thao tác task-be-04_API_Update_Round (Auto-generated fallback).
+**Endpoint:** `PATCH /api/v1/jobs/{jobId}/rounds/{roundId}`
+**Mô tả:** Cập nhật thông tin vòng tuyển dụng thuộc job hiện tại.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "name": "Technical Interview",
+  "order": 2,
+  "type": "INTERVIEW",
+  "passEmailTemplateId": 301,
+  "failEmailTemplateId": 302,
+  "isRequired": true
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Cập nhật vòng tuyển dụng thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 202,
+    "name": "Technical Interview",
+    "order": 2,
+    "type": "INTERVIEW",
+    "isRequired": true,
+    "updatedAt": "2026-08-31T10:30:00"
   }
 }
 ```

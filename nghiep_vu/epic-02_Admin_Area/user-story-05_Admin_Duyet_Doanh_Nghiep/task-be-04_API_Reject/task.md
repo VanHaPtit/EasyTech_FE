@@ -45,23 +45,26 @@ Cung cấp API backend phục vụ US-05 - Admin duyệt doanh nghiệp với co
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/04_api_reject`
-**Mô tả:** Đặc tả API cho thao tác task-be-04_API_Reject (Auto-generated fallback).
+**Endpoint:** `PATCH /api/v1/admin/companies/{companyId}/status`
+**Mô tả:** Từ chối hồ sơ doanh nghiệp và lưu lý do để HR xem, chỉnh sửa và gửi lại.
 
 ### Request Body
 ```json
 {
-  "example_field": "string_value"
+  "status": "REJECTED",
+  "reason": "Mã số thuế không khớp với tên doanh nghiệp."
 }
 ```
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Từ chối doanh nghiệp thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 1,
+    "status": "REJECTED",
+    "rejectedReason": "Mã số thuế không khớp với tên doanh nghiệp."
   }
 }
 ```

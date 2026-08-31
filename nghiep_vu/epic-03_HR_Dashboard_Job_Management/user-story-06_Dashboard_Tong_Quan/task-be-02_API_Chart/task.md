@@ -45,23 +45,28 @@ Cung cấp API backend phục vụ US-06 - Dashboard tổng quan với contract 
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/02_api_chart`
-**Mô tả:** Đặc tả API cho thao tác task-be-02_API_Chart (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/dashboard/charts?range=6m&metric=applications`
+**Mô tả:** Lấy dữ liệu biểu đồ theo kỳ và loại metric.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy dữ liệu biểu đồ thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "range": "6m",
+    "metric": "applications",
+    "points": [
+      { "label": "T1", "value": 142 },
+      { "label": "T2", "value": 198 },
+      { "label": "T3", "value": 176 },
+      { "label": "T4", "value": 240 },
+      { "label": "T5", "value": 289 },
+      { "label": "T6", "value": 339 }
+    ]
   }
 }
 ```

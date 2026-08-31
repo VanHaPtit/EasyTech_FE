@@ -45,23 +45,45 @@ Cung cấp API backend phục vụ US-16 - Candidate Drawer với contract rõ r
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/01_api_app_detail`
-**Mô tả:** Đặc tả API cho thao tác task-be-01_API_App_Detail (Auto-generated fallback).
+**Endpoint:** `GET /api/v1/applications/{applicationId}`
+**Mô tả:** Lấy chi tiết application/candidate để hiển thị Candidate Drawer.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Lấy chi tiết hồ sơ ứng viên thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 301,
+    "status": "ACTIVE",
+    "appliedAt": "2026-08-31T10:00:00",
+    "candidate": {
+      "id": 501,
+      "fullName": "Tran B",
+      "email": "tranb@example.com",
+      "phone": "0901234567",
+      "cvUrl": "https://storage.easytech.vn/cv/tran-b.pdf"
+    },
+    "job": {
+      "id": 101,
+      "title": "Senior Frontend Developer"
+    },
+    "currentRound": {
+      "id": 201,
+      "name": "CV Screening",
+      "result": "IN_PROGRESS"
+    },
+    "timeline": [
+      {
+        "type": "APPLIED",
+        "title": "Ứng viên đã nộp hồ sơ",
+        "createdAt": "2026-08-31T10:00:00"
+      }
+    ],
+    "emailHistory": []
   }
 }
 ```

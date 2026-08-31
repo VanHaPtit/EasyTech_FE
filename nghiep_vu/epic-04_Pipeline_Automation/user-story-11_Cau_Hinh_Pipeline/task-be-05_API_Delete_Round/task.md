@@ -45,23 +45,20 @@ Cung cấp API backend phục vụ US-11 - Cấu hình Pipeline với contract r
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/resource/05_api_delete_round`
-**Mô tả:** Đặc tả API cho thao tác task-be-05_API_Delete_Round (Auto-generated fallback).
+**Endpoint:** `DELETE /api/v1/jobs/{jobId}/rounds/{roundId}`
+**Mô tả:** Xóa mềm vòng tuyển dụng nếu vòng chưa có dữ liệu ràng buộc không cho phép xóa.
 
 ### Request Body
-```json
-{
-  "example_field": "string_value"
-}
-```
+Không có request body.
 
 ### Response (200 OK)
 ```json
 {
-  "status": "success",
+  "status": 1,
+  "message": "Xóa vòng tuyển dụng thành công",
   "data": {
-    "id": "uuid",
-    "message": "Operation successful"
+    "id": 202,
+    "deleted": true
   }
 }
 ```
