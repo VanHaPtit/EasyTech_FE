@@ -60,23 +60,77 @@ Workspace Authorization quyết định user có được vào workspace hay kh�
 - Luôn validate trường bắt buộc, format, enum/status, ownership theo company_id và role.
 - Thông báo lỗi phải trả lời được: điều gì sai và user cần làm gì.
 
-## 7. Loading, empty state và success feedback
+## 7. Quy ước API JSON Contract
+
+Request/Response của các User Story **không bắt buộc có cùng field nghiệp vụ**, vì mỗi luồng có dữ liệu khác nhau. Tuy nhiên tất cả task API phải thống nhất format contract để FE/BE đọc và implement nhất quán.
+
+### Quy tắc chung
+- Phần `HTTP Method` và `Endpoint` ở đầu task phải khớp tuyệt đối với phần `API JSON Contract` bên dưới.
+- Không dùng endpoint placeholder dạng `/api/v1/resource/...` trong task đã có nghiệp vụ rõ.
+- Không để lại nội dung `Auto-generated fallback`, `example_field`, hoặc response mẫu chung chung.
+- Endpoint dùng prefix chuẩn `/api/v1`.
+- Tên field JSON dùng `camelCase` cho API request/response, ví dụ `taxCode`, `companyId`, `createdAt`, `approvedAt`, `rejectedReason`.
+- Tên cột DB trong tài liệu schema có thể dùng `snake_case`, ví dụ `tax_code`, `company_id`, `created_at`.
+- ID trong API dùng `number` nếu backend dùng `Long/BIGSERIAL`; chỉ dùng `"uuid"` khi schema/backend thật sự dùng UUID.
+- Datetime trong API dùng ISO-8601 string, ví dụ `"2026-08-31T10:00:00"`.
+- Enum/status phải dùng đúng domain đã định nghĩa, ví dụ `PENDING`, `ACTIVE`, `REJECTED`, `BLOCKED`.
+
+### Response wrapper chuẩn
+API thành công:
+
+```json
+{
+  "status": 1,
+  "message": "Thao tác thành công",
+  "data": {}
+}
+```
+
+API thất bại:
+
+```json
+{
+  "status": 0,
+  "message": "Thông báo lỗi rõ ràng và có hướng xử lý",
+  "data": null
+}
+```
+
+### Pagination chuẩn
+Danh sách phân trang trả về trong `data` theo format:
+
+```json
+{
+  "status": 1,
+  "message": "Lấy danh sách thành công",
+  "data": {
+    "current_page": 1,
+    "last_page": 1,
+    "total": 0,
+    "data": []
+  }
+}
+```
+
+> Lưu ý: `current_page` và `last_page` đang theo format pagination backend hiện tại. Nếu backend đổi sang `currentPage`/`lastPage`, phải cập nhật quy ước này và toàn bộ task liên quan cùng lúc.
+
+## 8. Loading, empty state và success feedback
 - Mọi action gọi API phải có loading state.
 - Danh sách rỗng phải có empty state và CTA phù hợp.
 - Hành động thành công hiển thị toast hoặc trang xác nhận theo mức độ quan trọng.
 
-## 8. Destructive action
+## 9. Destructive action
 Các hành động như Reject, Close Job, Disable Member, Delete Round phải có confirmation modal mô tả rõ hậu quả và ảnh hưởng như gửi email, đổi trạng thái hoặc ghi audit log.
 
-## 9. File upload
+## 10. File upload
 - Validate file type và size ở FE ngay khi chọn file.
 - BE phải validate lại file type, size và storage policy.
 - Hiển thị file name, size và lỗi rõ ràng.
 
-## 10. AI và automation
+## 11. AI và automation
 - AI chỉ tạo recommendation; HR quyết định cuối cùng.
 - Nếu hiển thị score, phải có explanation như strengths, weaknesses, missing skills.
 - Ảnh hưởng tự động như gửi email hoặc cập nhật pipeline phải được nói rõ trước khi user xác nhận.
 
-## 11. Cải tiến trong tương lai
+## 12. Cải tiến trong tương lai
 Các nội dung như Google OAuth mở rộng, AI BYOK, Candidate đổi lịch, notification center đầy đủ, autosave toàn màn hình và branding multi-company phải được đánh dấu `Cải tiến trong tương lai` nếu chưa nằm trong MVP.
