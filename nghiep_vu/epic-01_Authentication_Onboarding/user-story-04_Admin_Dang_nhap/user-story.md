@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở form Login Admin] --> B[Nhập Credentials]
+    A[Mở form Login Admin /admin/login] --> B[Nhập Credentials]
     B --> C{Kiểm tra thông tin}
     C -- Sai --> D[Báo lỗi]
     C -- Đúng --> E{Kiểm tra Role}
@@ -22,7 +22,7 @@ graph TD
 
 - **Kịch bản 1: Admin đăng nhập thành công và được redirect đúng dashboard**
   - **VỚI ĐIỀU KIỆN** tài khoản Admin đã được tạo sẵn trong database với `role = ADMIN`.
-  - **KHI** Admin nhập đúng email và mật khẩu tại trang `/login`.
+  - **KHI** Admin nhập đúng email và mật khẩu tại trang `/admin/login`.
   - **THÌ** hệ thống xác thực credentials và kiểm tra `role`.
   - Vì `role = ADMIN`: hệ thống redirect đến `/admin/dashboard` thay vì `/dashboard`.
 
@@ -41,7 +41,7 @@ graph TD
 - **Kịch bản 4: Session Admin hết hạn**
   - **VỚI ĐIỀU KIỆN** Admin đang thao tác trên Admin Dashboard.
   - **KHI** `access_token` hết hạn (15 phút) và `refresh_token` cũng hết hạn (7 ngày).
-  - **THÌ** hệ thống tự động logout Admin và redirect về `/login` với thông báo "Phiên làm việc đã hết hạn."
+  - **THÌ** hệ thống tự động logout Admin và redirect về `/admin/login` với thông báo "Phiên làm việc đã hết hạn."
 
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ Admin đăng nhập bằng Google OAuth.

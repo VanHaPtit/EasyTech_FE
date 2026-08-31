@@ -15,7 +15,7 @@ graph TD
     B -- Hợp lệ --> D[Gửi Request API]
     D -- Sai thông tin --> E[Báo lỗi thông tin]
     D -- Đúng thông tin --> F{Kiểm tra Trạng thái Company}
-    F -- ACTIVE --> G[Lưu Token & Vào Dashboard]
+    F -- ACTIVE --> G[Lưu Token & vào Onboarding hoặc Dashboard]
     F -- PENDING --> H[Chuyển hướng trang Chờ duyệt]
     F -- REJECTED --> I[Chuyển hướng trang Bị từ chối]
 ```

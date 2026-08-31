@@ -13,12 +13,13 @@ graph TD
     A[Đăng nhập lần đầu] --> B{Kiểm tra Onboarding?}
     B -- Đã làm --> C[Vào Dashboard]
     B -- Chưa làm --> D[Hiển thị màn hình Onboarding]
-    D --> E[Bước 1: Branding Logo/Color]
-    E --> F[Bước 2: Thông tin công ty]
-    F --> G[Hoàn thành Onboarding]
-    G --> C
-    D -- Bỏ qua (Skip) --> H[Lưu trạng thái bỏ qua]
+    D --> E[Bước 1: Thông tin công ty]
+    E --> F[Bước 2: Thương hiệu/Logo optional]
+    F --> G[Bước 3: Liên hệ]
+    G --> H[Hoàn thành Onboarding]
     H --> C
+    D -- Bỏ qua (Skip) --> I[Lưu trạng thái bỏ qua]
+    I --> C
 ```
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)

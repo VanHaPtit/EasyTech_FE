@@ -15,7 +15,7 @@ graph TD
     B -- Hợp lệ --> D[Submit API]
     D --> E{Kiểm tra trùng Email/MST}
     E -- Trùng --> F[Báo lỗi đã tồn tại]
-    E -- Không trùng --> G[Tạo DB: Company=PENDING]
+    E -- Không trùng --> G[Tạo DB: Company=PENDING, User=HR_ADMIN/PENDING]
     G --> H[Gửi Email thông báo Admin]
     H --> I[Chuyển hướng trang Chờ duyệt]
 ```

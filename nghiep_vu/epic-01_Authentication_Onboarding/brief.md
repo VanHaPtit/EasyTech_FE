@@ -31,7 +31,7 @@ graph TD
   D --> E{Duyệt?}
   E -- Yes --> F[Company = ACTIVE, User = ACTIVE]
   F --> G[HR Login]
-  G --> H[Onboarding: Branding → Contact]
+  G --> H[Onboarding: Thông tin → Thương hiệu → Liên hệ]
   H --> I[Dashboard]
   E -- No --> J[Company = REJECTED, User = PENDING]
   J --> K[HR xem lý do]
