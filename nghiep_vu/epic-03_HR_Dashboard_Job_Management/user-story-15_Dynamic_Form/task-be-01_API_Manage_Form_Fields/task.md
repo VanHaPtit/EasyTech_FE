@@ -15,4 +15,43 @@ API để cấu hình bộ câu hỏi động (form_fields) cho từng Job (CRUD
 - DELETE /api/v1/jobs/{jobId}/form-fields/{fieldId}
 
 ## API JSON Contract
-- Bổ sung schema Request/Response chi tiết sau khi chốt thiết kế.
+
+### Request Body - Tạo/Cập nhật field
+```json
+{
+  "label": "Portfolio URL",
+  "fieldType": "URL",
+  "required": false,
+  "placeholder": "https://portfolio.example.com",
+  "options": [],
+  "displayOrder": 3
+}
+```
+
+### Response (200 OK)
+```json
+{
+  "status": 1,
+  "message": "Cập nhật trường form ứng tuyển thành công.",
+  "data": {
+    "id": 12,
+    "jobId": 1001,
+    "label": "Portfolio URL",
+    "fieldType": "URL",
+    "required": false,
+    "placeholder": "https://portfolio.example.com",
+    "options": [],
+    "displayOrder": 3,
+    "updatedAt": "2026-08-31T10:00:00"
+  }
+}
+```
+
+### Response lỗi
+```json
+{
+  "status": 0,
+  "message": "Field không hợp lệ hoặc job không thuộc công ty hiện tại.",
+  "data": null
+}
+```

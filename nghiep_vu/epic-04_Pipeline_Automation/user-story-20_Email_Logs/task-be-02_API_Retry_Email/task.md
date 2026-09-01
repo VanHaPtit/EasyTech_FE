@@ -13,4 +13,25 @@ API để gửi lại một email bị lỗi (FAILED).
 - POST /api/v1/admin/email-logs/{logId}/retry
 
 ## API JSON Contract
-- Bổ sung schema Request/Response chi tiết sau khi chốt thiết kế.
+
+### Response (200 OK)
+```json
+{
+  "status": 1,
+  "message": "Gửi lại email thành công.",
+  "data": {
+    "logId": 9001,
+    "status": "SENT",
+    "retriedAt": "2026-08-31T10:05:00"
+  }
+}
+```
+
+### Response lỗi
+```json
+{
+  "status": 0,
+  "message": "Chỉ có thể gửi lại email đang ở trạng thái FAILED.",
+  "data": null
+}
+```

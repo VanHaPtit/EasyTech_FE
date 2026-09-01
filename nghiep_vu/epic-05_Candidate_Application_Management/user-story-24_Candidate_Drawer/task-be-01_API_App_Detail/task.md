@@ -1,10 +1,10 @@
-﻿# Task BE API: API App Detail
+# Task BE API: API App Detail
 
 ## Mục đích
-Cung cấp API backend phục vụ US-16 - Candidate Drawer với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-24 - Candidate Drawer với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-16 - Candidate Drawer.
+- US-24 - Candidate Drawer.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

@@ -1,7 +1,7 @@
 # Task BE API: Lấy danh sách Job Categories
 
 ## Mục đích
-Cung cấp API backend phục vụ US-30 - Admin xem danh sách danh mục ngành nghề.
+Cung cấp API backend phục vụ US-07 - Admin xem danh sách danh mục ngành nghề.
 
 ## Điều kiện tiên quyết
 - User phải có quyền Admin (`role = ADMIN`).
@@ -23,7 +23,7 @@ Cung cấp API backend phục vụ US-30 - Admin xem danh sách danh mục ngàn
 ```json
 {
   "status": 1,
-  "message": "Success",
+  "message": "Lấy danh sách danh mục ngành nghề thành công.",
   "data": {
     "content": [
       {

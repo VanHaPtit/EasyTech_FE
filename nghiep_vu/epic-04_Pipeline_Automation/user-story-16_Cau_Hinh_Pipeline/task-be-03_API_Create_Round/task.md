@@ -1,10 +1,10 @@
-﻿# Task BE API: API Create Round
+# Task BE API: API Create Round
 
 ## Mục đích
-Cung cấp API backend phục vụ US-11 - Cấu hình Pipeline với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-16 - Cấu hình Pipeline với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-11 - Cau Hinh Pipeline.
+- US-16 - Cau Hinh Pipeline.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

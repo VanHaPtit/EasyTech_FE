@@ -11,4 +11,28 @@ API trả về trạng thái hồ sơ ứng tuyển dựa trên magic link hợp
 - GET /api/v1/candidates/application-status
 
 ## API JSON Contract
-- Bổ sung schema Request/Response chi tiết sau khi chốt thiết kế.
+
+### Response (200 OK)
+```json
+{
+  "status": 1,
+  "message": "Lấy trạng thái hồ sơ ứng tuyển thành công.",
+  "data": {
+    "applicationId": 2001,
+    "candidateName": "Tran Van B",
+    "jobTitle": "Java Backend Developer",
+    "applicationStatus": "ACTIVE",
+    "currentStage": "Technical Interview",
+    "lastUpdatedAt": "2026-08-31T10:00:00"
+  }
+}
+```
+
+### Response lỗi
+```json
+{
+  "status": 0,
+  "message": "Không thể lấy trạng thái hồ sơ từ magic link hiện tại.",
+  "data": null
+}
+```

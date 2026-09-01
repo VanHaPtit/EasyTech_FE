@@ -1,7 +1,7 @@
-﻿# Task BE Service: SMTP Sender
+# Task BE Service: SMTP Sender
 
 ## Mục đích
-Xử lý logic backend nội bộ phục vụ US-12 - Email Automation. Task này không cung cấp HTTP endpoint riêng.
+Xử lý logic backend nội bộ phục vụ US-17 - Email Automation. Task này không cung cấp HTTP endpoint riêng.
 
 ## Đầu vào
 - Entity hoặc DTO đã được validate từ API/service gọi vào.

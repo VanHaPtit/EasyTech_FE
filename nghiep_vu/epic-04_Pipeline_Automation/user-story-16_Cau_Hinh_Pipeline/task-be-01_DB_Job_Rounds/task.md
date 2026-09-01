@@ -1,7 +1,7 @@
-﻿# Task DB: DB Job Rounds
+# Task DB: DB Job Rounds
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-11 - Cau Hinh Pipeline. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-16 - Cau Hinh Pipeline. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `job_rounds`, `round_statuses`, `email_templates`, `email_logs`, `interview_schedules`.

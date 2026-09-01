@@ -12,4 +12,35 @@ API lấy danh sách thông báo in-app của HR, hỗ trợ phân trang và fil
 - GET /api/v1/notifications
 
 ## API JSON Contract
-- Bổ sung schema Request/Response chi tiết sau khi chốt thiết kế.
+
+### Response (200 OK)
+```json
+{
+  "status": 1,
+  "message": "Lấy danh sách thông báo thành công.",
+  "data": {
+    "content": [
+      {
+        "id": 7001,
+        "type": "INTERVIEW_RESPONSE",
+        "title": "Ứng viên đã xác nhận lịch phỏng vấn",
+        "message": "Tran Van B đã xác nhận tham dự phỏng vấn.",
+        "read": false,
+        "createdAt": "2026-08-31T10:00:00"
+      }
+    ],
+    "current_page": 1,
+    "last_page": 1,
+    "total": 1
+  }
+}
+```
+
+### Response lỗi
+```json
+{
+  "status": 0,
+  "message": "Không có quyền xem thông báo.",
+  "data": null
+}
+```

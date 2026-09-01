@@ -1,10 +1,10 @@
-﻿# Task BE API: API Job Stats
+# Task BE API: API Job Stats
 
 ## Mục đích
-Cung cấp API backend phục vụ US-07 - Xem danh sách Job với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-11 - Xem danh sách Job với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-07 - Xem Danh Sach Job.
+- US-11 - Xem Danh Sach Job.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

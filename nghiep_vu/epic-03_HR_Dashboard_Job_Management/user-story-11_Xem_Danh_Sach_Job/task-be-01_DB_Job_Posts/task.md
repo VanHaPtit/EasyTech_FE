@@ -1,7 +1,7 @@
-﻿# Task DB: DB Job Posts
+# Task DB: DB Job Posts
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-07 - Xem Danh Sach Job. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-11 - Xem Danh Sach Job. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `jobs`, `job_categories`, `job_forms`, `job_form_questions`.

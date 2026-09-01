@@ -1,7 +1,7 @@
-﻿# Task BE Service: AI Agent JD Writer
+# Task BE Service: AI Agent JD Writer
 
 ## Mục đích
-Xử lý logic backend nội bộ phục vụ US-08 - Tao Job AI JD. Task này không cung cấp HTTP endpoint riêng.
+Xử lý logic backend nội bộ phục vụ US-12 - Tao Job AI JD. Task này không cung cấp HTTP endpoint riêng.
 
 ## Đầu vào
 - Entity hoặc DTO đã được validate từ API/service gọi vào.

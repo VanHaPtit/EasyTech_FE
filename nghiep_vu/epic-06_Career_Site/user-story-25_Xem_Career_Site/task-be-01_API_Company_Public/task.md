@@ -1,10 +1,10 @@
-﻿# Task BE API: API Company Public
+# Task BE API: API Company Public
 
 ## Mục đích
-Cung cấp API backend phục vụ US-17 - Xem Career Site với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-25 - Xem Career Site với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-17 - Xem Career Site.
+- US-25 - Xem Career Site.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

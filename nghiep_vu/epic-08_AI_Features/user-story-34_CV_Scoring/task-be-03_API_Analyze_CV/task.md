@@ -1,10 +1,10 @@
-﻿# Task BE API: API Analyze CV
+# Task BE API: API Analyze CV
 
 ## Mục đích
 Cung cấp API backend phục vụ user-story-23 CV Scoring với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-23 - CV Scoring.
+- US-34 - CV Scoring.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

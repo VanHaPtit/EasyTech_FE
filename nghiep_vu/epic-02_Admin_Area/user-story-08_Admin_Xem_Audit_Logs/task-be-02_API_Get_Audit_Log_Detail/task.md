@@ -1,7 +1,7 @@
 # Task BE API: Xem chi tiết Audit Log
 
 ## Mục đích
-Cung cấp API backend phục vụ US-31 - Admin xem chi tiết một bản ghi nhật ký hoạt động, bao gồm payload dữ liệu thay đổi.
+Cung cấp API backend phục vụ US-08 - Admin xem chi tiết một bản ghi nhật ký hoạt động, bao gồm payload dữ liệu thay đổi.
 
 ## Điều kiện tiên quyết
 - User phải có quyền System Admin (`role = ADMIN`).
@@ -23,7 +23,7 @@ Cung cấp API backend phục vụ US-31 - Admin xem chi tiết một bản ghi 
 ```json
 {
   "status": 1,
-  "message": "Success",
+  "message": "Lấy chi tiết audit log thành công.",
   "data": {
     "id": "123e4567-e89b-12d3-a456-426614174000",
     "action": "UPDATE_COMPANY_STATUS",

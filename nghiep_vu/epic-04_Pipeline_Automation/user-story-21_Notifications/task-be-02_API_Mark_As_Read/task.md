@@ -12,4 +12,31 @@ API đánh dấu một hoặc tất cả thông báo là đã đọc.
 - PUT /api/v1/notifications/mark-read
 
 ## API JSON Contract
-- Bổ sung schema Request/Response chi tiết sau khi chốt thiết kế.
+
+### Request Body
+```json
+{
+  "notificationIds": [7001, 7002],
+  "markAll": false
+}
+```
+
+### Response (200 OK)
+```json
+{
+  "status": 1,
+  "message": "Đánh dấu thông báo đã đọc thành công.",
+  "data": {
+    "updatedCount": 2
+  }
+}
+```
+
+### Response lỗi
+```json
+{
+  "status": 0,
+  "message": "Không thể cập nhật trạng thái thông báo.",
+  "data": null
+}
+```

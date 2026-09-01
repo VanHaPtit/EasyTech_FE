@@ -1,7 +1,7 @@
 # Task BE API: Bật/Tắt trạng thái Người dùng
 
 ## Mục đích
-Cung cấp API backend phục vụ US-32 - Admin vô hiệu hóa (INACTIVE) hoặc kích hoạt lại (ACTIVE) một tài khoản.
+Cung cấp API backend phục vụ US-09 - Admin vô hiệu hóa (INACTIVE) hoặc kích hoạt lại (ACTIVE) một tài khoản.
 
 ## Điều kiện tiên quyết
 - User phải có quyền System Admin (`role = ADMIN`).

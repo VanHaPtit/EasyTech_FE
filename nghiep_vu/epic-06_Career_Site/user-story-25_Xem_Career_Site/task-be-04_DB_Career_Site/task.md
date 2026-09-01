@@ -1,7 +1,7 @@
-﻿# Task DB: DB Career Site
+# Task DB: DB Career Site
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-17 - Xem Career Site. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-25 - Xem Career Site. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `career_sites`, `jobs`, `candidates`, `applications`, `interview_responses`.

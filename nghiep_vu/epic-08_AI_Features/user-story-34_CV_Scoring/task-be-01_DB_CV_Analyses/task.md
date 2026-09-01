@@ -1,7 +1,7 @@
-﻿# Task DB: DB CV Analyses
+# Task DB: DB CV Analyses
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-23 - CV Scoring. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-34 - CV Scoring. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `cv_analyses`, `ai_suggestions`, `ai_provider_configs`.

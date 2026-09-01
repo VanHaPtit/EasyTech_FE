@@ -15,4 +15,43 @@ API phân quyền (chuyển đổi role giữa HR và HR_ADMIN) hoặc mời th�
 - DELETE /api/v1/companies/me/members/{userId} (Xóa khỏi công ty)
 
 ## API JSON Contract
-- Bổ sung schema Request/Response chi tiết sau khi chốt thiết kế.
+
+### Request Body - Mời thành viên
+```json
+{
+  "email": "hr.member@techa.vn",
+  "fullName": "Tran Thi C",
+  "role": "HR"
+}
+```
+
+### Request Body - Cập nhật role
+```json
+{
+  "role": "HR_ADMIN"
+}
+```
+
+### Response (200 OK)
+```json
+{
+  "status": 1,
+  "message": "Cập nhật phân quyền nhân sự thành công.",
+  "data": {
+    "userId": 21,
+    "email": "hr.member@techa.vn",
+    "fullName": "Tran Thi C",
+    "role": "HR_ADMIN",
+    "status": "ACTIVE"
+  }
+}
+```
+
+### Response lỗi
+```json
+{
+  "status": 0,
+  "message": "Không có quyền quản lý phân quyền hoặc role không hợp lệ.",
+  "data": null
+}
+```

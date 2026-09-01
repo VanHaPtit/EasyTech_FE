@@ -1,10 +1,10 @@
-﻿# Task BE API: API AI Suggestions
+# Task BE API: API AI Suggestions
 
 ## Mục đích
 Cung cấp API backend phục vụ user-story-24 AI Goi Y Cau Hoi với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-24 - AI Goi Y Cau Hoi.
+- US-35 - AI Goi Y Cau Hoi.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

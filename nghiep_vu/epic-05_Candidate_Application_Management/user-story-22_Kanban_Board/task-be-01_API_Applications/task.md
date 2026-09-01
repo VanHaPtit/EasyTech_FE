@@ -1,10 +1,10 @@
-﻿# Task BE API: API Applications
+# Task BE API: API Applications
 
 ## Mục đích
-Cung cấp API backend phục vụ US-14 - Kanban Board với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-22 - Kanban Board với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-14 - Kanban Board.
+- US-22 - Kanban Board.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

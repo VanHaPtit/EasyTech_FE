@@ -1,10 +1,10 @@
-﻿# Task BE API: API List Businesses
+# Task BE API: API List Businesses
 
 ## Mục đích
-Cung cấp API backend phục vụ US-05 - Admin duyệt doanh nghiệp với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-06 - Admin duyệt doanh nghiệp với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-05 - Admin Duyet Doanh Nghiep.
+- US-06 - Admin Duyet Doanh Nghiep.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

@@ -1,7 +1,7 @@
 # Task BE API: Xem chi tiết Người dùng
 
 ## Mục đích
-Cung cấp API backend phục vụ US-32 - Admin xem chi tiết thông tin, lịch sử đăng nhập và danh sách Job của một tài khoản.
+Cung cấp API backend phục vụ US-09 - Admin xem chi tiết thông tin, lịch sử đăng nhập và danh sách Job của một tài khoản.
 
 ## Điều kiện tiên quyết
 - User phải có quyền System Admin (`role = ADMIN`).
@@ -23,7 +23,7 @@ Cung cấp API backend phục vụ US-32 - Admin xem chi tiết thông tin, lị
 ```json
 {
   "status": 1,
-  "message": "Success",
+  "message": "Lấy chi tiết người dùng thành công.",
   "data": {
     "id": 10,
     "fullName": "Nguyen Van A",

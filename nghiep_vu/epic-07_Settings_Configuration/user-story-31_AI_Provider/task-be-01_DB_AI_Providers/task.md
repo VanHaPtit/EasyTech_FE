@@ -1,7 +1,7 @@
-﻿# Task DB: DB AI Providers
+# Task DB: DB AI Providers
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-22 - AI Provider. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-31 - AI Provider. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `company_profiles`, `email_templates`, `ai_providers`, `user_roles`, `permissions`.

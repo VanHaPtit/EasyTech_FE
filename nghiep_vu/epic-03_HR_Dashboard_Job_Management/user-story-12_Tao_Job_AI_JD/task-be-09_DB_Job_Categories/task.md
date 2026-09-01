@@ -1,7 +1,7 @@
-﻿# Task DB: DB Job Categories
+# Task DB: DB Job Categories
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-08 - Tao Job AI JD. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-12 - Tao Job AI JD. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `companies`, `company_profiles`, `users`, `audit_logs`, `job_categories`.

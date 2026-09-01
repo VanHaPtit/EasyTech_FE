@@ -1,7 +1,7 @@
-﻿# Task DB: DB Interview Schedules
+# Task DB: DB Interview Schedules
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-13 - Dat Lich Phong Van. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-18 - Dat Lich Phong Van. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `job_rounds`, `round_statuses`, `email_templates`, `email_logs`, `interview_schedules`.

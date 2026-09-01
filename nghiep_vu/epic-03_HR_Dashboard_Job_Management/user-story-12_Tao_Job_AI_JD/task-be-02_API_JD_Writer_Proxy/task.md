@@ -1,10 +1,10 @@
-﻿# Task BE API: API JD Writer Proxy
+# Task BE API: API JD Writer Proxy
 
 ## Mục đích
-Cung cấp API backend phục vụ US-08 - Tạo Job bằng AI JD với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-12 - Tạo Job bằng AI JD với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-08 - Tao Job AI JD.
+- US-12 - Tao Job AI JD.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

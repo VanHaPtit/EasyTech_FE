@@ -1,7 +1,7 @@
-﻿# Task DB: DB Candidates
+# Task DB: DB Candidates
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-18 - Nop CV. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-26 - Nop CV. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `career_sites`, `jobs`, `candidates`, `applications`, `interview_responses`.

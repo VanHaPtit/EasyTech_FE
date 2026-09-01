@@ -1,7 +1,7 @@
-﻿# Task BE Service: AI CV Scoring Agent
+# Task BE Service: AI CV Scoring Agent
 
 ## Mục đích
-Xử lý logic backend nội bộ phục vụ US-23 - CV Scoring. Task này không cung cấp HTTP endpoint riêng.
+Xử lý logic backend nội bộ phục vụ US-34 - CV Scoring. Task này không cung cấp HTTP endpoint riêng.
 
 ## Đầu vào
 - Entity hoặc DTO đã được validate từ API/service gọi vào.

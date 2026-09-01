@@ -1,7 +1,7 @@
 # Task BE API: Lấy danh sách Người Dùng (Users)
 
 ## Mục đích
-Cung cấp API backend phục vụ US-32 - Admin quản lý danh sách toàn bộ tài khoản người dùng trên hệ thống.
+Cung cấp API backend phục vụ US-09 - Admin quản lý danh sách toàn bộ tài khoản người dùng trên hệ thống.
 
 ## Điều kiện tiên quyết
 - User phải có quyền System Admin (`role = ADMIN`).
@@ -27,7 +27,7 @@ Cung cấp API backend phục vụ US-32 - Admin quản lý danh sách toàn b�
 ```json
 {
   "status": 1,
-  "message": "Success",
+  "message": "Lấy danh sách người dùng thành công.",
   "data": {
     "content": [
       {

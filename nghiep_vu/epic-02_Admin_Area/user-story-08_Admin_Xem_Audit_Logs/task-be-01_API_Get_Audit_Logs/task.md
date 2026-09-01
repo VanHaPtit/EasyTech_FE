@@ -1,7 +1,7 @@
 # Task BE API: Lấy danh sách Audit Logs
 
 ## Mục đích
-Cung cấp API backend phục vụ US-31 - Admin xem và lọc nhật ký hoạt động hệ thống.
+Cung cấp API backend phục vụ US-08 - Admin xem và lọc nhật ký hoạt động hệ thống.
 
 ## Điều kiện tiên quyết
 - User phải có quyền System Admin (`role = ADMIN`).
@@ -27,7 +27,7 @@ Cung cấp API backend phục vụ US-31 - Admin xem và lọc nhật ký hoạt
 ```json
 {
   "status": 1,
-  "message": "Success",
+  "message": "Lấy danh sách audit logs thành công.",
   "data": {
     "content": [
       {

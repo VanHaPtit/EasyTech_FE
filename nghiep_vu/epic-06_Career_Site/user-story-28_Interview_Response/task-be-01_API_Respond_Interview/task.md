@@ -13,4 +13,37 @@ API cho phép ứng viên xác nhận (ACCEPT) hoặc từ chối (REJECT/RESCHE
 - PUT /api/v1/candidates/interview/{interviewId}/respond
 
 ## API JSON Contract
-- Bổ sung schema Request/Response chi tiết sau khi chốt thiết kế.
+
+### Request Body
+```json
+{
+  "verifyEmail": "candidate@example.com",
+  "response": "CONFIRMED",
+  "declineReason": null,
+  "proposedTime": null,
+  "rescheduleReason": null
+}
+```
+
+### Response (200 OK)
+```json
+{
+  "status": 1,
+  "message": "Ghi nhận phản hồi lịch phỏng vấn thành công.",
+  "data": {
+    "interviewId": 3001,
+    "applicationId": 2001,
+    "response": "CONFIRMED",
+    "respondedAt": "2026-08-31T10:00:00"
+  }
+}
+```
+
+### Response lỗi
+```json
+{
+  "status": 0,
+  "message": "Link không hợp lệ, email xác minh không khớp hoặc lịch phỏng vấn đã được phản hồi.",
+  "data": null
+}
+```

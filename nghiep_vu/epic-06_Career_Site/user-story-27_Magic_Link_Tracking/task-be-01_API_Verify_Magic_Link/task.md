@@ -12,4 +12,33 @@ API xác thực token magic link của ứng viên.
 - POST /api/v1/candidates/verify-magic-link
 
 ## API JSON Contract
-- Bổ sung schema Request/Response chi tiết sau khi chốt thiết kế.
+
+### Request Body
+```json
+{
+  "token": "magic_link_token",
+  "email": "candidate@example.com"
+}
+```
+
+### Response (200 OK)
+```json
+{
+  "status": 1,
+  "message": "Xác thực magic link thành công.",
+  "data": {
+    "applicationId": 2001,
+    "candidateName": "Tran Van B",
+    "expiresAt": "2026-09-30T10:00:00"
+  }
+}
+```
+
+### Response lỗi
+```json
+{
+  "status": 0,
+  "message": "Magic link không hợp lệ, đã hết hạn hoặc email xác minh không khớp.",
+  "data": null
+}
+```

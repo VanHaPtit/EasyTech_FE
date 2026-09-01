@@ -1,10 +1,10 @@
-﻿# Task BE API: API Get Job
+# Task BE API: API Get Job
 
 ## Mục đích
-Cung cấp API backend phục vụ US-09 - Xem và chỉnh sửa Job với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-13 - Xem và chỉnh sửa Job với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-09 - Xem Chinh Sua Job.
+- US-13 - Xem Chinh Sua Job.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

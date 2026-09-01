@@ -1,10 +1,10 @@
-﻿# Task BE API: API Job Public
+# Task BE API: API Job Public
 
 ## Mục đích
-Cung cấp API backend phục vụ US-18 - Nộp CV với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-26 - Nộp CV với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-18 - Nop CV.
+- US-26 - Nop CV.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

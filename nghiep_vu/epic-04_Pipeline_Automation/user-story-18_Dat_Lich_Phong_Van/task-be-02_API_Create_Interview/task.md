@@ -1,10 +1,10 @@
-﻿# Task BE API: API Create Interview
+# Task BE API: API Create Interview
 
 ## Mục đích
-Cung cấp API backend phục vụ US-13 - Đặt lịch phỏng vấn với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-18 - Đặt lịch phỏng vấn với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-13 - Dat Lich Phong Van.
+- US-18 - Dat Lich Phong Van.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

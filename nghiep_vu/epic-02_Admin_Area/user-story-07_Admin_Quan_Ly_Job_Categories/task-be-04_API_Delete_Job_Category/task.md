@@ -1,7 +1,7 @@
 # Task BE API: Xóa Job Category
 
 ## Mục đích
-Cung cấp API backend phục vụ US-30 - Admin xóa (soft delete) danh mục ngành nghề.
+Cung cấp API backend phục vụ US-07 - Admin xóa (soft delete) danh mục ngành nghề.
 
 ## Điều kiện tiên quyết
 - User phải có quyền Admin (`role = ADMIN`).

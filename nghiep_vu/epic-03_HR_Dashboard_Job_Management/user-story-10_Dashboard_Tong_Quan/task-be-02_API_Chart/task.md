@@ -1,10 +1,10 @@
-﻿# Task BE API: API Chart
+# Task BE API: API Chart
 
 ## Mục đích
-Cung cấp API backend phục vụ US-06 - Dashboard tổng quan với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-10 - Dashboard tổng quan với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-06 - Dashboard Tong Quan.
+- US-10 - Dashboard Tong Quan.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

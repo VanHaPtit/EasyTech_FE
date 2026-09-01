@@ -1,7 +1,7 @@
-﻿# Task BE Service: Audit Log BE
+# Task BE Service: Audit Log BE
 
 ## Mục đích
-Xử lý logic backend nội bộ phục vụ US-05 - Admin Duyet Doanh Nghiep. Task này không cung cấp HTTP endpoint riêng.
+Xử lý logic backend nội bộ phục vụ US-06 - Admin Duyet Doanh Nghiep. Task này không cung cấp HTTP endpoint riêng.
 
 ## Đầu vào
 - Entity hoặc DTO đã được validate từ API/service gọi vào.

@@ -1,10 +1,10 @@
-﻿# Task BE API: API Publish
+# Task BE API: API Publish
 
 ## Mục đích
-Cung cấp API backend phục vụ US-10 - Publish Job với contract rõ ràng và validate tại server.
+Cung cấp API backend phục vụ US-14 - Publish Job với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-10 - Publish Job.
+- US-14 - Publish Job.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.

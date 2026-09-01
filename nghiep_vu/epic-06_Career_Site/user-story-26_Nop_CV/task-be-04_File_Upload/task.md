@@ -1,7 +1,7 @@
-﻿# Task BE Service: File Upload
+# Task BE Service: File Upload
 
 ## Mục đích
-Xử lý logic backend nội bộ phục vụ US-18 - Nop CV. Task này không cung cấp HTTP endpoint riêng.
+Xử lý logic backend nội bộ phục vụ US-26 - Nop CV. Task này không cung cấp HTTP endpoint riêng.
 
 ## Đầu vào
 - Entity hoặc DTO đã được validate từ API/service gọi vào.

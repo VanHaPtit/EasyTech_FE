@@ -1,7 +1,7 @@
-﻿# Task DB: DB Audit Logs
+# Task DB: DB Audit Logs
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-05 - Admin Duyet Doanh Nghiep. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-06 - Admin Duyet Doanh Nghiep. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `companies`, `company_profiles`, `users`, `audit_logs`, `job_categories`.

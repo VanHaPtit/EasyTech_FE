@@ -1,7 +1,7 @@
-﻿# Task DB: Seed Templates
+# Task DB: Seed Templates
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-20 - Email Templates. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-29 - Email Templates. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `company_profiles`, `email_templates`, `ai_providers`, `user_roles`, `permissions`.

@@ -1,7 +1,7 @@
-﻿# Task DB: DB Email Logs
+# Task DB: DB Email Logs
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-12 - Email Automation. Task này không cung cấp HTTP endpoint.
+Chuẩn hóa schema/database phục vụ US-17 - Email Automation. Task này không cung cấp HTTP endpoint.
 
 ## Bảng/entity liên quan
 - Bảng chính: `job_rounds`, `round_statuses`, `email_templates`, `email_logs`, `interview_schedules`.

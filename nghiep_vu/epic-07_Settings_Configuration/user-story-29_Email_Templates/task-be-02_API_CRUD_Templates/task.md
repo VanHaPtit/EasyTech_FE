@@ -4,7 +4,7 @@
 Cung cấp API để HR quản lý Email Template trong phạm vi company hiện tại.
 
 ## User Story liên quan
-- US-20 - Email Templates.
+- US-29 - Email Templates.
 
 ## Điều kiện tiên quyết
 - User đã đăng nhập và có quyền quản lý Email Template.

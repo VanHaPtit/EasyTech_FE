@@ -1,10 +1,10 @@
-﻿# Task BE API: API Update Key
+# Task BE API: API Update Key
 
 ## Mục đích
 Cung cấp API backend phục vụ user-story-22 AI Provider với contract rõ ràng và validate tại server.
 
 ## User Story liên quan
-- US-22 - AI Provider.
+- US-31 - AI Provider.
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
