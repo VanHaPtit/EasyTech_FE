@@ -1,10 +1,10 @@
-﻿# Task FE: Stats Cards
+# Task FE: Stats Cards
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-07 - Xem danh sách Job, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-11 - Xem danh sách Job, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Stats Cards.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

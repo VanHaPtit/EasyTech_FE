@@ -1,10 +1,10 @@
-﻿# Task FE: Score UI
+# Task FE: Score UI
 
 ## Mục đích
 Xây dựng screen/component phục vụ user-story-23 CV Scoring, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Score UI.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

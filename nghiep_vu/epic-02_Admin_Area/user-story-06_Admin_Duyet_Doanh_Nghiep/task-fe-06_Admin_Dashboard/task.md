@@ -1,10 +1,10 @@
-﻿# Task FE: Admin Dashboard
+# Task FE: Admin Dashboard
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-05 - Admin duyệt doanh nghiệp, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-06 - Admin duyệt doanh nghiệp, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Admin Dashboard.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

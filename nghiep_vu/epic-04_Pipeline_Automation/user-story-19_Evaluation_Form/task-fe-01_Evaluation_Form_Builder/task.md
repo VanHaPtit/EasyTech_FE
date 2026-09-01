@@ -1,10 +1,10 @@
-﻿# Task FE: Evaluation Form Builder
+# Task FE: Evaluation Form Builder
 
 ## Mục đích
 Xây dựng screen/component phục vụ user-story-26 Evaluation Form, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Evaluation Form Builder.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

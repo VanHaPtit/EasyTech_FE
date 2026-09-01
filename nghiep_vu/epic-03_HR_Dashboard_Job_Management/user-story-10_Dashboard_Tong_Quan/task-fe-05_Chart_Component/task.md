@@ -1,10 +1,10 @@
-﻿# Task FE: Chart Component
+# Task FE: Chart Component
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-06 - Dashboard tổng quan, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-10 - Dashboard tổng quan, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Chart Component.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

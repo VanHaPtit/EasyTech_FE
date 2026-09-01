@@ -1,10 +1,10 @@
-﻿# Task FE: UI HR RBAC
+# Task FE: UI HR RBAC
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-33 - HR quản lý phân quyền, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-32 - HR quản lý phân quyền, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: UI HR RBAC.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

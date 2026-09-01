@@ -1,10 +1,10 @@
-﻿# Task FE: LoginForm
+# Task FE: LoginForm
 
 ## Mục đích
 Xây dựng screen/component phục vụ US-01 - HR đăng nhập, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: LoginForm.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

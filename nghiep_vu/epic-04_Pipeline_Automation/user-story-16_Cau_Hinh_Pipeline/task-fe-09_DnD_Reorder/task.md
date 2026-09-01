@@ -1,10 +1,10 @@
-﻿# Task FE: DnD Reorder
+# Task FE: DnD Reorder
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-11 - Cấu hình Pipeline, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-16 - Cấu hình Pipeline, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: DnD Reorder.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

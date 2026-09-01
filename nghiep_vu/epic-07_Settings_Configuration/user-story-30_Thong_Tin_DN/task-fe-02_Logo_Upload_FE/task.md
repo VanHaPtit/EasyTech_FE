@@ -1,10 +1,10 @@
-﻿# Task FE: Logo Upload
+# Task FE: Logo Upload
 
 ## Mục đích
 Xây dựng screen/component phục vụ user-story-21 Thong Tin DN, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Logo Upload.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

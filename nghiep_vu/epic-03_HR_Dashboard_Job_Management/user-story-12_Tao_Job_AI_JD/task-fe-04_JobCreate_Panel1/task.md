@@ -1,10 +1,10 @@
-﻿# Task FE: JobCreate Panel1
+# Task FE: JobCreate Panel1
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-08 - Tạo Job bằng AI JD, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-12 - Tạo Job bằng AI JD, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: JobCreate Panel1.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

@@ -1,10 +1,10 @@
-﻿# Task FE: Admin Guard
+# Task FE: Admin Guard
 
 ## Mục đích
 Xây dựng screen/component phục vụ US-04 - Admin đăng nhập, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Admin Guard.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

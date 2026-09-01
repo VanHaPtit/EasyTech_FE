@@ -1,10 +1,10 @@
-﻿# Task FE: UI AI Suggestions
+# Task FE: UI AI Suggestions
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-34 - AI match ứng viên, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-36 - AI match ứng viên, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: UI AI Suggestions.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
@@ -31,4 +31,4 @@ Xây dựng screen/component phục vụ US-34 - AI match ứng viên, tập tru
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `POST /api/v1/applications/{applicationId}/cv-analysis`, `POST /api/v1/ai/interview-questions/suggest`.
+- `POST /api/v1/jobs/{jobId}/ai-matching/trigger`, `GET /api/v1/jobs/{jobId}/ai-suggestions`.

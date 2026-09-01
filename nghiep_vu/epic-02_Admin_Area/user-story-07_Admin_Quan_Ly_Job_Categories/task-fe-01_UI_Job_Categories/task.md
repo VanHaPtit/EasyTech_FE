@@ -1,10 +1,10 @@
-﻿# Task FE: UI Job Categories
+# Task FE: UI Job Categories
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-30 - Admin quản lý Job Categories, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-07 - Admin quản lý Job Categories, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: UI Job Categories.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
@@ -31,4 +31,4 @@ Xây dựng screen/component phục vụ US-30 - Admin quản lý Job Categories
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/admin/companies`, `GET /api/v1/admin/companies/{companyId}`, `PATCH /api/v1/admin/companies/{companyId}/status`.
+- `GET /api/v1/admin/job-categories`, `POST /api/v1/admin/job-categories`, `PUT /api/v1/admin/job-categories/{id}`, `DELETE /api/v1/admin/job-categories/{id}`.

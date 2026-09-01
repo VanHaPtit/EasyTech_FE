@@ -1,10 +1,10 @@
-﻿# Task FE: EditJobModal
+# Task FE: EditJobModal
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-09 - Xem và chỉnh sửa Job, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-13 - Xem và chỉnh sửa Job, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: EditJobModal.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

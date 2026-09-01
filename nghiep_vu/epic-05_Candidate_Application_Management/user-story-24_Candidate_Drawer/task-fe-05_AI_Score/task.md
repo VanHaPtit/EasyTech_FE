@@ -1,10 +1,10 @@
-﻿# Task FE: AI Score
+# Task FE: AI Score
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-16 - Candidate Drawer, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-24 - Candidate Drawer, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: AI Score.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

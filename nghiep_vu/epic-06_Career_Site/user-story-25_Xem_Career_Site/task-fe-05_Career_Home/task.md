@@ -1,10 +1,10 @@
-﻿# Task FE: Career Home
+# Task FE: Career Home
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-17 - Xem Career Site, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-25 - Xem Career Site, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Career Home.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

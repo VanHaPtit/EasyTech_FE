@@ -1,10 +1,10 @@
-﻿# Task FE: Chờ duyệt Screen
+# Task FE: Chờ duyệt Screen
 
 ## Mục đích
 Xây dựng screen/component phục vụ US-02 - HR đăng ký, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Chờ duyệt Screen.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

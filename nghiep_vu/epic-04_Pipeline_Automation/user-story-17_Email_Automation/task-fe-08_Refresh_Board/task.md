@@ -1,10 +1,10 @@
-﻿# Task FE: Refresh Board
+# Task FE: Refresh Board
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-12 - Email automation, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-17 - Email automation, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Refresh Board.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

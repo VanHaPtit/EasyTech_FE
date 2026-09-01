@@ -1,10 +1,10 @@
-﻿# Task FE: UI Admin Accounts
+# Task FE: UI Admin Accounts
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-32 - Admin quản lý users, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-09 - Admin quản lý users, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: UI Admin Accounts.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
@@ -31,4 +31,4 @@ Xây dựng screen/component phục vụ US-32 - Admin quản lý users, tập t
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/admin/companies`, `GET /api/v1/admin/companies/{companyId}`, `PATCH /api/v1/admin/companies/{companyId}/status`.
+- `GET /api/v1/admin/users`, `GET /api/v1/admin/users/{userId}`, `PATCH /api/v1/admin/users/{userId}/status`.

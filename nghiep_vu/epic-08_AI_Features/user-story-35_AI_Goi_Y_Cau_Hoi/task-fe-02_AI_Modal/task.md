@@ -1,10 +1,10 @@
-﻿# Task FE: AI Modal
+# Task FE: AI Modal
 
 ## Mục đích
 Xây dựng screen/component phục vụ user-story-24 AI Goi Y Cau Hoi, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: AI Modal.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

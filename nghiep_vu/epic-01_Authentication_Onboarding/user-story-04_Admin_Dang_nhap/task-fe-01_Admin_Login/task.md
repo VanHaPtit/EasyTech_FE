@@ -1,10 +1,10 @@
-﻿# Task FE: Admin đăng nhập
+# Task FE: Admin đăng nhập
 
 ## Mục đích
 Xây dựng screen/component phục vụ US-04 - Admin đăng nhập, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Admin đăng nhập.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 

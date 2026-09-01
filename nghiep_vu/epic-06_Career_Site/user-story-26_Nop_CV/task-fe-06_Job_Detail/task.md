@@ -1,10 +1,10 @@
-﻿# Task FE: Job Detail
+# Task FE: Job Detail
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-18 - Nộp CV, tập trung vào hành vi người dùng và trạng thái UI.
+Xây dựng screen/component phục vụ US-26 - Nộp CV, tập trung vào hành vi người dùng và trạng thái UI.
 
 ## Screen/Component
-- Component chính: $title.
+- Component chính: Job Detail.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
