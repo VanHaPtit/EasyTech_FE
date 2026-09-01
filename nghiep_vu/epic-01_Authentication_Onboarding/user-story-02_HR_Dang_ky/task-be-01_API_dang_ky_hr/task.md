@@ -1,13 +1,13 @@
 # task-be-01_API_dang_ky_hr
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-01 API dang ky hr.
+Xác định phạm vi backend cho task 'API dang ky hr' trong US-02 HR Dang ky, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-API nhận dữ liệu tổng hợp (User + Company). Backend phải mở một Database Transaction, thực hiện insert vào bảng `companies` và `users` đồng thời. Validate unique cho email, mã số thuế (taxCode), và subdomain. Nếu 1 trong 2 lệnh insert lỗi, toàn bộ thao tác bị rollback. Khởi tạo trạng thái mặc định là PENDING.
-
-## Mục đích
-Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràng và validate tại server.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## User Story liên quan
 - US-02 - HR Dang ky.
@@ -86,9 +86,6 @@ Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràn
 
 ## Thiết kế Database – Bảng users
 
-## Mô tả chức năng chi tiết
-Định nghĩa Schema cho bảng Users và Companies. Các trường tối thiểu gồm: email, password_hash, role (ADMIN/HR/HR_ADMIN), status (PENDING/ACTIVE/BLOCKED). Thiết lập khóa ngoại (Foreign Key) giữa User và Company.
-
 ## Bảng/entity liên quan
 - Bảng chính: `users`, `companies`, `company_profiles`, `refresh_tokens`.
 - Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
@@ -103,7 +100,8 @@ Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràn
 
 ## Khóa và ràng buộc
 - Primary Key: id.
-- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, ound_id, user_id.
+- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, 
+ound_id, user_id.
 - Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
 - Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
 
@@ -119,9 +117,6 @@ Cung cấp API backend phục vụ US-02 - HR đăng ký với contract rõ ràn
 
 ## Thiết kế Database – Bảng companies
 
-## Mô tả chức năng chi tiết
-Thiết kế Schema mở rộng cho bảng Companies. Bổ sung các trường về industry, companySize, logoUrl, description, website. Đảm bảo đánh Index cho các trường thường xuyên query như `taxCode` và `subdomain`.
-
 ## Bảng/entity liên quan
 - Bảng chính: `users`, `companies`, `company_profiles`, `refresh_tokens`.
 - Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
@@ -136,7 +131,8 @@ Thiết kế Schema mở rộng cho bảng Companies. Bổ sung các trường v
 
 ## Khóa và ràng buộc
 - Primary Key: id.
-- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, ound_id, user_id.
+- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, 
+ound_id, user_id.
 - Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
 - Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
 

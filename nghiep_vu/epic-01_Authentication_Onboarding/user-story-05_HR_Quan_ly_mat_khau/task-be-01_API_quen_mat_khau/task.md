@@ -1,10 +1,13 @@
 # task-be-01_API_quen_mat_khau
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-01 API quen mat khau.
+Xác định phạm vi backend cho task 'API quen mat khau' trong US-05 HR Quan ly mat khau, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Nhận địa chỉ email từ client. Backend truy vấn DB xem email có tồn tại không. Nếu có, sinh ra mã OTP 6 chữ số (hoặc JWT reset token ngắn hạn), băm (hash) mã này rồi lưu vào Database hoặc Redis (kèm TTL 5-10 phút). Cuối cùng, trigger gửi email chứa mã OTP đến người dùng.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## 3. API JSON Contract
 **Endpoint:** `POST /api/v1/auth/forgot-password`

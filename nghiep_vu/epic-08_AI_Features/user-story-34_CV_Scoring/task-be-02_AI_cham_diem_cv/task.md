@@ -1,15 +1,13 @@
 # task-be-02_AI_cham_diem_cv
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-02 AI cham diem cv.
+Xác định phạm vi backend cho task 'AI cham diem cv' trong US-34 CV Scoring, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Đây là module đảm nhận vai trò thực thi chức năng đã định nghĩa, đảm bảo luồng nghiệp vụ hoạt động chính xác.
-
-# Task BE Service: AI CV Scoring Agent
-
-## Mục đích
-Xử lý logic backend nội bộ phục vụ US-34 - CV Scoring. Task này không cung cấp HTTP endpoint riêng.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## Đầu vào
 - Entity hoặc DTO đã được validate từ API/service gọi vào.

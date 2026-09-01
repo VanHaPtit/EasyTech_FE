@@ -1,7 +1,13 @@
 # Task FE: JobCreate Panel1
 
 ## Mục đích
-Xây dựng screen/component phục vụ US-12 - Tạo Job bằng AI JD, tập trung vào hành vi người dùng và trạng thái UI.
+Xác định phạm vi frontend cho task 'JobCreate Panel1' trong US-12 Tao Job AI JD, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
+
+## Mô tả chức năng chi tiết
+- Hiển thị giao diện và trạng thái tương ứng với nghiệp vụ của user story, gồm loading, empty, success và error state khi cần.
+- Thu thập dữ liệu người dùng, validate ở mức UI để cải thiện trải nghiệm và gọi đúng API dependency đã mô tả.
+- Hiển thị phản hồi rõ ràng cho người dùng, giữ dữ liệu đang nhập khi có lỗi hợp lệ và điều hướng theo đúng flow nghiệp vụ.
+- Không tự quyết định trạng thái nghiệp vụ nhạy cảm; frontend tuân theo response và quyền do backend trả về.
 
 ## Screen/Component
 - Component chính: JobCreate Panel1.

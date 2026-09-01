@@ -1,7 +1,13 @@
 # Task DB: Hồ sơ doanh nghiệp phục vụ onboarding
 
 ## Mục đích
-Chuẩn hóa schema/database phục vụ US-03 - HR Onboarding, bảo đảm lưu được dữ liệu bổ sung sau khi doanh nghiệp được duyệt và không trộn trạng thái onboarding với trạng thái duyệt tài khoản.
+Xác định phạm vi backend cho task 'DB ho so doanh nghiep' trong US-03 HR Onboarding, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
+
+## Mô tả chức năng chi tiết
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## User Story liên quan
 - US-03 - HR Onboarding.

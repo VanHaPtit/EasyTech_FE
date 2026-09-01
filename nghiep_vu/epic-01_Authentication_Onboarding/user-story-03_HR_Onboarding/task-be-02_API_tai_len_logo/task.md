@@ -1,7 +1,13 @@
 # Task BE API: Tải lên logo công ty trong onboarding
 
 ## Mục đích
-Cung cấp API để HR upload logo công ty ở bước 2 onboarding US-03. Logo này là logo public dùng cho Career Site.
+Xác định phạm vi backend cho task 'API tai len logo' trong US-03 HR Onboarding, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
+
+## Mô tả chức năng chi tiết
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## User Story liên quan
 - US-03 - HR Onboarding.

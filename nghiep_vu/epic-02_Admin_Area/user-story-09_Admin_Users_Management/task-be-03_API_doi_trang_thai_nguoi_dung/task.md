@@ -1,15 +1,13 @@
 # task-be-03_API_doi_trang_thai_nguoi_dung
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-03 API doi trang thai nguoi dung.
+Xác định phạm vi backend cho task 'API doi trang thai nguoi dung' trong US-09 Admin Users Management, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Đây là module đảm nhận vai trò thực thi chức năng đã định nghĩa, đảm bảo luồng nghiệp vụ hoạt động chính xác.
-
-# Task BE API: Bật/Tắt trạng thái Người dùng
-
-## Mục đích
-Cung cấp API backend phục vụ US-09 - Admin vô hiệu hóa (INACTIVE) hoặc kích hoạt lại (ACTIVE) một tài khoản.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## Điều kiện tiên quyết
 - User phải có quyền System Admin (`role = ADMIN`).

@@ -1,9 +1,13 @@
 # Task FE: Change Password / Reset Password Form
 
 ## Mục đích
-Xây dựng form đặt lại hoặc đổi mật khẩu thuộc US-05, bao phủ hai ngữ cảnh:
-- HR quên mật khẩu và đặt mật khẩu mới bằng `resetToken`.
-- HR đang đăng nhập và chủ động đổi mật khẩu trong phần cài đặt tài khoản.
+Xác định phạm vi frontend cho task 'ChangePassword Form' trong US-05 HR Quan ly mat khau, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
+
+## Mô tả chức năng chi tiết
+- Hiển thị giao diện và trạng thái tương ứng với nghiệp vụ của user story, gồm loading, empty, success và error state khi cần.
+- Thu thập dữ liệu người dùng, validate ở mức UI để cải thiện trải nghiệm và gọi đúng API dependency đã mô tả.
+- Hiển thị phản hồi rõ ràng cho người dùng, giữ dữ liệu đang nhập khi có lỗi hợp lệ và điều hướng theo đúng flow nghiệp vụ.
+- Không tự quyết định trạng thái nghiệp vụ nhạy cảm; frontend tuân theo response và quyền do backend trả về.
 
 ## User Story liên quan
 - US-05 - HR quản lý mật khẩu.

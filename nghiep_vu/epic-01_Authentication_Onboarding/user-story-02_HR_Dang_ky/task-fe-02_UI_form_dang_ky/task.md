@@ -1,13 +1,13 @@
 # task-fe-02_UI_form_dang_ky
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-fe-02 UI form dang ky.
+Xác định phạm vi frontend cho task 'UI form dang ky' trong US-02 HR Dang ky, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Xây dựng component Multi-step Form (Form nhiều bước) cho quá trình đăng ký. Quản lý local state cho từng bước để giữ data khi người dùng bấm Back/Next. Ở bước 2 (Company), gọi API kiểm tra nhanh Subdomain khả dụng bằng Debounce. Tích hợp thông báo lỗi chi tiết khi API báo trùng lặp.
-
-## Mục đích
-Xây dựng screen/component phục vụ US-02 - HR đăng ký, tập trung vào hành vi người dùng và trạng thái UI.
+- Hiển thị giao diện và trạng thái tương ứng với nghiệp vụ của user story, gồm loading, empty, success và error state khi cần.
+- Thu thập dữ liệu người dùng, validate ở mức UI để cải thiện trải nghiệm và gọi đúng API dependency đã mô tả.
+- Hiển thị phản hồi rõ ràng cho người dùng, giữ dữ liệu đang nhập khi có lỗi hợp lệ và điều hướng theo đúng flow nghiệp vụ.
+- Không tự quyết định trạng thái nghiệp vụ nhạy cảm; frontend tuân theo response và quyền do backend trả về.
 
 ## Screen/Component
 - Component chính: Đăng ký Form.

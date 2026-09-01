@@ -1,15 +1,13 @@
 # task-be-01_API_xuat_ban_job
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-01 API xuat ban job.
+Xác định phạm vi backend cho task 'API xuat ban job' trong US-14 Publish Job, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Đây là module đảm nhận vai trò thực thi chức năng đã định nghĩa, đảm bảo luồng nghiệp vụ hoạt động chính xác.
-
-# Task BE API: API Publish
-
-## Mục đích
-Cung cấp API backend phục vụ US-14 - Publish Job với contract rõ ràng và validate tại server.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## User Story liên quan
 - US-14 - Publish Job.
@@ -68,4 +66,3 @@ Không có request body.
   }
 }
 ```
-

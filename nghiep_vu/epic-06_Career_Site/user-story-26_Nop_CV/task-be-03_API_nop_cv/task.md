@@ -1,15 +1,13 @@
 # task-be-03_API_nop_cv
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-03 API nop cv.
+Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Đây là module đảm nhận vai trò thực thi chức năng đã định nghĩa, đảm bảo luồng nghiệp vụ hoạt động chính xác.
-
-# Task BE API: API Apply
-
-## Mục đích
-Cung cấp API backend phục vụ US-26 - Nộp CV với contract rõ ràng và validate tại server.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## User Story liên quan
 - US-26 - Nop CV.
@@ -95,7 +93,8 @@ Cung cấp API backend phục vụ US-26 - Nộp CV với contract rõ ràng và
 
 ## Khóa và ràng buộc
 - Primary Key: id.
-- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, ound_id, user_id.
+- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, 
+ound_id, user_id.
 - Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
 - Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
 
@@ -110,9 +109,6 @@ Cung cấp API backend phục vụ US-26 - Nộp CV với contract rõ ràng và
 ---
 
 ## Internal Service – Xử lý Upload File CV
-
-## Mục đích
-Xử lý logic backend nội bộ phục vụ US-26 - Nop CV. Task này không cung cấp HTTP endpoint riêng.
 
 ## Đầu vào
 - Entity hoặc DTO đã được validate từ API/service gọi vào.

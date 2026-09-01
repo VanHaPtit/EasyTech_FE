@@ -1,13 +1,13 @@
 # task-fe-02_UI_bao_ve_admin
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-fe-02 UI bao ve admin.
+Xác định phạm vi frontend cho task 'UI bao ve admin' trong US-04 Admin Dang nhap, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Cấu hình component AdminGuard (AdminRoute) bọc riêng các trang quản trị. Kiểm tra chặt chẽ `role === 'ADMIN'` từ AuthContext. Nếu một user có role 'HR' cố tình gõ URL của trang Admin, hệ thống lập tức đá về trang 403 Forbidden hoặc trang đăng nhập.
-
-## Mục đích
-Xây dựng screen/component phục vụ US-04 - Admin đăng nhập, tập trung vào hành vi người dùng và trạng thái UI.
+- Hiển thị giao diện và trạng thái tương ứng với nghiệp vụ của user story, gồm loading, empty, success và error state khi cần.
+- Thu thập dữ liệu người dùng, validate ở mức UI để cải thiện trải nghiệm và gọi đúng API dependency đã mô tả.
+- Hiển thị phản hồi rõ ràng cho người dùng, giữ dữ liệu đang nhập khi có lỗi hợp lệ và điều hướng theo đúng flow nghiệp vụ.
+- Không tự quyết định trạng thái nghiệp vụ nhạy cảm; frontend tuân theo response và quyền do backend trả về.
 
 ## Screen/Component
 - Component chính: Admin Guard.

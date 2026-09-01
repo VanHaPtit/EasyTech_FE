@@ -1,15 +1,13 @@
 # task-be-03_API_phan_tich_cv
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-03 API phan tich cv.
+Xác định phạm vi backend cho task 'API phan tich cv' trong US-34 CV Scoring, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Đây là module đảm nhận vai trò thực thi chức năng đã định nghĩa, đảm bảo luồng nghiệp vụ hoạt động chính xác.
-
-# Task BE API: API Analyze CV
-
-## Mục đích
-Cung cấp API backend phục vụ user-story-23 CV Scoring với contract rõ ràng và validate tại server.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## User Story liên quan
 - US-34 - CV Scoring.
@@ -107,7 +105,8 @@ Cung cấp API backend phục vụ user-story-23 CV Scoring với contract rõ r
 
 ## Khóa và ràng buộc
 - Primary Key: id.
-- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, ound_id, user_id.
+- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, 
+ound_id, user_id.
 - Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
 - Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
 

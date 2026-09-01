@@ -1,13 +1,13 @@
 # task-be-01_API_dang_nhap
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-01 API dang nhap.
+Xác định phạm vi backend cho task 'API dang nhap' trong US-01 HR Dang nhap, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Xử lý xác thực người dùng dựa trên Email và Password. Backend cần truy vấn DB, kiểm tra mật khẩu (so khớp Hash bằng Bcrypt/Argon2). Đồng thời phải xác minh tài khoản HR và Công ty tương ứng đều đang ở trạng thái ACTIVE (không bị khóa hay từ chối). Nếu hợp lệ, hệ thống tạo và trả về Access Token (JWT chứa userId, role, companyId) và Refresh Token.
-
-## Mục đích
-Cung cấp API backend phục vụ US-01 - HR đăng nhập với contract rõ ràng và validate tại server.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## User Story liên quan
 - US-01 - HR Dang nhap.
@@ -83,4 +83,3 @@ Cung cấp API backend phục vụ US-01 - HR đăng nhập với contract rõ r
   }
 }
 ```
-

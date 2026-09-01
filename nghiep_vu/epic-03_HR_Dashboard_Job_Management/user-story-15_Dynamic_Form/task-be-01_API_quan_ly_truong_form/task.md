@@ -1,15 +1,13 @@
 # task-be-01_API_quan_ly_truong_form
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-01 API quan ly truong form.
+Xác định phạm vi backend cho task 'API quan ly truong form' trong US-15 Dynamic Form, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Đây là module đảm nhận vai trò thực thi chức năng đã định nghĩa, đảm bảo luồng nghiệp vụ hoạt động chính xác.
-
-# Task BE API: Manage Form Fields
-
-## Mục đích
-API để cấu hình bộ câu hỏi động (form_fields) cho từng Job (CRUD).
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## Yêu cầu nghiệp vụ
 - Contract API cần tuân thủ cấu trúc BaseResponse chuẩn.

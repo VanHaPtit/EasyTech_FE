@@ -1,15 +1,13 @@
 # task-be-01_API_goi_y_ai
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-01 API goi y ai.
+Xác định phạm vi backend cho task 'API goi y ai' trong US-35 AI Goi Y Cau Hoi, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Đây là module đảm nhận vai trò thực thi chức năng đã định nghĩa, đảm bảo luồng nghiệp vụ hoạt động chính xác.
-
-# Task BE API: API AI Suggestions
-
-## Mục đích
-Cung cấp API backend phục vụ user-story-24 AI Goi Y Cau Hoi với contract rõ ràng và validate tại server.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## User Story liên quan
 - US-35 - AI Goi Y Cau Hoi.
@@ -95,4 +93,3 @@ Cung cấp API backend phục vụ user-story-24 AI Goi Y Cau Hoi với contract
   }
 }
 ```
-

@@ -1,13 +1,13 @@
 # task-fe-04_UI_bao_ve_tuyen_duong
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-fe-04 UI bao ve tuyen duong.
+Xác định phạm vi frontend cho task 'UI bao ve tuyen duong' trong US-01 HR Dang nhap, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Viết component ProtectedRoute (hoặc PrivateRoute) bọc ngoài các trang nội bộ (Dashboard). Component này sẽ đọc state từ AuthContext. Nếu user chưa đăng nhập, tự động Redirect về trang `/login` kèm tham số lưu lại URL hiện tại để chuyển về sau khi login xong.
-
-## Mục đích
-Xây dựng screen/component phục vụ US-01 - HR đăng nhập, tập trung vào hành vi người dùng và trạng thái UI.
+- Hiển thị giao diện và trạng thái tương ứng với nghiệp vụ của user story, gồm loading, empty, success và error state khi cần.
+- Thu thập dữ liệu người dùng, validate ở mức UI để cải thiện trải nghiệm và gọi đúng API dependency đã mô tả.
+- Hiển thị phản hồi rõ ràng cho người dùng, giữ dữ liệu đang nhập khi có lỗi hợp lệ và điều hướng theo đúng flow nghiệp vụ.
+- Không tự quyết định trạng thái nghiệp vụ nhạy cảm; frontend tuân theo response và quyền do backend trả về.
 
 ## Screen/Component
 - Component chính: PrivateRoute.

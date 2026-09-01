@@ -1,10 +1,13 @@
 # task-be-02_API_xac_thuc_otp
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-02 API xac thuc otp.
+Xác định phạm vi backend cho task 'API xac thuc otp' trong US-05 HR Quan ly mat khau, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-API nhận email và mã OTP. Backend so khớp mã OTP do client gửi với mã lưu trong DB/Redis. Kiểm tra thời gian hết hạn (expiration time). Nếu hợp lệ, cấp trả một temporary token (hoặc boolean flag) cho phép chuyển sang bước đổi mật khẩu.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## 3. API JSON Contract
 

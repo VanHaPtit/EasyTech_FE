@@ -1,13 +1,13 @@
 # task-be-07_API_lam_moi_token
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-07 API lam moi token.
+Xác định phạm vi backend cho task 'API lam moi token' trong US-01 HR Dang nhap, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Nhận Refresh Token từ Cookie (HttpOnly) hoặc Request Body, kiểm tra tính hợp lệ và thời hạn trong DB (hoặc Cache). Nếu hợp lệ, sinh ra một Access Token mới kèm thời gian sống ngắn hạn để tiếp tục phiên làm việc mà không bắt User đăng nhập lại.
-
-## Mục đích
-Cung cấp API backend phục vụ US-01 - HR đăng nhập với contract rõ ràng và validate tại server.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## User Story liên quan
 - US-01 - HR Dang nhap.

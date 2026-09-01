@@ -1,15 +1,13 @@
 # task-be-01_API_cap_nhat_career_site
 
 ## Mục đích
-Task này dùng để xử lý nghiệp vụ liên quan đến chức năng task-be-01 API cap nhat career site.
+Xác định phạm vi backend cho task 'API cap nhat career site' trong US-33 Career Site Settings, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
-Đây là module đảm nhận vai trò thực thi chức năng đã định nghĩa, đảm bảo luồng nghiệp vụ hoạt động chính xác.
-
-# Task BE API: Update Career Site Config
-
-## Mục đích
-API lưu cấu hình giao diện Career Site (màu sắc, banner, font, hiển thị phúc lợi) cho tenant.
+- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
+- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
+- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
+- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
 
 ## Yêu cầu nghiệp vụ
 - Contract API cần tuân thủ cấu trúc BaseResponse chuẩn.
@@ -77,7 +75,8 @@ API lưu cấu hình giao diện Career Site (màu sắc, banner, font, hiển t
 
 ## Khóa và ràng buộc
 - Primary Key: id.
-- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, ound_id, user_id.
+- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, 
+ound_id, user_id.
 - Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
 - Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
 
