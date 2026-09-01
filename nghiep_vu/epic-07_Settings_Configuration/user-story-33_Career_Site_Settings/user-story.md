@@ -1,4 +1,4 @@
-﻿# 📋 User Story 35: Cấu Hình Career Site (Career Site Branding & Settings)
+# 📋 User Story 33: Cấu Hình Career Site (Career Site Branding & Settings)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 35 Career Site Settings] --> B[Thực hiện thao tác]
+    A[Mở giao diện 33 Career Site Settings] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

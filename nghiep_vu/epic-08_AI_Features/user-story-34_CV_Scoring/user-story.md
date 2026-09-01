@@ -1,4 +1,4 @@
-﻿# 📋 User Story 23: CV Scoring & Insights (AI Chấm Điểm CV Tự Động)
+# 📋 User Story 34: CV Scoring & Insights (AI Chấm Điểm CV Tự Động)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),

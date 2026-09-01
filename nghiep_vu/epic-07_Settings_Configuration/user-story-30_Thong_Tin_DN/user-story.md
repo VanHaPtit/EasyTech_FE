@@ -1,4 +1,4 @@
-﻿# 📋 User Story 21: Thông Tin Doanh Nghiệp (Company General Settings)
+# 📋 User Story 30: Thông Tin Doanh Nghiệp (Company General Settings)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR Admin),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 21 Thong Tin DN] --> B[Thực hiện thao tác]
+    A[Mở giao diện 30 Thong Tin DN] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

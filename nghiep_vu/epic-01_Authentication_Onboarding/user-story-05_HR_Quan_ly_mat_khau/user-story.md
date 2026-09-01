@@ -1,4 +1,4 @@
-# 📋 User Story 06: HR Quản lý Mật khẩu (Password Management)
+# 📋 User Story 05: HR Quản lý Mật khẩu (Password Management)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),

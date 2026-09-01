@@ -1,4 +1,4 @@
-﻿# 📋 User Story 05: Admin Duyệt Doanh Nghiệp (Approve Company Registrations)
+# 📋 User Story 06: Admin Duyệt Doanh Nghiệp (Approve Company Registrations)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Quản trị viên Hệ thống (System Admin),

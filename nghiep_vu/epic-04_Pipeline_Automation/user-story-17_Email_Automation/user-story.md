@@ -1,4 +1,4 @@
-﻿# 📋 User Story 12: Email Automation (Tự Động Hóa Gửi Email)
+# 📋 User Story 17: Email Automation (Tự Động Hóa Gửi Email)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 12 Email Automation] --> B[Thực hiện thao tác]
+    A[Mở giao diện 17 Email Automation] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

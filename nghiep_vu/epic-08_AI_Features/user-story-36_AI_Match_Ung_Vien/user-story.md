@@ -1,4 +1,4 @@
-﻿# 📋 User Story 34: AI Shadow Matching & Suggestions (Gợi Ý Ứng Viên Từ Kho Dữ Liệu Cũ)
+# 📋 User Story 36: AI Shadow Matching & Suggestions (Gợi Ý Ứng Viên Từ Kho Dữ Liệu Cũ)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 34 AI Match Ung Vien] --> B[Thực hiện thao tác]
+    A[Mở giao diện 36 AI Match Ung Vien] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

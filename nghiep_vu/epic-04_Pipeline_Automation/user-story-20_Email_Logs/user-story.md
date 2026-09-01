@@ -1,4 +1,4 @@
-﻿# 📋 User Story 27: Email Logs (Lịch Sử Email Tự Động Gửi Đến Ứng Viên)
+# 📋 User Story 20: Email Logs (Lịch Sử Email Tự Động Gửi Đến Ứng Viên)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 27 Email Logs] --> B[Thực hiện thao tác]
+    A[Mở giao diện 20 Email Logs] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

@@ -1,4 +1,4 @@
-﻿# 📋 User Story 26: Evaluation Form (Phiếu Đánh Giá Ứng Viên Theo Vòng)
+# 📋 User Story 19: Evaluation Form (Phiếu Đánh Giá Ứng Viên Theo Vòng)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR) / Người phỏng vấn (Interviewer),
@@ -11,7 +11,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 26 Evaluation Form] --> B[Thực hiện thao tác]
+    A[Mở giao diện 19 Evaluation Form] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

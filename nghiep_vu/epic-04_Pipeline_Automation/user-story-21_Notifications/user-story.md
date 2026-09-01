@@ -1,4 +1,4 @@
-﻿# 📋 User Story 36: Hệ Thống Thông Báo (In-App Notifications)
+# 📋 User Story 21: Hệ Thống Thông Báo (In-App Notifications)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 36 Notifications] --> B[Thực hiện thao tác]
+    A[Mở giao diện 21 Notifications] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

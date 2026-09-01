@@ -1,4 +1,4 @@
-﻿# 📋 User Story 10: Publish / Close / Reopen Job
+# 📋 User Story 14: Publish / Close / Reopen Job
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),

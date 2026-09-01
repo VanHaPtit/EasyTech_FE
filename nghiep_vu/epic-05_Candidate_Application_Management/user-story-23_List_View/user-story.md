@@ -1,4 +1,4 @@
-﻿# 📋 User Story 15: List View Ứng Viên (Xem Danh Sách Dạng Bảng)
+# 📋 User Story 23: List View Ứng Viên (Xem Danh Sách Dạng Bảng)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 15 List View] --> B[Thực hiện thao tác]
+    A[Mở giao diện 23 List View] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

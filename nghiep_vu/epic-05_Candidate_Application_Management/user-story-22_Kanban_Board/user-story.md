@@ -1,4 +1,4 @@
-﻿# 📋 User Story 14: Kanban Board Ứng Viên (Bảng Quản Lý Tuyển Dụng Động)
+# 📋 User Story 22: Kanban Board Ứng Viên (Bảng Quản Lý Tuyển Dụng Động)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),

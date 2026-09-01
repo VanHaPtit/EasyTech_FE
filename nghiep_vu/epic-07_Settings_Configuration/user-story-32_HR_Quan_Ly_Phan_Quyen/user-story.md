@@ -1,4 +1,4 @@
-﻿# 📋 User Story 33: HR Quản Lý Phân Quyền (Role-Based Access Control - RBAC)
+# 📋 User Story 32: HR Quản Lý Phân Quyền (Role-Based Access Control - RBAC)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Quản trị viên Công ty (Company Admin / HR có quyền Admin),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 33 HR Quan Ly Phan Quyen] --> B[Thực hiện thao tác]
+    A[Mở giao diện 32 HR Quan Ly Phan Quyen] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

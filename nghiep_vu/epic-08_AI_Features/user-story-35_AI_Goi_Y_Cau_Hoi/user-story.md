@@ -1,4 +1,4 @@
-﻿# 📋 User Story 24: Gợi Ý Câu Hỏi Phỏng Vấn (AI Interview Questions Suggestion)
+# 📋 User Story 35: Gợi Ý Câu Hỏi Phỏng Vấn (AI Interview Questions Suggestion)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng / Người phỏng vấn,
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 24 AI Goi Y Cau Hoi] --> B[Thực hiện thao tác]
+    A[Mở giao diện 35 AI Goi Y Cau Hoi] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

@@ -1,4 +1,4 @@
-﻿# 📋 User Story 06: Dashboard Tổng Quan (HR Dashboard Overview)
+# 📋 User Story 10: Dashboard Tổng Quan (HR Dashboard Overview)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),

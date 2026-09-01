@@ -1,4 +1,4 @@
-﻿# 📋 User Story 16: Candidate Drawer (Xem Chi Tiết Hồ Sơ Ứng Viên)
+# 📋 User Story 24: Candidate Drawer (Xem Chi Tiết Hồ Sơ Ứng Viên)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),

@@ -1,4 +1,4 @@
-﻿# 📋 User Story 22: AI Provider Configuration (Cấu Hình Dịch Vụ AI)
+# 📋 User Story 31: AI Provider Configuration (Cấu Hình Dịch Vụ AI)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Quản trị viên Công ty (Company Admin),

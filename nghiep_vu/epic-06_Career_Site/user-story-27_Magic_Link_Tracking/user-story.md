@@ -1,4 +1,4 @@
-﻿# 📋 User Story 28: Magic Link Tracking (Tra cứu hồ sơ không dùng mật khẩu)
+# 📋 User Story 27: Magic Link Tracking (Tra cứu hồ sơ không dùng mật khẩu)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Ứng viên (Candidate),

@@ -1,4 +1,4 @@
-﻿# 📋 User Story 25: Dynamic Application Form (Form Ứng Tuyển Tùy Chỉnh Theo Job)
+# 📋 User Story 15: Dynamic Application Form (Form Ứng Tuyển Tùy Chỉnh Theo Job)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 25 Dynamic Form] --> B[Thực hiện thao tác]
+    A[Mở giao diện 15 Dynamic Form] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

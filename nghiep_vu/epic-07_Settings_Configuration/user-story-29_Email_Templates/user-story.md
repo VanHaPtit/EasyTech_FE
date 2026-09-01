@@ -1,4 +1,4 @@
-﻿# 📋 User Story 20: Cấu Hình Mẫu Email (Email Templates Management)
+# 📋 User Story 29: Cấu Hình Mẫu Email (Email Templates Management)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),

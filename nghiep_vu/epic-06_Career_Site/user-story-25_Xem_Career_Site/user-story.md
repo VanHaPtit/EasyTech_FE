@@ -1,4 +1,4 @@
-﻿# 📋 User Story 17: Xem Career Site & Job Công Khai
+# 📋 User Story 25: Xem Career Site & Job Công Khai
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Ứng viên (Candidate) / Khách truy cập ẩn danh (Guest),

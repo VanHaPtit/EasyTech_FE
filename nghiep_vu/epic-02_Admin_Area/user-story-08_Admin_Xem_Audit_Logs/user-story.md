@@ -1,4 +1,4 @@
-﻿# 📋 User Story 31: Admin Xem Audit Logs (Nhật Ký Hoạt Động Hệ Thống)
+# 📋 User Story 08: Admin Xem Audit Logs (Nhật Ký Hoạt Động Hệ Thống)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Quản trị viên Hệ thống (System Admin),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 31 Admin Xem Audit Logs] --> B[Thực hiện thao tác]
+    A[Mở giao diện 8 Admin Xem Audit Logs] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

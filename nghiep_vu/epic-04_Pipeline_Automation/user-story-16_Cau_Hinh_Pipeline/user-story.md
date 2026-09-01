@@ -1,4 +1,4 @@
-﻿# 📋 User Story 11: Cấu Hình Pipeline Tuyển Dụng (Hiring Rounds Configuration)
+# 📋 User Story 16: Cấu Hình Pipeline Tuyển Dụng (Hiring Rounds Configuration)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),

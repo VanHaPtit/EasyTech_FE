@@ -1,4 +1,4 @@
-﻿# 📋 User Story 08: Tạo Job Với AI Gợi Ý (Tạo Job with AI JD)
+# 📋 User Story 12: Tạo Job Với AI Gợi Ý (Tạo Job with AI JD)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),

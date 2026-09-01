@@ -1,4 +1,4 @@
-﻿# 📋 User Story 32: Admin Quản Lý Users (Tài Khoản Người Dùng Hệ Thống)
+# 📋 User Story 09: Admin Quản Lý Users (Tài Khoản Người Dùng Hệ Thống)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Quản trị viên Hệ thống (System Admin),
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 32 Admin Users Management] --> B[Thực hiện thao tác]
+    A[Mở giao diện 9 Admin Users Management] --> B[Thực hiện thao tác]
     B --> C{Hệ thống xử lý}
     C -- Lỗi --> D[Báo lỗi]
     C -- Thành công --> E[Cập nhật CSDL]

@@ -1,4 +1,4 @@
-﻿# 📋 User Story 30: Admin Quản Lý Job Categories (Danh Mục Ngành Nghề)
+# 📋 User Story 07: Admin Quản Lý Job Categories (Danh Mục Ngành Nghề)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Quản trị viên Hệ thống (System Admin),
