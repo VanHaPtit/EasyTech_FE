@@ -29,7 +29,7 @@ graph TD
   - **VỚI ĐIỀU KIỆN** HR đang ở trang Cài đặt thông tin.
   - **KHI** HR upload một logo (<= 2MB, JPG/PNG).
   - **THÌ** ảnh được tải lên thành công, thay thế logo cũ trên thanh điều hướng góc trái Dashboard.
-  - _Lưu ý: Logo này độc lập với Logo trên Career Site (User Story 35), dùng cho giao diện nội bộ HR._
+  - _Lưu ý: Logo này (`companies.logo_url`) dùng riêng cho giao diện nội bộ HR (Dashboard sidebar). Logo công khai trên Career Site được quản lý riêng tại **US-33 Career Site Settings** (`career_site_settings.logo_url`). Hai trường độc lập, thay đổi ở đây KHÔNG ảnh hưởng Career Site._
 
 - **Kịch bản 3: HR không có quyền Admin cố gắng chỉnh sửa**
   - **VỚI ĐIỀU KIỆN** HR (không có quyền Admin) truy cập trang này.

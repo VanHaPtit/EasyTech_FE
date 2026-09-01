@@ -10,7 +10,7 @@
 ## 1. Mục tiêu sản phẩm
 
 EasyTech Recruitment Platform là nền tảng quản lý tuyển dụng SaaS dành cho doanh nghiệp, tập trung vào trải nghiệm người dùng rõ ràng cho 3 đối tượng chính:
-- HR / HR_ADMIN
+- HR_ADMIN (người đăng ký công ty, có toàn quyền quản lý) / HR (thành viên được HR_ADMIN thêm vào)
 - Candidate
 - System Admin
 
@@ -74,7 +74,7 @@ Trạng thái doanh nghiệp trong quá trình đăng ký và sử dụng.
 | `PENDING` | Đã đăng ký, chờ Admin duyệt | Sau đăng ký |
 | `ACTIVE` | Được Admin phê duyệt, có quyền sử dụng | Sau Admin approve |
 | `REJECTED` | Bị Admin từ chối, có lý do | Sau Admin reject |
-| `BLOCKED` | Bị khóa (tùy chọn, dùng trong tương lai) | Admin thao tác thủ công |
+| `BLOCKED` | Bị khóa — **[Future Enhancement]** không implement trong MVP | Admin thao tác thủ công |
 
 ### User Status
 Trạng thái tài khoản cá nhân, độc lập với Company Status.
@@ -199,7 +199,7 @@ Mục tiêu: Job publish, ứng tuyển, review Candidate và pipeline hoạt đ
 ### Sprint 3 — Polish, AI, Settings
 Mục tiêu: Tối ưu UX, AI recommendation, email template, feedback và demo-ready.
 - EP-02: US-08, US-09
-- EP-03: US-10 (dashboard polish), US-13 (edit flow)
+- EP-03: US-13 (edit flow polish)
 - EP-04: US-19, US-21
 - EP-06: US-28
 - EP-07: US-29, US-30, US-31, US-32, US-33

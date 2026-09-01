@@ -34,7 +34,7 @@ graph TD
   - **VỚI ĐIỀU KIỆN** người dùng chưa có tài khoản trên hệ thống.
   - **KHI** người dùng điền đầy đủ form:
     - **Bước 1 (Tài khoản HR):** Họ tên, Email đăng nhập, Mật khẩu (≥ 8 ký tự, có chữ hoa + số).
-    - **Bước 2 (Doanh nghiệp):** Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ, Subdomain mong muốn (Website & Email liên hệ công ty là tùy chọn).
+    - **Bước 2 (Doanh nghiệp):** Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ, Subdomain mong muốn, Ngành nghề (Industry), Quy mô (Company Size), Mô tả công ty, và Upload Logo (tùy chọn).
   - **VÀ** nhấn "Đăng ký".
   - **THÌ** hệ thống tạo bản ghi trong bảng `companies` với `status = PENDING` và `users` với `role = HR`, `status = PENDING` (liên kết qua `company_id`).
   - Hệ thống gửi email xác nhận đến HR và gửi yêu cầu phê duyệt đến Admin.
@@ -60,14 +60,18 @@ graph TD
     - _"Subdomain này đã được sử dụng. Vui lòng chọn một subdomain khác."_
 
 - **Kịch bản 5: Bị từ chối → chỉnh sửa + gửi lại**
-  - **VỚI ĐIỀU KIỆN** company đã bị Admin từ chối.
-  - **KHI** HR click "Chỉnh sửa và gửi lại".
-  - **THÌ** hệ thống cho phép sửa thông tin (ngoại trừ Email HR) và gửi lại đơn. Trạng thái Company và User trở về `PENDING`.
+  - **VỚI ĐIỀU KIỆN** Company đang ở trạng thái `REJECTED`. HR đang ở trang `/registration/rejected`.
+  - **KHI** HR nhấn CTA "Chỉnh sửa & Gửi lại hồ sơ".
+  - **THÌ** hệ thống mở form chỉnh sửa, **status KHÔNG thay đổi trong khi HR đang edit** (vẫn là `REJECTED`).
+  - HR chỉnh sửa các trường (không được đổi Email đăng nhập, Mã số thuế chỉ đổi nếu thuộc lý do từ chối).
+  - **KHI** HR nhấn nút "Xác nhận gửi lại" (confirmation action cuối), hệ thống hiển thị modal xác nhận: _"Bạn sắp gửi lại hồ sơ đăng ký. Hồ sơ sẽ vào hàng chờ xem xét của Admin."_
+  - **Sau khi HR confirm:** Hệ thống gọi API → `Company.status = PENDING`, `User.status = PENDING`, hồ sơ xuất hiện lại trong danh sách Admin.
+  - HR được redirect về trang Chờ duyệt (`/pending`).
 
 ## 3. BUSINESS RULES
 
 ### Company & User Creation
-- Quá trình đăng ký phải tạo **Company** (`status = PENDING`) và **User** (`role = HR`, `status = PENDING`) trong cùng một Transaction (nếu lỗi thì rollback toàn bộ).
+- Quá trình đăng ký phải tạo **Company** (`status = PENDING`) và **User** (`role = HR_ADMIN`, `status = PENDING`) trong cùng một Transaction (nếu lỗi thì rollback toàn bộ).
 - Cả Company và User phải cùng được Admin duyệt trước khi activate.
 - Khi Admin approve: Company = ACTIVE, User = ACTIVE.
 - Khi Admin reject: Company = REJECTED, User = PENDING (restricted).
@@ -76,10 +80,13 @@ graph TD
 - Subdomain có thể tự động tạo (auto-suggest) dựa trên Tên công ty khi người dùng nhập xong tên, HR vẫn có thể chỉnh sửa lại.
 - Email liên hệ của công ty nếu để trống sẽ tự động lấy Email đăng nhập của HR.
 
-### Approval & Resubmit
+### Approval & Resubmit Trigger Rule
 - Đăng ký phải đi qua kênh duyệt; không được cho phép company vào Dashboard ngay sau khi đăng ký.
 - Nếu `company.status = REJECTED`, HR không được dead-end. Phải có route để xem lý do, sửa, resubmit.
-- Khi gửi lại hồ sơ: Company = PENDING, User = PENDING, luồng duyệt được lặp lại.
+- Status CHỈ chuyển về `PENDING` sau khi HR nhấn nút "Xác nhận gửi lại" trong confirmation modal — không phải khi mở form edit.
+- Trong thời gian HR đang edit form (chưa confirm), Company và User vẫn ở trạng thái `REJECTED`.
+- Nếu HR đóng tab/thoát khỏi form mà chưa confirm, không có thay đổi status nào xảy ra.
+- Khi gửi lại hồ sơ chính thức thành công: Company = PENDING, User = PENDING, luồng duyệt được lặp lại.
 
 ### Auth Method
 - Google OAuth chỉ là phương thức auth bổ sung trong tương lai. Trọng tâm MVP là email/password.

@@ -13,7 +13,7 @@ graph TD
     A[Chọn Job (DRAFT)] --> B[Nhấn Publish]
     B --> C{Validate đầy đủ thông tin?}
     C -- Lỗi --> D[Báo lỗi các trường còn thiếu]
-    C -- OK --> E[Đổi Job Status = PUBLISHED]
+    C -- OK --> E[Đổi Job Status = ACTIVE]
     E --> F[Hiển thị Public Link cho Job]
 ```
 
@@ -46,6 +46,25 @@ graph TD
 - Trong MVP không dùng `Unpublish` như trạng thái riêng.
 - Job lifecycle chuẩn: `DRAFT → ACTIVE → CLOSED`, với `CLOSED → ACTIVE` khi reopen.
 - `Close` là state transition; không phải là lỗi hệ thống.
+
+### Job Status & Pipeline Behavior
+| Job Status | Candidate Apply | Pipeline hoạt động | Email Automation |
+|------------|-----------------|---------------------|------------------|
+| `DRAFT`    | ❌ Không được   | ❌ Chưa có          | ❌ Không gửi     |
+| `ACTIVE`   | ✅ Được         | ✅ Đầy đủ           | ✅ Gửi bình thường |
+| `CLOSED`   | ❌ Bị chặn      | ✅ Vẫn hoạt động    | ✅ Vẫn gửi (ứng viên cũ vẫn đang trong process) |
+
+### Khi Job chuyển sang CLOSED:
+- Trang Job trên Career Site ẩn đi / hiển thị "Đã đóng tuyển dụng".
+- Ứng viên mới KHÔNG thể nộp CV.
+- Ứng viên đang trong pipeline **vẫn tiếp tục quy trình bình thường** — HR vẫn có thể move stage, đánh giá, đặt lịch phỏng vấn.
+- Email automation vẫn gửi bình thường cho ứng viên cũ.
+- Ứng viên đang chờ phỏng vấn KHÔNG nhận thông báo đặc biệt khi Job Close (vì họ đang trong process, không bị ảnh hưởng).
+
+### Khi Job reopen (CLOSED → ACTIVE):
+- Job xuất hiện lại trên Career Site.
+- Ứng viên cũ trong pipeline tiếp tục ở stage hiện tại — không cần thao tác riêng.
+- KHÔNG có thay đổi về Application Status hay Round Result.
 
 ## 4. NGOÀI PHẠM VI
 - **KHÔNG** tự động đăng Job lên các nền tảng tuyển dụng bên ngoài.

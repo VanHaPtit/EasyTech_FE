@@ -1,66 +1,80 @@
-﻿# 📋 User Story 03: HR Onboarding (Thiết Lập Hồ Sơ Công Ty)
+# 📋 User Story 03: HR Onboarding (Thiết lập Hồ Sơ Công Ty Sau Khi Được Duyệt)
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR) vừa được Admin phê duyệt,
-- **Tôi muốn** hoàn thành nhanh một bước onboarding ngắn gọn để thiết lập thông tin công ty,
-- **Để** tôi có thể bắt đầu tuyển dụng mà không mất thời gian điền lại dữ liệu đã biết và không bị mất hướng dẫn khi chưa hoàn tất hồ sơ.
+- **Tôi muốn** hoàn thành quy trình onboarding để thiết lập thông tin cơ bản cho công ty,
+- **Để** hệ thống có đủ thông tin hiển thị trên Career Site và Dashboard, đồng thời tôi có thể bắt đầu tạo Job ngay sau đó.
 - **Story Points:** 3
 
 ## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
 
 ```mermaid
 graph TD
-    A[Đăng nhập lần đầu] --> B{Kiểm tra Onboarding?}
-    B -- Đã làm --> C[Vào Dashboard]
-    B -- Chưa làm --> D[Hiển thị màn hình Onboarding]
-    D --> E[Bước 1: Thông tin công ty]
-    E --> F[Bước 2: Thương hiệu/Logo optional]
-    F --> G[Bước 3: Liên hệ]
-    G --> H[Hoàn thành Onboarding]
-    H --> C
-    D -- Bỏ qua (Skip) --> I[Lưu trạng thái bỏ qua]
-    I --> C
+    A[HR login lần đầu sau khi ACTIVE] --> B{onboardingCompleted?}
+    B -- false --> C[Redirect /onboarding]
+    B -- true --> D[Redirect /dashboard]
+    C --> E[Bước 1: Xác nhận Thông tin công ty]
+    E --> F[Bước 2: Upload Logo & Thương hiệu]
+    F --> G[Bước 3: Thông tin liên hệ]
+    G --> H{HR nhấn Hoàn tất?}
+    H -- Có --> I[Set onboardingCompleted = true]
+    H -- Skip --> J[Set onboardingCompleted = true + show reminder]
+    I --> D
+    J --> D
 ```
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
-- **Kịch bản 1: HR đăng nhập lần đầu sau khi được approve**
-  - **VỚI ĐIỀU KIỆN** Admin vừa phê duyệt tài khoản HR, `Company Status` chuyển từ `PENDING` → `ACTIVE` và `User Status` chuyển từ `PENDING` → `ACTIVE`.
-  - **KHI** HR đăng nhập lần đầu.
-  - **THÌ** hệ thống kiểm tra `company_profile.onboardingCompleted = false` và chuyển đến trang Onboarding `/onboarding` thay vì Dashboard.
+- **Kịch bản 1: HR lần đầu đăng nhập sau khi được duyệt — bị redirect vào Onboarding**
+  - **VỚI ĐIỀU KIỆN** Company.status = ACTIVE, User.status = ACTIVE và `onboardingCompleted = false`.
+  - **KHI** HR đăng nhập thành công.
+  - **THÌ** hệ thống tự động redirect về `/onboarding` thay vì `/dashboard`.
 
-- **Kịch bản 2: Onboarding 3 bước**
-  - **VỚI ĐIỀU KIỆN** HR đang ở trang Onboarding.
-  - **KHI** HR điền bước 1: Thông tin công ty (industry, company size, website, description); bước 2: Branding (logo, optional); bước 3: Liên hệ (phone, address).
-  - **THÌ** hệ thống hiển thị progress indicator: 1 Thông tin → 2 Thương hiệu → 3 Liên hệ.
-  - Sau mỗi step, hệ thống lưu dữ liệu. Khi HR nhấn "Hoàn thành" ở bước cuối, `onboardingCompleted = true` được cập nhật và user được chuyển đến Dashboard.
+- **Kịch bản 2: Bước 1 — Xác nhận thông tin công ty**
+  - **VỚI ĐIỀU KIỆN** HR đang ở Bước 1 Onboarding.
+  - **THÌ** hệ thống pre-fill các trường từ dữ liệu đăng ký (Tên công ty, Email, Số điện thoại, Mã số thuế) — không được yêu cầu nhập lại.
+  - HR có thể cập nhật thêm: Website, Ngành nghề, Quy mô công ty, Mô tả ngắn.
+  - HR nhấn "Tiếp theo" để sang Bước 2.
 
-- **Kịch bản 3: Không hỏi lại dữ liệu đã biết**
-  - **VỚI ĐIỀU KIỆN** Company Name, Email và Mã số thuế đã có từ đăng ký.
-  - **KHI** HR ở trang Onboarding.
-  - **THÌ** hệ thống không bắt nhập lại những dữ liệu này trừ khi cần xác nhận hoặc chỉnh sửa rõ ràng. Những trường này có thể được hiển thị dạng readonly hoặc không hiện thị nếu không cần.
+- **Kịch bản 3: Bước 2 — Upload Logo & Thiết lập Thương hiệu**
+  - **VỚI ĐIỀU KIỆN** HR đang ở Bước 2 Onboarding.
+  - **THÌ** HR có thể upload Logo công ty (PNG/JPG, ≤ 2MB) — đây là logo dùng cho Career Site (public).
+  - Nếu bỏ qua, hệ thống dùng placeholder mặc định.
+  - HR nhấn "Tiếp theo" để sang Bước 3.
 
-- **Kịch bản 4: Bỏ qua onboarding**
-  - **VỚI ĐIỀU KIỆN** HR không muốn điền ngay trong lần đầu.
-  - **KHI** HR nhấn "Bỏ qua, tôi sẽ điền sau".
-  - **THÌ** hệ thống lưu `onboardingCompleted = true` để không bắt lặp lại, nhưng vẫn hiển thị reminder trên Dashboard: "Hồ sơ doanh nghiệp của bạn chưa hoàn thiện." và CTA "Hoàn thiện hồ sơ".
+- **Kịch bản 4: Bước 3 — Thông tin liên hệ**
+  - **VỚI ĐIỀU KIỆN** HR đang ở Bước 3 Onboarding (bước cuối).
+  - **THÌ** HR điền Email liên hệ tuyển dụng (reply-to email cho ứng viên), Địa chỉ công ty (nếu chưa có).
+  - Nhấn "Hoàn tất Onboarding" → set `onboardingCompleted = true` → redirect `/dashboard`.
 
-- **Kịch bản 5: Lưu / khôi phục dữ liệu**
-  - **VỚI ĐIỀU KIỆN** HR đã điền một bước nhưng chưa hoàn thành onboarding.
-  - **KHI** HR reload trang hoặc quay lại sau thời gian.
-  - **THÌ** dữ liệu đã nhập trong từng bước còn nguyên và có thể tiếp tục mà không cần nhập lại.
+- **Kịch bản 5: HR bỏ qua toàn bộ Onboarding (Skip)**
+  - **VỚI ĐIỀU KIỆN** HR không muốn điền ngay.
+  - **KHI** HR nhấn "Bỏ qua, thiết lập sau" (có thể ở bất kỳ bước nào).
+  - **THÌ** hệ thống set `onboardingCompleted = true` và redirect về `/dashboard`.
+  - Dashboard hiển thị banner nhắc nhở với progress indicator (X/3 bước đã hoàn thành) và CTA "Hoàn thiện hồ sơ công ty".
 
-- **Kịch bản 6: HR cũ quay lại trang /onboarding**
-  - **VỚI ĐIỀU KIỆN** HR đã có `onboardingCompleted = true`.
-  - **KHI** HR truy cập direct URL `/onboarding`.
-  - **THÌ** hệ thống redirect về `/dashboard`.
+- **Kịch bản 6: HR đã hoàn thành Onboarding — không bị redirect lại**
+  - **VỚI ĐIỀU KIỆN** `onboardingCompleted = true`.
+  - **KHI** HR truy cập lại `/onboarding`.
+  - **THÌ** hệ thống redirect về `/dashboard`. Onboarding không xuất hiện lại.
 
 ## 3. BUSINESS RULES
-- Onboarding tối đa 3 bước và ưu tiên tối giản.
-- Logo là optional.
-- `Skip` không làm mất reminder; chỉ làm profile chưa hoàn thiện nhưng onboarding không lặp lại.
-- Nếu chưa triển khai autosave, phải có save per step và restore khi reload.
+
+### onboardingCompleted Flag
+- `onboardingCompleted = false`: HR bị redirect vào `/onboarding` sau mỗi lần login cho đến khi hoàn thành hoặc skip.
+- `onboardingCompleted = true`: Set khi HR nhấn "Hoàn tất" (bước 3) **HOẶC** nhấn "Bỏ qua". Sau khi set `true`, không tự reset về `false`.
+- **Lý do skip = true:** Dùng `onboardingCompleted = true` kể cả khi skip vì mục tiêu là không block HR vào Dashboard; reminder banner sẽ thay thế redirect. Không dùng trường riêng `onboardingSkipped` để tránh logic phức tạp.
+
+### Dữ liệu pre-fill
+- Onboarding KHÔNG được yêu cầu nhập lại dữ liệu từ bước đăng ký (Tên công ty, Email, MST).
+- Dữ liệu từ bước đăng ký phải được pre-fill tự động qua API `GET /api/v1/companies/me`.
+
+### Logo trong Onboarding
+- Logo upload ở Bước 2 Onboarding → lưu vào `career_site_settings.logo_url` (public/Career Site logo).
+- Logo nội bộ Dashboard (sidebar) có thể set riêng trong US-30 Company Settings.
+- **Source of truth:** Career Site logo ← `career_site_settings.logo_url`; Dashboard logo ← `companies.logo_url` (nội bộ).
 
 ## 4. NGOÀI PHẠM VI
-- **KHÔNG** bắt buộc HR phải upload logo trong bước Onboarding.
-- **KHÔNG** verify thông tin với dữ liệu quốc gia hoặc pháp lý trong MVP.
+- **KHÔNG** bắt buộc HR hoàn thành tất cả bước — skip là hợp lệ.
+- **KHÔNG** reset `onboardingCompleted` về `false` khi HR chỉnh sửa thông tin sau đó trong Settings.
+- **KHÔNG** có bước "Video giới thiệu hệ thống" trong MVP.

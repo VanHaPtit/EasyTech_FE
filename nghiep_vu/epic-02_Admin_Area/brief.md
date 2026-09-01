@@ -54,6 +54,13 @@ graph TD
 - Email approval/rejection reason phải được gửi tới HR đăng ký.
 - HR có thể authentication thành công khi credentials hợp lệ, nhưng quyền vào workspace phụ thuộc Company Status và User Status.
 
+### Admin Individual User Management (US-09)
+- Admin có thể INACTIVE hoặc BLOCK một User cụ thể trong một Company mà **không ảnh hưởng đến Company Status**.
+- Kịch bản: HR vi phạm policy cá nhân trong khi Company vẫn hợp lệ → Admin block User đó.
+- Khi User bị BLOCKED / INACTIVE: User không thể login vào HR Workspace (Login bị từ chối với thông báo "Tài khoản đã bị vô hiệu hóa / khóa").
+- Company vẫn ACTIVE → các HR khác trong cùng Company không bị ảnh hưởng.
+- Admin phải ghi lý do khi BLOCK/INACTIVE một User (Audit Log bắt buộc).
+
 ## 6. Cải tiến trong tương lai và quyết định sản phẩm
 - Luồng REQUEST_CHANGES là `Cải tiến trong tương lai` nếu Product muốn quy trình chi tiết hơn trạng thái REJECTED.
 - Tự động kiểm tra trùng mã số thuế hoặc độ giống tên công ty là cải tiến trong tương lai, tùy mức chấp nhận rủi ro.

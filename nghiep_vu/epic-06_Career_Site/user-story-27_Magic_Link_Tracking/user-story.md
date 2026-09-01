@@ -28,7 +28,7 @@ graph TD
     - Trang hiển thị: tên ứng viên, tên Job, tên công ty, trạng thái hiện tại, và lịch phỏng vấn nếu có.
 
 - **Kịch bản 2: Magic Link đã hết hạn**
-  - **VỚI ĐIỀU KIỆN** ứng viên có `secure_token` đã vượt quá thời gian hiệu lực được cấu hình.
+  - **VỚI ĐIỀU KIỆN** ứng viên có `secure_token` đã vượt quá 30 ngày kể từ ngày nộp đơn.
   - **KHI** ứng viên truy cập link với token đó.
   - **THÌ** hệ thống hiển thị trang "Liên kết đã hết hạn." và cho phép ứng viên yêu cầu gửi lại Magic Link mới.
 
@@ -42,8 +42,7 @@ graph TD
   - **THÌ** trang tra cứu hiển thị trạng thái phản hồi hiện tại (đã xác nhận / đã từ chối) thay vì hiển thị nút hành động.
 
 ## 3. BUSINESS RULES
-- Magic Link TTL cần Product Owner quyết định; không hard-code 48 giờ trong MVP.
-- Mặc định: `NEEDS PRODUCT DECISION` với các lựa chọn: 7 ngày / 30 ngày / 90 ngày.
+- **Magic Link TTL: 30 ngày (Đã chốt — xem `_overview.md §8`).** Hết hạn → Candidate phải tự yêu cầu gửi lại link mới (không tự động gia hạn).
 - Magic Link không cấp quyền đăng nhập vào hệ thống HR Dashboard.
 
 ## 4. NGOÀI PHẠM VI

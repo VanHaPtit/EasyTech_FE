@@ -1,4 +1,4 @@
-﻿# EPIC 07 — Settings & Configuration
+# EPIC 07 — Settings & Configuration
 
 ## 1. Tóm tắt
 - **Nghiệp vụ:** HR quản lý thông tin doanh nghiệp, email templates và các tùy chọn AI trong phạm vi công ty.
@@ -33,7 +33,16 @@ graph TD
 - Default email templates phải có sẵn để job flow hoạt động ngay mà không yêu cầu HR tạo template từ đầu.
 - AI Provider / BYOK là cấu hình nâng cao tùy chọn; AI mặc định của EasyTech vẫn hoạt động khi HR chưa nhập key.
 - Company settings và Career Site settings phải tách biệt rõ ràng: dữ liệu pháp lý/nội bộ và dữ liệu thương hiệu public.
-- Nếu cùng một field xuất hiện ở hai nơi, source of truth phải rõ ràng trong spec.
+
+### Data Source of Truth — Branding Fields
+| Field | Source of Truth | Nơi quản lý | Hiển thị ở |
+|-------|-----------------|-------------|------------|
+| Logo nội bộ | `companies.logo_url` | US-30 General Settings | Dashboard sidebar |
+| Logo Career Site | `career_site_settings.logo_url` | US-33 Career Site Settings (hoặc Onboarding Bước 2) | Career Site public |
+| Tên công ty (nội bộ) | `companies.name` | US-30 General Settings | Dashboard, Audit logs |
+| Tên công ty (public) | `career_site_settings.display_name` | US-33 Career Site Settings | Career Site, Job listings |
+| Mô tả công ty (public) | `career_site_settings.description` | US-33 Career Site Settings | Career Site About section |
+- Thay đổi ở US-30 KHÔNG tự động áp dụng lên Career Site và ngược lại.
 
 ## 6. Cải tiến trong tương lai và quyết định sản phẩm
 - Cấu hình AI provider BYOK đầy đủ là cấu hình nâng cao.

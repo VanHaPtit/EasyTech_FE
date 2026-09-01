@@ -38,7 +38,11 @@ graph TD
 
 - **Kịch bản 3: HR thực hiện Action từ Drawer**
   - **VỚI ĐIỀU KIỆN** Drawer đang mở.
-  - **KHI** HR nhấn vào các nút chức năng (Đổi vòng, Đánh dấu Đạt, Đánh dấu Trượt).
+  - **KHI** HR nhấn vào các nút chức năng:
+    - **"Đánh dấu Đạt" (PASSED):** Cập nhật Round Result = PASSED. Nếu không phải vòng cuối → tự động chuyển sang vòng tiếp theo + Confirmation email. Nếu là vòng cuối → Application vẫn ACTIVE, chờ HR nhấn "Tuyển dụng".
+    - **"Đánh dấu Trượt" (FAILED):** Hiển thị Confirmation Modal → Sau khi xác nhận: Round Result = FAILED + Application Status = REJECTED + Email từ chối tự động.
+    - **"Tuyển dụng" (HIRE):** Chỉ xuất hiện khi ứng viên ở vòng cuối và Round Result = PASSED → Application Status = HIRED + Email chúc mừng.
+    - **"Xóa hồ sơ" (Hard Delete):** Hiển thị cảnh báo xác nhận → Xóa vĩnh viễn toàn bộ thông tin ứng viên và file CV.
   - **THÌ** hệ thống xử lý logic tương ứng, hiển thị thông báo thành công và cập nhật lại thông tin hiển thị trên Header của Drawer cũng như trên bảng/kanban bên dưới.
 
 - **Kịch bản 4: HR đóng Drawer**
@@ -46,6 +50,15 @@ graph TD
   - **KHI** HR nhấn nút "X", hoặc click ra ngoài vùng xám (backdrop).
   - **THÌ** Drawer trượt đóng lại, màn hình Kanban/List phía dưới không thay đổi vị trí cuộn ban đầu.
 
-## 3. NGOÀI PHẠM VI
+## 3. BUSINESS RULES
+
+### Reject Trigger Rule
+- Application Status = REJECTED được set theo 2 con đường:
+  1. **Explicit action:** HR nhấn "Đánh dấu Trượt" trong Candidate Drawer → Confirmation Modal → FAILED + REJECTED.
+  2. **Auto rule:** Round Result = FAILED (từ Kanban drag hoặc Drawer) → tự động set Application Status = REJECTED.
+- Cả 2 con đường đều trigger Email Automation gửi email từ chối nếu HR confirm trong modal.
+- KHÔNG cho phép drag card trực tiếp sang cột "Rejected" mà bỏ qua Round Result (phải đi qua FAILED evaluation).
+
+## 4. NGOÀI PHẠM VI
 - **KHÔNG** có tính năng "Preview PDF" trực tiếp nhúng vào Drawer nếu trình duyệt không hỗ trợ iframe PDF chuẩn (chấp nhận mở tab mới).
 - **KHÔNG** hỗ trợ tính năng Chat trực tuyến với ứng viên trong Drawer.

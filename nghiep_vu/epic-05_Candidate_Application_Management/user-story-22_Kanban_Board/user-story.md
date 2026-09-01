@@ -46,8 +46,8 @@ graph TD
   - **THÌ** HR đánh giá Round Result: PASSED hoặc FAILED.
     - **Nếu Round Result = PASSED (và không phải vòng cuối)**: Card tự động di chuyển sang stage tiếp theo; `Application Status` vẫn là `ACTIVE`.
     - **Nếu Round Result = PASSED (và là vòng cuối)**: Kết quả vòng cuối chỉ cho biết ứng viên đạt kỳ đánh giá; `Application Status` vẫn là `ACTIVE` cho đến khi HR thực hiện explicit `Hire`; card không được tự động tạo `HIRED`.
-    - **Nếu Round Result = FAILED (bất kỳ vòng nào)**: Card di chuyển sang "Rejected" column; `Application Status = REJECTED`.
-  - Hệ thống tự động kích hoạt Email Automation gửi email thông báo kết quả đến ứng viên.
+    - **Nếu Round Result = FAILED (bất kỳ vòng nào)**: Card tự động di chuyển sang "Rejected" column; `Application Status = REJECTED`. Hệ thống hiển thị Confirmation Modal: _"Đánh dấu ứng viên [tên] không đạt vòng [tên vòng]? Email từ chối sẽ được gửi nếu bạn xác nhận."_
+  - Hệ thống kích hoạt Email Automation gửi email thông báo kết quả đến ứng viên nếu HR confirm.
   - **Lưu ý:** PASSED/FAILED là Round Result (đánh giá một vòng cụ thể), không phải Application Status. Application Status chỉ là ACTIVE/REJECTED/HIRED.
 
 - **Kịch bản 4: Job không có hiring_rounds (dùng cấu hình tối giản)**

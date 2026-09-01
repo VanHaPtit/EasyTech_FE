@@ -10,23 +10,30 @@
 
 ```mermaid
 graph TD
-    A[Mở giao diện 17 Email Automation] --> B[Thực hiện thao tác]
-    B --> C{Hệ thống xử lý}
-    C -- Lỗi --> D[Báo lỗi]
-    C -- Thành công --> E[Cập nhật CSDL]
-    E --> F[Phản hồi giao diện thành công]
+    A{Trigger event} -- Candidate nộp CV --> B1[Auto-reply: Email xác nhận nhận đơn + Magic Link]
+    A -- HR chuyển vòng sang PASSED --> B2[Confirmation modal: Gửi email chuyển vòng?]
+    A -- HR đánh giá FAILED --> B3[Confirmation modal: Gửi email từ chối?]
+    B2 -- HR confirm --> C[Lấy Email Template của vòng → Parse variables → SMTP gửi]
+    B3 -- HR confirm --> C
+    B2 -- HR bỏ qua --> D[Chỉ cập nhật stage, không gửi email]
+    B3 -- HR bỏ qua --> D
+    C --> E{SMTP thành công?}
+    E -- Có --> F[Lưu email_logs status=SENT]
+    E -- Không --> G[Retry tối đa 3 lần → FAILED nếu vẫn lỗi]
 ```
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Kích hoạt email tự động khi chuyển vòng**
   - **VỚI ĐIỀU KIỆN** HR đã cấu hình `hiring_rounds` cho Job, và mỗi vòng có gắn một Email Template cụ thể.
-  - **KHI** HR kéo-thả ứng viên sang vòng tiếp theo trên Kanban Board.
-  - **THÌ** Background Job của hệ thống được kích hoạt:
+  - **KHI** HR kéo-thả ứng viên sang vòng tiếp theo trên Kanban Board và vòng đó có gắn Email Template.
+  - **THÌ** hệ thống hiển thị **Confirmation Modal**: _"Gửi email thông báo chuyển vòng đến [tên ứng viên]? Template: [tên template]"_ với 2 nút: **"Gửi Email & Cập nhật"** / **"Chỉ Cập nhật"**.
+  - Nếu HR chọn "Gửi Email & Cập nhật": Background Job được kích hoạt:
     - Lấy thông tin Email Template tương ứng.
     - Parse các biến nội suy (variables) như `{{candidate_name}}`, `{{job_title}}`, `{{company_name}}` thành dữ liệu thực tế.
     - Gọi dịch vụ SMTP (qua Mailtrap/SendGrid) để gửi email đến địa chỉ của ứng viên.
     - Lưu một bản ghi vào bảng `email_logs`.
+  - Nếu HR chọn "Chỉ Cập nhật": Chỉ cập nhật stage, không gửi email (lưu log với status = SKIPPED).
 
 - **Kịch bản 2: Tự động gửi email khi nhận đơn ứng tuyển mới (Auto-reply)**
   - **VỚI ĐIỀU KIỆN** Job có cấu hình tự động trả lời khi nhận đơn (ví dụ: Template "Xác nhận nhận đơn").

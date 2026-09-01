@@ -18,7 +18,7 @@ graph TD
     D -- Từ chối --> G[Nhập lý do từ chối]
     G --> H[Company=REJECTED]
     H --> F
-    D -- Block --> I[Company=BLOCKED]
+    %% Note: BLOCKED state là Future Enhancement
 ```
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)

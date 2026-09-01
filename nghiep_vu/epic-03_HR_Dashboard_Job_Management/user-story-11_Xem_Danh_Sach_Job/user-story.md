@@ -34,7 +34,8 @@ graph TD
 - **Kịch bản 3: HR thực hiện thao tác nhanh (Quick Actions)**
   - **VỚI ĐIỀU KIỆN** HR đang xem một dòng Job trong bảng.
   - **KHI** HR nhấn vào nút "..." (More options).
-  - **THÌ** hiển thị dropdown với các tùy chọn: Xem chi tiết (Kanban ứng viên), Chỉnh sửa Job, Sao chép (Duplicate) Job, Đóng Job (Close), Xóa (chỉ hiển thị nếu Job đang là Draft).
+  - **THÌ** hiển thị dropdown với các tùy chọn: Xem chi tiết (Kanban ứng viên), Chỉnh sửa Job, Sao chép (Duplicate) Job, Đóng Job (Close), Xóa.
+  - Khi chọn Xóa: Hệ thống sẽ thực hiện Xóa cứng (Hard Delete) Job đó, đồng thời tự động xóa cứng tất cả các ứng viên (Application) đang thuộc về Job này cùng file CV của họ.
 
 - **Kịch bản 4: Phân trang (Pagination)**
   - **VỚI ĐIỀU KIỆN** công ty có hơn 10 Jobs.

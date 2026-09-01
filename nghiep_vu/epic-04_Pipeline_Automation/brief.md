@@ -36,7 +36,8 @@ graph TD
 ## 5. Business Rules
 - Pipeline default phải sẵn sàng khi Job mới tạo; không yêu cầu HR tự tạo từ đầu.
 - Nếu HR xóa một round đang có ứng viên, phải hiện cảnh báo rõ ràng và có CTA xem ứng viên hoặc chuyển họ đi.
-- Email automation luôn cần confirmation nếu có side effect gửi email.
+- Email automation với trigger "chuyển vòng" và "FAILED" luôn hiển thị Confirmation Modal trước khi gửi.
+- Email auto-reply khi Candidate nộp CV (trigger = apply) KHÔNG cần confirmation — gửi tự động.
 - Không có hidden side effect: mọi action ảnh hưởng candidate phải được báo trước.
 
 ## 6. Cải tiến trong tương lai và quyết định sản phẩm
