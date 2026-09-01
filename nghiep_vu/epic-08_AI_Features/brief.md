@@ -22,8 +22,9 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-23 | CV Scoring | Should Have | To-do |
-| US-24 | AI Gợi ý câu hỏi | Should Have | To-do |
+| US-34 | CV Scoring | Should Have | To-do |
+| US-35 | AI Gợi ý câu hỏi | Should Have | To-do |
+| US-36 | AI Match ứng viên | Should Have | To-do |
 
 ## 5. Business Rules
 - AI không được tự động reject hoặc hire ứng viên.

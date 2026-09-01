@@ -26,11 +26,12 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-11 | Config pipeline | Must Have | To-do |
-| US-12 | Email automation | Must Have | To-do |
-| US-13 | Đặt lịch phỏng vấn | Must Have | To-do |
-| US-26 | Evaluation form | Must Have | To-do |
-| US-27 | Email logs | Must Have | To-do |
+| US-16 | Config pipeline | Must Have | To-do |
+| US-17 | Email automation | Must Have | To-do |
+| US-18 | Đặt lịch phỏng vấn | Must Have | To-do |
+| US-19 | Evaluation form | Must Have | To-do |
+| US-20 | Email logs | Must Have | To-do |
+| US-21 | Notifications | Should Have | To-do |
 
 ## 5. Business Rules
 - Pipeline default phải sẵn sàng khi Job mới tạo; không yêu cầu HR tự tạo từ đầu.

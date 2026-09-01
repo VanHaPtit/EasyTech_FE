@@ -184,25 +184,26 @@ Thể hiện ứng viên đang ở bước nào trong quy trình tuyển dụng.
 
 ### Sprint 1 — Foundation & Access
 Mục tiêu: HR có thể đăng ký, hệ thống admin duyệt, HR đăng nhập, onboarding cơ bản, và Job list hoạt động.
-- EP-01: US-01, US-02, US-03, US-04
-- EP-02: US-05, US-30
-- EP-03: US-06, US-07, US-09
+- EP-01: US-01, US-02, US-03, US-04, US-05
+- EP-02: US-06, US-07
+- EP-03: US-10, US-11, US-13
 - INFRA: DB schema, auth, routes, seed data
 
 ### Sprint 2 — Core Recruitment Flow
 Mục tiêu: Job publish, ứng tuyển, review Candidate và pipeline hoạt động end-to-end.
-- EP-03: US-08, US-10, US-25
-- EP-04: US-11, US-12, US-13, US-27
-- EP-05: US-14, US-15, US-16
-- EP-06: US-17, US-18, US-28
+- EP-03: US-12, US-14, US-15
+- EP-04: US-16, US-17, US-18, US-20
+- EP-05: US-22, US-23, US-24
+- EP-06: US-25, US-26, US-27
 
 ### Sprint 3 — Polish, AI, Settings
 Mục tiêu: Tối ưu UX, AI recommendation, email template, feedback và demo-ready.
-- EP-03: US-06 (dashboard polish), US-09 (edit flow)
-- EP-04: US-26, US-36
-- EP-06: US-29
-- EP-07: US-20, US-21, US-22, US-33, US-35
-- EP-08: US-23, US-24, US-34
+- EP-02: US-08, US-09
+- EP-03: US-10 (dashboard polish), US-13 (edit flow)
+- EP-04: US-19, US-21
+- EP-06: US-28
+- EP-07: US-29, US-30, US-31, US-32, US-33
+- EP-08: US-34, US-35, US-36
 
 ---
 

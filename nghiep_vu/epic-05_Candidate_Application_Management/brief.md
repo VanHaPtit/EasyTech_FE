@@ -23,9 +23,9 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-14 | Kanban Board | Must Have | To-do |
-| US-15 | List View | Must Have | To-do |
-| US-16 | Candidate Drawer | Must Have | To-do |
+| US-22 | Kanban Board | Must Have | To-do |
+| US-23 | List View | Must Have | To-do |
+| US-24 | Candidate Drawer | Must Have | To-do |
 
 ## 5. Business Rules
 - Candidate list phải thể hiện trạng thái rõ ràng và hiển thị time-to-stage logic nếu phù hợp.

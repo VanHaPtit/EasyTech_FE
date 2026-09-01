@@ -23,11 +23,11 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-20 | Email Templates | Must Have | To-do |
-| US-21 | Thông tin doanh nghiệp | Must Have | To-do |
-| US-22 | AI Provider | Should Have | To-do |
-| US-33 | HR quản lý phân quyền | Should Have | To-do |
-| US-35 | Career Site Settings | Should Have | To-do |
+| US-29 | Email Templates | Must Have | To-do |
+| US-30 | Thông tin doanh nghiệp | Must Have | To-do |
+| US-31 | AI Provider | Should Have | To-do |
+| US-32 | HR quản lý phân quyền | Should Have | To-do |
+| US-33 | Career Site Settings | Should Have | To-do |
 
 ## 5. Business Rules
 - Default email templates phải có sẵn để job flow hoạt động ngay mà không yêu cầu HR tạo template từ đầu.

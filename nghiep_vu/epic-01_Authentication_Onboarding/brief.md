@@ -46,9 +46,7 @@ graph TD
 | US-02 | HR đăng ký | Must Have | To-do |
 | US-03 | HR onboarding | Must Have | To-do |
 | US-04 | Admin đăng nhập | Must Have | To-do |
-| US-05 | Admin duyệt doanh nghiệp | Must Have | In related epic |
-| US-06 | HR quên mật khẩu | Must Have | To-do |
-| US-07 | HR đổi mật khẩu | Must Have | To-do |
+| US-05 | HR quản lý mật khẩu | Must Have | To-do |
 
 ## 5. Business Rules
 

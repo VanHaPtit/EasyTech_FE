@@ -25,12 +25,12 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-06 | Dashboard tổng quan | Must Have | To-do |
-| US-07 | Xem danh sách Job | Must Have | To-do |
-| US-08 | Tạo Job với AI JD | Must Have | To-do |
-| US-09 | Xem & chỉnh sửa Job | Must Have | To-do |
-| US-10 | Publish Job | Must Have | To-do |
-| US-25 | Dynamic Form | Must Have | To-do |
+| US-10 | Dashboard tổng quan | Must Have | To-do |
+| US-11 | Xem danh sách Job | Must Have | To-do |
+| US-12 | Tạo Job với AI JD | Must Have | To-do |
+| US-13 | Xem & chỉnh sửa Job | Must Have | To-do |
+| US-14 | Publish Job | Must Have | To-do |
+| US-15 | Dynamic Form | Must Have | To-do |
 
 ## 5. Business Rules
 - Job mới bắt đầu với default pipeline, default email template và default application form; HR không cần tạo từ đầu.

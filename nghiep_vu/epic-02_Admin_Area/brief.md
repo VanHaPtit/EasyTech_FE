@@ -34,10 +34,10 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-05 | Admin duyệt doanh nghiệp | Must Have | To-do |
-| US-30 | Admin quản lý job categories | Should Have | To-do |
-| US-31 | Admin xem audit logs | Should Have | To-do |
-| US-32 | Admin quản lý users | Should Have | To-do |
+| US-06 | Admin duyệt doanh nghiệp | Must Have | To-do |
+| US-07 | Admin quản lý job categories | Should Have | To-do |
+| US-08 | Admin xem audit logs | Should Have | To-do |
+| US-09 | Admin quản lý users | Should Have | To-do |
 
 ## 5. Business Rules
 

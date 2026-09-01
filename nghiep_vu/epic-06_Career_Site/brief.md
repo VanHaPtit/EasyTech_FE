@@ -27,14 +27,13 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-17 | Xem Career Site | Must Have | To-do |
-| US-18 | Nộp CV | Must Have | To-do |
-| US-28 | Magic Link tracking | Must Have | To-do |
-| US-29 | Interview Response | Must Have | To-do |
+| US-25 | Xem Career Site | Must Have | To-do |
+| US-26 | Nộp CV | Must Have | To-do |
+| US-27 | Magic Link tracking | Must Have | To-do |
+| US-28 | Interview Response | Must Have | To-do |
 
-> Ghi chú: US-19 đã bị deprecated và hợp nhất vào US-29.
-> US-30 là Admin Job Categories trong EP-02.
-> US-33 là HR Permission Management trong EP-07.
+> US-07 là Admin Job Categories trong EP-02.
+> US-32 là HR Permission Management trong EP-07.
 
 ## 5. Business Rules
 - Candidate ứng tuyển không cần register/login.
