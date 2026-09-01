@@ -71,7 +71,7 @@ Lưu tài khoản đăng nhập của Admin và HR.
 | `avatar_url` | TEXT | nullable | Avatar từ Google OAuth. |
 | `google_id` | VARCHAR(255) | UNIQUE, nullable | ID Google OAuth. |
 | `password_hash` | VARCHAR(255) | nullable | Dùng nếu có login email/password. |
-| `role` | VARCHAR(50) | NOT NULL | `ADMIN`, `HR`. |
+| `role` | VARCHAR(50) | NOT NULL | `ADMIN` (System Admin), `HR_ADMIN` (Company Owner/Admin), `HR` (Company Member). |
 | `status` | VARCHAR(50) | NOT NULL | `ACTIVE`, `INACTIVE`, `BLOCKED`. |
 | `last_login_at` | TIMESTAMP | nullable | Lần đăng nhập gần nhất. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
@@ -96,6 +96,7 @@ Lưu thông tin doanh nghiệp/tenant.
 | `email` | VARCHAR(255) | nullable | Email liên hệ. |
 | `website` | VARCHAR(255) | nullable | Website công ty. |
 | `address` | TEXT | nullable | Địa chỉ. |
+| `onboarding_completed` | BOOLEAN | default false | Đánh dấu hoàn thành Onboarding 3 bước. |
 | `status` | VARCHAR(50) | NOT NULL | `PENDING`, `ACTIVE`, `REJECTED`, `BLOCKED`. |
 | `approved_by` | UUID/BIGINT | FK -> users.id, nullable | Admin duyệt. |
 | `approved_at` | TIMESTAMP | nullable | Thời điểm duyệt. |
@@ -134,16 +135,24 @@ Lưu cấu hình giao diện Career Site riêng cho từng doanh nghiệp.
 | --- | --- | --- | --- |
 | `id` | UUID/BIGINT | PK | ID config. |
 | `company_id` | UUID/BIGINT | FK, UNIQUE, NOT NULL | Doanh nghiệp. |
+| `display_name` | VARCHAR(255) | nullable | Tên công ty hiển thị công khai (override `companies.name`). |
+| `logo_url` | TEXT | nullable | Logo public (override `company_profiles.logo_url`). |
+| `banner_url` | TEXT | nullable | Banner public (override `company_profiles.banner_url`). |
+| `primary_color` | VARCHAR(20) | nullable | Màu thương hiệu public (hex). |
 | `site_title` | VARCHAR(255) | nullable | Tiêu đề trang Career Site. |
 | `tagline` | VARCHAR(255) | nullable | Slogan hiển thị trên trang chủ. |
 | `hero_image_url` | TEXT | nullable | Ảnh nền hero section. |
 | `accent_color` | VARCHAR(20) | nullable | Màu nhấn (hex), ví dụ `#47b1de`. |
 | `font_family` | VARCHAR(100) | nullable | Font hiển thị tùy chỉnh. |
+| `description` | TEXT | nullable | Mô tả công ty hiển thị trên Career Site. |
 | `show_company_description` | BOOLEAN | default true | Hiển thị mô tả công ty trên Career Site. |
 | `show_benefits` | BOOLEAN | default true | Hiển thị quyền lợi. |
 | `footer_text` | TEXT | nullable | Nội dung footer tùy chỉnh. |
+| `is_published` | BOOLEAN | default true | Bật/tắt Career Site công khai (US-33 Kịch bản 6). |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
+
+*Lưu ý Fallback:* Nếu `display_name` hoặc `logo_url` bị `NULL`, hệ thống tự động kế thừa dữ liệu mặc định từ `companies.name` và `company_profiles.logo_url`.
 
 ---
 
@@ -199,7 +208,7 @@ Lưu tin tuyển dụng.
 | `employment_type` | VARCHAR(50) | nullable | `FULL_TIME`, `PART_TIME`, `CONTRACT`. |
 | `experience_level` | VARCHAR(50) | nullable | `INTERN`, `JUNIOR`, `MID_LEVEL`, `SENIOR`, `LEAD`. |
 | `experience_years_min` | INT | nullable | Số năm kinh nghiệm tối thiểu. |
-| `round_count` | INT | default 1 | Số vòng phỏng vấn. |
+| `round_count` | INT | default 1 | Số vòng phỏng vấn (cột tính toán/cached count; nguồn chân lý lấy từ `COUNT(hiring_rounds)`). |
 | `status` | VARCHAR(50) | NOT NULL | `INACTIVE`, `ACTIVE`, `CLOSED`, `EXPIRED`. |
 | `published_at` | TIMESTAMP | nullable | Ngày publish. |
 | `closed_at` | TIMESTAMP | nullable | Ngày đóng. |
@@ -339,11 +348,11 @@ Lưu đơn ứng tuyển của Candidate vào Job.
 | `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp nhận hồ sơ. |
 | `job_id` | UUID/BIGINT | FK, NOT NULL | Job ứng tuyển. |
 | `candidate_id` | UUID/BIGINT | FK, NOT NULL | Ứng viên. |
-| `current_round_id` | UUID/BIGINT | FK -> job_rounds.id, nullable | Vòng hiện tại đang ở. |
+| `current_round_id` | UUID/BIGINT | FK -> hiring_rounds.id, nullable | Vòng hiện tại đang ở (hiring_rounds). |
 | `current_step` | INT | default 0 | Index vòng hiện tại (0-based). |
 | `cv_url` | TEXT | NOT NULL | Đường dẫn file CV (S3/local). |
 | `cover_letter` | TEXT | nullable | Thư giới thiệu/ghi chú. |
-| `status` | VARCHAR(50) | NOT NULL | `NEW`, `IN_PROGRESS`, `PASSED`, `REJECTED`, `HIRED`. |
+| `status` | VARCHAR(50) | NOT NULL | `ACTIVE`, `REJECTED`, `HIRED`. |
 | `source` | VARCHAR(100) | default `CAREER_SITE` | Nguồn ứng tuyển: `CAREER_SITE`, `MANUAL`, `REFERRAL`. |
 | `secure_token` | VARCHAR(255) | UNIQUE, nullable | Token bảo mật để ứng viên tra cứu hồ sơ (Magic Link). |
 | `applied_at` | TIMESTAMP | NOT NULL | Thời điểm ứng tuyển. |
@@ -506,12 +515,13 @@ Lưu lịch phỏng vấn.
 | `application_id` | UUID/BIGINT | FK, NOT NULL | Hồ sơ ứng tuyển. |
 | `round_id` | UUID/BIGINT | FK, nullable | Vòng phỏng vấn. |
 | `scheduled_by` | UUID/BIGINT | FK -> users.id | HR đặt lịch. |
-| `interview_time` | TIMESTAMP | NOT NULL | Thời gian phỏng vấn. |
+| `proposed_slots` | JSON/TEXT | nullable | Mảng các khung giờ HR đề xuất cho UV chọn (JSON array). |
+| `interview_time` | TIMESTAMP | nullable | Thời gian phỏng vấn đã được ứng viên chọn chốt. |
 | `duration` | INT | nullable | Thời lượng dự kiến (phút). |
 | `location` | VARCHAR(255) | nullable | Địa điểm hoặc link meet. |
 | `note` | TEXT | nullable | Ghi chú nội bộ. |
 | `candidate_note` | TEXT | nullable | Hướng dẫn gửi cho ứng viên. |
-| `status` | VARCHAR(50) | NOT NULL | `SCHEDULED`, `ACCEPTED`, `RESCHEDULE_REQUESTED`, `CANCELLED`, `DONE`. |
+| `status` | VARCHAR(50) | NOT NULL | `PENDING_SELECTION`, `CONFIRMED`, `RESCHEDULE_REQUESTED`, `DECLINED`, `CANCELLED`, `DONE`. |
 | `secure_token` | VARCHAR(255) | UNIQUE, nullable | Token bảo mật cho link phản hồi (Magic Link). |
 | `token_expiry_at` | TIMESTAMP | nullable | Thời hạn của token (VD: 48h). |
 | `reschedule_time` | TIMESTAMP | nullable | Thời gian ứng viên xin đổi lịch. |
@@ -569,6 +579,9 @@ Lưu cấu hình AI provider theo doanh nghiệp.
 | `provider_code` | VARCHAR(100) | NOT NULL | `OPENAI`, `GOOGLE_GEMINI`, `ANTHROPIC`. |
 | `api_key_encrypted` | TEXT | nullable | API key đã mã hóa AES-256. |
 | `model_name` | VARCHAR(100) | nullable | Model sử dụng, ví dụ `gpt-4o`, `gemini-2.0-flash`. |
+| `max_daily_requests` | INT | default 100 | Giới hạn số lần gọi API AI mỗi ngày cho DN. |
+| `max_reruns_per_candidate` | INT | default 3 | Giới hạn số lần rerun AI trên 1 bộ hồ sơ. |
+| `daily_token_budget` | INT | default 200000 | Hạn ngạch token tối đa cho phép mỗi ngày. |
 | `status` | VARCHAR(50) | NOT NULL | `ACTIVE`, `INACTIVE`. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
@@ -581,36 +594,36 @@ Unique: `(company_id, provider_code)`
 
 ```text
 companies 1---n users
-companies 1---1 business_profiles
-companies 1---1 career_site_settings
-companies 1---n job_posts
+companies 1---1 company_profiles
+companies 1---1 career_sites
+companies 1---n jobs
 companies 1---n email_templates
-companies 1---n ai_provider_configs
+companies 1---n ai_configs
 companies 1---n notifications
 
-job_categories 1---n job_posts
+job_categories 1---n jobs
 
-job_posts 1---n job_rounds
-job_posts 1---n applications
-job_posts 1---n job_post_history
+jobs 1---n hiring_rounds
+jobs 1---n applications
+jobs 1---n job_activities
 
-job_rounds 1---n application_round_statuses
-job_rounds n---1 email_templates (pass_email_template_id)
-job_rounds n---1 email_templates (fail_email_template_id)
-job_rounds 1---1 form_evaluations
-job_posts 1---n form_fields
-job_posts 1---n ai_suggestions
+hiring_rounds 1---n application_progress
+hiring_rounds n---1 email_templates (pass_email_template_id)
+hiring_rounds n---1 email_templates (fail_email_template_id)
+hiring_rounds 1---1 evaluation_forms
+jobs 1---n form_fields
+jobs 1---n ai_suggestions
 
 candidates 1---n applications
 
-applications 1---n application_round_statuses
-applications 1---n cv_analyses
+applications 1---n application_progress
+applications 1---n cv_insights
 applications 1---n email_logs
 applications 1---n application_answers
-applications 1---n interview_schedules
+applications 1---n interviews
 
 users 1---n audit_logs
-users 1---n job_post_history
+users 1---n job_activities
 ```
 
 ---
@@ -633,18 +646,17 @@ ACTIVE → EXPIRED (Hết hạn tự động)
 CLOSED → ACTIVE (Mở lại)
 ```
 
-### 5.3 Application status
+### 5.3 Application status (Trạng thái tổng thể hồ sơ)
 ```
-NEW → IN_PROGRESS (HR bắt đầu xét)
-IN_PROGRESS → PASSED (Qua tất cả vòng)
-IN_PROGRESS → REJECTED (Trượt)
-PASSED → HIRED (Ký hợp đồng)
+ACTIVE   — Hồ sơ đang trong quy trình (Candidate mới nộp hoặc qua các vòng)
+REJECTED — Hồ sơ bị từ chối (HR đánh giá FAILED hoặc chọn từ chối)
+HIRED    — Hồ sơ trúng tuyển (HR bấm Tuyển dụng ở vòng cuối)
 ```
 
-### 5.4 Application round status
+### 5.4 Application round status (Kết quả đánh giá một vòng cụ thể trong application_progress)
 ```
-PENDING → PASSED  (HR đánh giá Đạt)
-PENDING → FAILED  (HR đánh giá Trượt)
+PENDING → PASSED  (HR đánh giá Đạt vòng)
+PENDING → FAILED  (HR đánh giá Trượt vòng → chuyển Application.status = REJECTED)
 PENDING → SKIPPED (Bỏ qua vòng)
 ```
 
@@ -666,9 +678,9 @@ INTERN | JUNIOR | MID_LEVEL | SENIOR | LEAD
 ### 5.8 Email template type
 ```
 APPLICATION_RECEIVED  — Xác nhận đã nhận hồ sơ
-PASS                  — Thông báo đạt vòng
-FAIL                  — Thông báo trượt vòng
-INTERVIEW_INVITE      — Mời phỏng vấn
+PASS                  — Thông báo đạt vòng (thư chúc mừng)
+FAIL                  — Thông báo trượt vòng (thư cảm ơn)
+INTERVIEW_INVITE      — Mời phỏng vấn (gửi kèm thông tin lịch hẹn)
 OFFER                 — Thư mời nhận việc
 ```
 
@@ -682,10 +694,13 @@ RETRYING → SENT | FAILED
 
 ### 5.10 Interview schedule status
 ```
-SCHEDULED → ACCEPTED (Ứng viên xác nhận)
-SCHEDULED → RESCHEDULE_REQUESTED (Ứng viên xin đổi)
-SCHEDULED → CANCELLED
-ACCEPTED → DONE
+PENDING_SELECTION → CONFIRMED            (Ứng viên chọn 1 trong các khung giờ đề xuất)
+PENDING_SELECTION → DECLINED             (Ứng viên từ chối tất cả các khung giờ)
+PENDING_SELECTION → RESCHEDULE_REQUESTED (Ứng viên đề xuất khung giờ khác ngoài danh sách)
+RESCHEDULE_REQUESTED → CONFIRMED        (HR chấp nhận khung giờ đề xuất khác)
+RESCHEDULE_REQUESTED → PENDING_SELECTION (HR từ chối & gửi danh sách khung giờ mới)
+CONFIRMED / PENDING_SELECTION → CANCELLED (HR hủy phỏng vấn)
+CONFIRMED → DONE                         (Hoàn tất phỏng vấn)
 ```
 
 ---

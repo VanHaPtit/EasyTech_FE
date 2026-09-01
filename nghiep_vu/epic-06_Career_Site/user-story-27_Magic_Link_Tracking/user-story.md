@@ -41,9 +41,17 @@ graph TD
   - **KHI** ứng viên mở lại trang tra cứu bằng cùng Magic Link (vẫn còn hạn).
   - **THÌ** trang tra cứu hiển thị trạng thái phản hồi hiện tại (đã xác nhận / đã từ chối) thay vì hiển thị nút hành động.
 
+- **Kịch bản 5: Khôi phục Magic Link bị mất hoặc hết hạn (Magic Link Recovery Portal)**
+  - **VỚI ĐIỀU KIỆN** Ứng viên bị mất email chứa link tra cứu hoặc link cũ đã hết hạn 30 ngày.
+  - **KHI** Ứng viên truy cập trang tra cứu công khai `/careers/{company_slug}/track-request` và nhập Email đã dùng để nộp CV.
+  - **THÌ** Hệ thống kiểm tra xem Email này có đơn ứng tuyển nào đang `ACTIVE` tại công ty đó hay không.
+    - Nếu CÓ: Hệ thống tự động sinh `secure_token` mới (gia hạn 30 ngày), gửi email xác nhận chứa Magic Link mới về địa chỉ email của ứng viên và hiển thị thông báo: _"Magic Link mới đã được gửi tới email của bạn. Vui lòng kiểm tra hộp thư."_
+    - Nếu KHÔNG: Hiển thị thông báo chung: _"Nếu email của bạn đã ứng tuyển tại công ty, chúng tôi đã gửi liên kết tra cứu tới hộp thư của bạn."_ (chống dò quét email).
+
 ## 3. BUSINESS RULES
-- **Magic Link TTL: 30 ngày (Đã chốt — xem `_overview.md §8`).** Hết hạn → Candidate phải tự yêu cầu gửi lại link mới (không tự động gia hạn).
+- **Magic Link TTL: 30 ngày (Đã chốt — xem `_overview.md §8`).** Hết hạn → Candidate sử dụng trang Recovery Portal `/careers/{company_slug}/track-request` để nhận lại link mới.
 - Magic Link không cấp quyền đăng nhập vào hệ thống HR Dashboard.
+- **Recovery API Endpoint:** `POST /api/v1/public/applications/magic-link/request` với payload `{"email": "candidate@email.com", "company_slug": "techa"}`.
 
 ## 4. NGOÀI PHẠM VI
 - Ứng viên **KHÔNG** được chỉnh sửa thông tin cá nhân, thay đổi file CV hoặc rút đơn ứng tuyển từ trang tra cứu (Chỉ đọc).

@@ -51,6 +51,12 @@ graph TD
   - **THÌ** nếu lỗi mạng/server: Background Job sẽ thử lại (retry) tối đa 3 lần.
   - Nếu vẫn thất bại: bản ghi trong `email_logs` sẽ có `status = FAILED`, HR có thể thấy trên giao diện và thao tác gửi lại sau.
 
-## 3. NGOÀI PHẠM VI
+## 3. BUSINESS RULES
+
+### Phân biệt Email Pass Vòng vs Email Mời Phỏng Vấn
+- **`pass_email_template_id` (gắn ở `hiring_rounds`):** Dùng cho email thông báo kết quả Đạt vòng (thư chúc mừng chuyển vòng). Gửi khi HR đánh giá PASSED hoặc kéo thẻ sang vòng mới.
+- **Email Mời Phỏng Vấn (`INTERVIEW_INVITE`):** Gửi kèm thông tin ngày giờ, hình thức, địa điểm phỏng vấn. Email này **KHÔNG tự động gửi khi vừa chuyển vòng**, mà chỉ được kích hoạt khi HR thực hiện thao tác **Đặt lịch phỏng vấn thành công** ở [US-18](file:///e:/DATN/EasyTech_FE/nghiep_vu/epic-04_Pipeline_Automation/user-story-18_Dat_Lich_Phong_Van/user-story.md).
+
+## 4. NGOÀI PHẠM VI
 - **KHÔNG** cho phép ứng viên reply (trả lời) trực tiếp vào email hệ thống và nhận vào inbox của phần mềm (hỗ trợ 1-way email, reply-to sẽ trỏ về email công ty).
 - **KHÔNG** cho phép HR custom email nội dung (viết tay hoàn toàn) trong lúc kéo thả – nó phải dùng Template định sẵn.

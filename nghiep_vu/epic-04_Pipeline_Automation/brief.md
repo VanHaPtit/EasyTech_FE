@@ -46,25 +46,29 @@ graph TD
 
 ## 7. API JSON Contracts (Tham khảo)
 
-### 7.1. API Lên lịch phỏng vấn (Schedule Interview)
+### 7.1. API Đề xuất lịch phỏng vấn (Schedule Interview with Proposed Slots)
 - **Endpoint:** `POST /api/v1/hr/interviews`
 - **Request Body:** (Tham chiếu bảng `interviews`)
 ```json
 {
   "application_id": "app-uuid-5678",
   "round_id": "round-uuid-9999",
-  "interview_time": "2026-09-05T09:00:00Z",
+  "proposed_slots": [
+    "2026-09-05T09:00:00Z",
+    "2026-09-05T14:00:00Z",
+    "2026-09-06T10:00:00Z"
+  ],
   "duration": 60,
   "location": "https://meet.google.com/abc-xyz",
   "note": "Phỏng vấn kỹ thuật vòng 1",
-  "candidate_note": "Vui lòng chuẩn bị laptop có cài sẵn IDE."
+  "candidate_note": "Vui lòng chọn 1 khung giờ phù hợp nhất."
 }
 ```
 - **Response (201 Created):**
 ```json
 {
   "id": "interview-uuid-1111",
-  "status": "SCHEDULED",
+  "status": "PENDING_SELECTION",
   "secure_token": "token-for-magic-link-123",
   "token_expiry_at": "2026-09-04T09:00:00Z"
 }
