@@ -11,7 +11,8 @@ Xác định phạm vi frontend cho task 'UI tao form dong' trong US-15 Dynamic 
 
 ## Screen/Component
 - Component chính: Form Builder.
-- Hiển thị trong đúng route/layout của epic hiện tại.
+- Hiển thị trong wizard tạo Job và modal chỉnh sửa Job của HR; dùng pattern layout, spacing, control và toast của EasyTech_FE.
+- Form Builder hỗ trợ thêm, sửa, xóa mềm, kéo-thả hoặc nút lên/xuống để sắp xếp field. Field `SELECT` có editor danh sách options.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user
@@ -37,4 +38,11 @@ Xác định phạm vi frontend cho task 'UI tao form dong' trong US-15 Dynamic 
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, `POST /api/v1/jobs`, `PATCH /api/v1/jobs/{jobId}`, `POST /api/v1/jobs/{jobId}/publish` tùy component.
+- `GET /api/v1/jobs/{jobId}/form-fields`
+- `POST /api/v1/jobs/{jobId}/form-fields`
+- `PUT /api/v1/jobs/{jobId}/form-fields/{fieldId}`
+- `PUT /api/v1/jobs/{jobId}/form-fields/reorder`
+- `DELETE /api/v1/jobs/{jobId}/form-fields/{fieldId}`
+- `GET /api/v1/public/companies/{companySlug}/jobs/{jobSlug}` để hiển thị field tùy chỉnh trong flow apply; API submit thuộc US-26.
+
+Khi tạo Job, frontend tạo Job trước rồi lưu lần lượt các field với Job ID trả về. Nếu lưu field thất bại, phải báo rõ Job đã tạo nhưng form chưa hoàn chỉnh và cho phép vào chỉnh sửa lại; không giả vờ hiển thị thành công toàn bộ.
