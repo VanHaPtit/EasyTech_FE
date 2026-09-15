@@ -24,17 +24,18 @@ graph TD
   - **THÌ** hệ thống tải trang Career Site với:
     - Giao diện (Logo, Banner, Primary Color) đã được HR cấu hình.
     - Tên công ty, Slogan và Mô tả.
-    - Danh sách các Job đang ở trạng thái `ACTIVE`. (Job `CLOSED` hoặc `DRAFT` không hiển thị).
+    - Danh sách các Job đang ở trạng thái `ACTIVE` và chưa bị soft delete. (Job `CLOSED` hoặc `INACTIVE` không hiển thị).
 
 - **Kịch bản 2: Lọc và tìm kiếm Job trên Career Site**
   - **VỚI ĐIỀU KIỆN** ứng viên đang xem trang Career Site của công ty.
   - **KHI** ứng viên nhập từ khóa vào ô tìm kiếm hoặc lọc theo Danh mục (Categories).
-  - **THÌ** danh sách Job bên dưới hiển thị ngay kết quả khớp (Client-side hoặc Server-side filtering), giúp ứng viên tìm nhanh vị trí phù hợp.
+  - **THÌ** danh sách Job bên dưới hiển thị ngay kết quả khớp bằng server-side filtering theo `keyword`, `location` và category slug; category chỉ gồm bản ghi `ACTIVE` và chưa bị soft delete.
+  - Category `INACTIVE` vẫn có thể còn được gắn với Job cũ nhưng không xuất hiện trong bộ lọc. Job cũ có trạng thái `ACTIVE` vẫn xuất hiện trong danh sách không lọc category.
 
 - **Kịch bản 3: Ứng viên xem chi tiết một tin tuyển dụng (JD)**
   - **VỚI ĐIỀU KIỆN** ứng viên thấy một Job quan tâm trên Career Site.
   - **KHI** ứng viên click vào tên Job đó.
-  - **THÌ** hệ thống chuyển đến URL `/careers/{company_slug}/jobs/{job_id}`.
+  - **THÌ** hệ thống chuyển đến URL `/careers/{company_slug}/jobs/{job_slug}`. `job_slug` chỉ unique trong phạm vi company nên URL luôn giữ cả `company_slug`.
   - Trang chi tiết hiển thị: Tiêu đề công việc, Mức lương, Địa điểm, Loại hình và toàn bộ nội dung Mô tả công việc (Rich text).
   - Luôn có nút "Ứng tuyển ngay" (Apply Now) ghim ở vị trí dễ thấy (sticky header/bottom).
 
@@ -46,3 +47,18 @@ graph TD
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ tạo tài khoản Ứng viên (Candidate Portal profile lưu sẵn CV) trong hệ thống này – ứng viên khách vãng lai hoàn toàn (Guest).
 - **KHÔNG** có chức năng "Lưu việc làm" (Save Job).
+
+## 4. Contract đã triển khai trong US-25
+
+- Route public chuẩn: `/careers/{companySlug}` và `/careers/{companySlug}/jobs/{jobSlug}`.
+- `/company/{companySlug}` chỉ là alias tương thích và redirect về route chuẩn.
+- API public:
+  - `GET /api/v1/public/companies/{companySlug}` lấy branding, thông tin public và danh mục `ACTIVE` chưa soft delete.
+  - `GET /api/v1/public/companies/{companySlug}/jobs` nhận `keyword`, `location`, `category`, `page`, `limit`.
+  - `GET /api/v1/public/companies/{companySlug}/jobs/{jobSlug}` lấy chi tiết Job public.
+- Backend chỉ trả dữ liệu khi company `ACTIVE`, Career Site tồn tại và `is_published = true`.
+- Job public phải có `status = ACTIVE` và `is_deleted = false`.
+- `category` là slug; category `INACTIVE`, đã soft delete hoặc không tồn tại không được trả về trong filter và khi lọc theo slug đó sẽ cho trang rỗng.
+- API dùng ID `BIGINT`/Java `Long`; pagination dùng duy nhất `page` bắt đầu từ `1` và `limit` theo `PaginationRequest`.
+- Chi tiết Job trong US-25 trả các trường Job public và thông tin công ty tối thiểu. US-15 mở rộng cùng endpoint bằng `applicationForm.fields` để Career Site và flow apply dùng cấu hình field tùy chỉnh; các field đã soft delete không được trả về.
+- Nút `Ứng tuyển ngay` chỉ điều hướng sang flow US-26; US-25 không tự xử lý application hoặc dynamic form.

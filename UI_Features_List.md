@@ -39,9 +39,9 @@ Khu vực public để ứng viên xem tin và nộp hồ sơ.
 | Tính năng | Đường dẫn (Route) | Component | Mô tả |
 | :--- | :--- | :--- | :--- |
 | **Trang chủ Tuyển dụng** | `/careers` | `CareerHome` | Trang chủ chung hiển thị danh sách các công việc. |
-| **Trang Tuyển dụng Doanh nghiệp** | `/company/:companySlug` | `CompanyCareerSitePage` | Trang Career Site được cấp phát riêng biệt mang thương hiệu của một doanh nghiệp cụ thể. |
-| **Chi tiết Việc làm** | `/careers/jobs/:slug` | `CareerJobDetail` | Màn hình xem JD công khai của một tin tuyển dụng cụ thể. |
-| **Form Ứng tuyển** | `/careers/jobs/:slug/apply` | `CareerApplyForm` | Form ứng viên điền thông tin và upload CV ứng tuyển. |
+| **Trang Tuyển dụng Doanh nghiệp** | `/careers/:companySlug` | `CompanyCareerSitePage` | Route public chuẩn của Career Site theo slug doanh nghiệp; `/company/:companySlug` chỉ là alias tương thích. |
+| **Chi tiết Việc làm** | `/careers/:companySlug/jobs/:slug` | `CareerJobDetail` | Màn hình xem JD công khai của một tin tuyển dụng thuộc đúng doanh nghiệp. |
+| **Form Ứng tuyển** | `/careers/:companySlug/jobs/:slug/apply` | `CareerApplyForm` | Form ứng viên điền thông tin và upload CV ứng tuyển; thuộc US-26. |
 | **Tra cứu Hồ sơ** | `/careers/applications/track` | `CandidateTrackPage` | Trang để ứng viên nhập thông tin để theo dõi tình trạng ứng tuyển. |
 | **Trạng thái Hồ sơ** | `/careers/applications/status` | `CandidateStatusPage` | Hiển thị trạng thái chi tiết hiện tại của một hồ sơ ứng viên. |
 | **Phản hồi Phỏng vấn** | `/careers/interviews/respond` | `InterviewResponsePage` | Trang dành cho ứng viên thao tác Xác nhận Đồng ý hoặc Xin đổi lịch phỏng vấn từ email mời. |

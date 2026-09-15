@@ -27,7 +27,7 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-25 | Xem Career Site | Must Have | To-do |
+| US-25 | Xem Career Site | Must Have | Implemented locally; authenticated/public E2E pending |
 | US-26 | Nộp CV | Must Have | To-do |
 | US-27 | Magic Link tracking | Must Have | To-do |
 | US-28 | Interview Response | Must Have | To-do |
@@ -49,7 +49,7 @@ graph TD
 ## 7. API JSON Contracts (Tham khảo)
 
 ### 7.1. API Ứng viên nộp hồ sơ (Apply Job)
-- **Endpoint:** `POST /api/v1/public/jobs/{job_id}/apply`
+- **Endpoint:** `POST /api/v1/public/jobs/{jobId}/applications`
 - **Content-Type:** `multipart/form-data`
 - **Payload:**
 ```json

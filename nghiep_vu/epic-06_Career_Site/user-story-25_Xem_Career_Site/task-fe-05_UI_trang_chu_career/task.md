@@ -37,4 +37,7 @@ Xác định phạm vi frontend cho task 'UI trang chu career' trong US-25 Xem C
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/public/companies/{companySlug}`, `GET /api/v1/public/jobs/{jobSlug}`, `POST /api/v1/public/jobs/{jobId}/applications`.
+- `GET /api/v1/public/companies/{companySlug}` để lấy branding và danh mục filter.
+- `GET /api/v1/public/companies/{companySlug}/jobs` để lấy danh sách Job public có filter và pagination.
+- `GET /api/v1/public/companies/{companySlug}/jobs/{jobSlug}` cho màn hình chi tiết Job.
+- CTA Apply chỉ mở flow US-26, không gửi application trong US-25.

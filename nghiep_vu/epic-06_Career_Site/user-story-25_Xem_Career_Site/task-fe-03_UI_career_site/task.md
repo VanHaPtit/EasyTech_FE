@@ -37,4 +37,7 @@ Xác định phạm vi frontend cho task 'UI career site' trong US-25 Xem Career
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/public/companies/{companySlug}`, `GET /api/v1/public/jobs/{jobSlug}`, `POST /api/v1/public/jobs/{jobId}/applications`.
+- `GET /api/v1/public/companies/{companySlug}`.
+- `GET /api/v1/public/companies/{companySlug}/jobs` với `keyword`, `location`, `category`, `page`, `limit`.
+- `GET /api/v1/public/companies/{companySlug}/jobs/{jobSlug}`.
+- Nút Apply điều hướng sang route US-26; API `POST .../applications` không thuộc scope US-25.
