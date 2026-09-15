@@ -11,7 +11,8 @@ Xác định phạm vi frontend cho task 'UI quan ly danh muc job' trong US-07 A
 
 ## Screen/Component
 - Component chính: UI Job Categories.
-- Hiển thị trong đúng route/layout của epic hiện tại.
+- Route chuẩn: `/admin/job-categories`; `/admin/categories` chỉ redirect tương thích.
+- Hiển thị trong AdminLayout theo pattern table/card đang dùng trong mockup `EasyTech_FE`.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user
@@ -22,6 +23,9 @@ Xác định phạm vi frontend cho task 'UI quan ly danh muc job' trong US-07 A
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
+- Hiển thị cột thứ tự, cho phép kéo thả hoặc dùng nút đưa danh mục lên/xuống; sau mỗi thay đổi gọi API reorder và hiển thị success/error feedback.
+- Không cho sắp xếp trên danh sách đang lọc theo từ khóa; yêu cầu Admin xóa bộ lọc để bảo đảm gửi đủ toàn bộ `orderedIds`.
+- ID frontend dùng kiểu `number`, tương ứng với `BIGINT` của backend; không parse ID thành UUID/string giả định.
 
 ## Validation
 - Validate trường bắt buộc ngay trên FE để cải thiện UX.
@@ -38,3 +42,4 @@ Xác định phạm vi frontend cho task 'UI quan ly danh muc job' trong US-07 A
 
 ## API dependency cụ thể
 - `GET /api/v1/admin/job-categories`, `POST /api/v1/admin/job-categories`, `PUT /api/v1/admin/job-categories/{id}`, `DELETE /api/v1/admin/job-categories/{id}`.
+- `PUT /api/v1/admin/job-categories/reorder` với body `{ "orderedIds": number[] }`.
