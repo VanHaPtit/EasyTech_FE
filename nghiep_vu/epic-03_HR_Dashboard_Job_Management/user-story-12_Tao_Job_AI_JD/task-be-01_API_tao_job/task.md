@@ -24,7 +24,9 @@ Xác định phạm vi backend cho task 'API tao job' trong US-12 Tao Job AI JD,
 - `/api/v1/jobs`
 
 ## Request
-- Thông tin job: title, description, location, salary, jobType, categories và form config.
+- Thông tin job: title, description, location, salary và `categoryId`. Cấu hình form tùy chỉnh không nằm trong body của API tạo Job; frontend gọi các endpoint form-fields của US-15 sau khi nhận được Job ID.
+- `categoryId` là số nguyên JSON tương ứng với `Long`/`BIGINT` trong backend/database.
+- Khi tạo hoặc đổi category, backend chỉ chấp nhận category có `status = ACTIVE` và `is_deleted = false`.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -32,14 +34,15 @@ Xác định phạm vi backend cho task 'API tao job' trong US-12 Tao Job AI JD,
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
 ## Response
-- Thành công: BaseResponse(status = 1, message, data); Job vừa tạo ở trạng thái DRAFT.
+- Thành công: BaseResponse(status = 1, message, data); Job vừa tạo ở trạng thái `INACTIVE` (chưa công khai/bản nháp).
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
-- Job Status = DRAFT.
+- Job Status = `INACTIVE`.
 
 ## Side Effects
-- Tạo pipeline/form/email template mặc định theo cấu hình chuẩn.
+- Tạo bản ghi `jobs` thuộc đúng `company_id` của HR, gán `created_by` và lưu ở trạng thái `INACTIVE`.
+- Không tự tạo pipeline hoặc form ứng tuyển trong API này. Form tùy chỉnh được lưu riêng qua US-15 trong bảng `form_fields` sau khi Job được tạo; pipeline được cấu hình ở luồng riêng.
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
@@ -75,27 +78,34 @@ Xác định phạm vi backend cho task 'API tao job' trong US-12 Tao Job AI JD,
     "id": 101,
     "title": "Senior Frontend Developer",
     "slug": "senior-frontend-developer",
-    "status": "DRAFT",
+    "status": "INACTIVE",
     "createdAt": "2026-08-31T10:00:00"
   }
 }
 ```
+
+### Phạm vi đã chốt trong code hiện tại
+
+- `POST /api/v1/jobs` đã hỗ trợ tạo Job thủ công với category ACTIVE.
+- `categoryId` là JSON number tương ứng Java `Long`/PostgreSQL `BIGINT`.
+- `status` không nhận từ client; backend luôn tạo Job mới ở `INACTIVE`.
+- AI JD Writer là phần phụ thuộc riêng, không dùng mock response trong API tạo Job khi provider chưa được chốt. Cấu hình form ứng tuyển là contract riêng của US-15.
 
 ---
 
 ## Thiết kế Database – Bảng jobs
 
 ## Bảng/entity liên quan
-- Bảng chính: `jobs`, `job_categories`, `job_forms`, `job_form_questions`.
+- Bảng chính của task: `jobs`, `job_categories`. Bảng `form_fields` được quản lý ở US-15, không được ghi trong transaction tạo Job của endpoint này.
 - Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
 - Các bảng thuộc tenant phải có company_id và index theo company_id.
 
 ## Column và kiểu dữ liệu
-- Dùng UUID cho khóa chính/khóa ngoại.
+- Dùng `BIGINT` trong PostgreSQL và `Long` trong Java cho ID/khóa ngoại của các entity hiện có.
 - Dùng VARCHAR cho mã, email, slug, enum dạng text.
 - Dùng TEXT cho nội dung dài như mô tả, lý do từ chối, email body hoặc AI explanation.
 - Dùng TIMESTAMP cho thời điểm tạo/cập nhật/gửi email/đánh giá.
-- - Enum/status liên quan: Job Status = `DRAFT`/`ACTIVE`/`CLOSED`.
+- - Enum/status liên quan: Job Status = `INACTIVE`/`ACTIVE`/`CLOSED`.
 
 ## Khóa và ràng buộc
 - Primary Key: id.

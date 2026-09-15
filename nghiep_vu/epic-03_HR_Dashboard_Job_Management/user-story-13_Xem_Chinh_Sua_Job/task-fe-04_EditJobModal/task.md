@@ -21,6 +21,9 @@ Xác định phạm vi frontend cho task 'EditJobModal' trong US-13 Xem Chinh Su
 ## Hành vi UI
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Form hiển thị trường **Danh mục** theo style input/select của mockup `EasyTech_FE`, nhưng dữ liệu lấy từ API thật `GET /api/v1/job-categories` thay cho mock text.
+- Chỉ hiển thị category `ACTIVE` trong lựa chọn mới. Nếu Job hiện tại đang gắn category `INACTIVE`, hiển thị lựa chọn hiện tại ở trạng thái disabled và giải thích rằng hệ thống giữ nguyên liên kết nếu HR không chọn category mới.
+- Có loading, lỗi và retry riêng cho danh mục; lỗi tải catalog không làm mất các field Job đang chỉnh sửa.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
 
 ## Validation
@@ -37,4 +40,4 @@ Xác định phạm vi frontend cho task 'EditJobModal' trong US-13 Xem Chinh Su
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, `POST /api/v1/jobs`, `PATCH /api/v1/jobs/{jobId}`, `POST /api/v1/jobs/{jobId}/publish` tùy component.
+- `GET /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, `POST /api/v1/jobs`, `PUT /api/v1/jobs/{jobId}`, `POST /api/v1/jobs/{jobId}/publish` tùy component.

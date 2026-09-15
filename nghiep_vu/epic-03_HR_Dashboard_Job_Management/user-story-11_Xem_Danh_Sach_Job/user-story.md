@@ -24,7 +24,7 @@ graph TD
 - **Kịch bản 1: HR xem danh sách Job mặc định**
   - **VỚI ĐIỀU KIỆN** HR đã đăng nhập thành công.
   - **KHI** HR truy cập `/dashboard/jobs`.
-  - **THÌ** hệ thống hiển thị dạng bảng (Table view) các Job của công ty, sắp xếp theo ngày tạo mới nhất. Các cột hiển thị: Tiêu đề Job, Trạng thái (Draft/Active/Closed), Ngày tạo, Ngày hết hạn, Số lượng ứng viên, và Cột Hành động.
+  - **THÌ** hệ thống hiển thị dạng bảng (Table view) các Job của công ty, sắp xếp theo ngày tạo mới nhất. Các cột hiển thị: Tiêu đề Job, Trạng thái (Inactive/Active/Closed), Ngày tạo, Ngày hết hạn, Số lượng ứng viên, và Cột Hành động.
 
 - **Kịch bản 2: HR lọc và tìm kiếm Job**
   - **VỚI ĐIỀU KIỆN** HR đang ở trang danh sách Job.
@@ -35,7 +35,8 @@ graph TD
   - **VỚI ĐIỀU KIỆN** HR đang xem một dòng Job trong bảng.
   - **KHI** HR nhấn vào nút "..." (More options).
   - **THÌ** hiển thị dropdown với các tùy chọn: Xem chi tiết (Kanban ứng viên), Chỉnh sửa Job, Sao chép (Duplicate) Job, Đóng Job (Close), Xóa.
-  - Khi chọn Xóa: Hệ thống sẽ thực hiện Xóa cứng (Hard Delete) Job đó, đồng thời tự động xóa cứng tất cả các ứng viên (Application) đang thuộc về Job này cùng file CV của họ.
+  - Khi chọn Xóa: Hệ thống thực hiện soft delete Job. Application và file CV liên quan được
+    giữ lại để bảo toàn lịch sử; Job không còn xuất hiện trong danh sách quản lý hoặc Career Site.
 
 - **Kịch bản 4: Phân trang (Pagination)**
   - **VỚI ĐIỀU KIỆN** công ty có hơn 10 Jobs.

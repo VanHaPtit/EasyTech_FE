@@ -18,7 +18,7 @@ graph TD
     F --> G[Review và Edit]
     G --> H[Nhập cấu hình Pipeline, Email, v.v.]
     D --> H
-    H --> I[Lưu DRAFT hoặc PUBLISH]
+    H --> I[Lưu INACTIVE hoặc PUBLISH]
 ```
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
@@ -31,7 +31,9 @@ graph TD
 - **Kịch bản 2: HR sử dụng AI để tạo JD**
   - **VỚI ĐIỀU KIỆN** HR đang ở màn hình tạo Job, phần Mô tả công việc (Rich Text Editor).
   - **KHI** HR nhập vài từ khóa vào ô "Gợi ý AI" (ví dụ: "ReactJS, 2 năm kinh nghiệm, tiếng Anh cơ bản") và nhấn "Tạo bằng AI".
-  - **THÌ** hệ thống gọi API LLM (OpenAI/Gemini). Hiển thị loading spinner. Sau đó trả về một đoạn JD hoàn chỉnh (có cấu trúc: Trách nhiệm, Yêu cầu, Quyền lợi) và tự động điền vào Rich Text Editor.
+- **THÌ** hệ thống gọi API LLM (OpenAI/Gemini). Hiển thị loading spinner. Sau đó trả về một đoạn JD hoàn chỉnh (có cấu trúc: Trách nhiệm, Yêu cầu, Quyền lợi) và tự động điền vào Rich Text Editor.
+
+> **Phạm vi contract hiện tại:** luồng tạo Job thủ công và liên kết category đã được triển khai. AI JD Writer chỉ được nối khi provider, secret/config và API contract được chốt; không dùng mock response trong backend.
 
 - **Kịch bản 3: HR chỉnh sửa nội dung AI tạo ra**
   - **VỚI ĐIỀU KIỆN** AI đã tạo xong nội dung JD trong editor.
@@ -41,12 +43,14 @@ graph TD
 - **Kịch bản 4: HR lưu nháp (Save Draft)**
   - **VỚI ĐIỀU KIỆN** HR đã điền một phần thông tin nhưng chưa muốn Publish.
   - **KHI** HR nhấn "Lưu nháp".
-  - **THÌ** hệ thống lưu dữ liệu vào bảng `jobs` với `status = DRAFT`. HR được đưa về danh sách Job.
+  - **THÌ** hệ thống lưu dữ liệu vào bảng `jobs` với `status = INACTIVE`. Đây là trạng thái chưa công khai/bản nháp theo database và code hiện tại. HR được đưa về danh sách Job.
 
 - **Kịch bản 5: Lỗi kết nối AI**
   - **VỚI ĐIỀU KIỆN** AI generation service hiện không khả dụng.
   - **KHI** HR nhấn "Tạo bằng AI".
-  - **THÌ** hệ thống hiển thị thông báo thân thiện: _"Dịch vụ AI hiện không khả dụng. Vui lòng thử lại hoặc tiếp tục nhập JD thủ công."_ Trình soạn thảo vẫn khả dụng để gõ thủ công và giữ nguyên dữ liệu HR đã nhập.
+- **THÌ** hệ thống hiển thị thông báo thân thiện: _"Dịch vụ AI hiện không khả dụng. Vui lòng thử lại hoặc tiếp tục nhập JD thủ công."_ Trình soạn thảo vẫn khả dụng để gõ thủ công và giữ nguyên dữ liệu HR đã nhập.
+
+- Cấu hình form ứng tuyển không nằm trong request tạo Job của US-12. US-15 đã bổ sung bảng `form_fields` và migration V14; màn hình tạo Job lưu các field tùy chỉnh sau khi Job được tạo thành công qua API form-fields. Việc ứng viên gửi các câu trả lời vẫn thuộc flow submit của US-26.
 
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ AI tự động dịch JD sang nhiều ngôn ngữ cùng lúc.

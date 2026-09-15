@@ -24,7 +24,9 @@ Xác định phạm vi backend cho task 'API danh sach job' trong US-11 Xem Danh
 - `/api/v1/jobs`
 
 ## Request
-- Query params: keyword, status, page, size.
+- Query params: `keyword`, `status`, `page`, `limit`.
+- `page` bắt đầu từ `1`; `limit` là số bản ghi mỗi trang và mặc định là `10`, theo `PaginationRequest` của backend.
+- `status` chỉ nhận các giá trị hiện được code hỗ trợ: `INACTIVE`, `ACTIVE`, `CLOSED`.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -73,10 +75,20 @@ Không có request body.
         "slug": "senior-frontend-developer",
         "status": "ACTIVE",
         "location": "TP. HCM",
-        "applicationCount": 86,
+        "employmentType": "FULL_TIME",
+        "roundCount": 3,
+        "applicantCount": 86,
         "createdAt": "2026-08-31T10:00:00"
       }
     ]
   }
 }
+
+### Contract đồng bộ với code hiện tại
+- id là JSON number tương ứng Java Long/PostgreSQL BIGINT.
+- employmentType là tên field chuẩn; không dùng jobType trong response.
+- roundCount lấy từ số vòng tuyển dụng đã cấu hình, không hiển thị số vòng hardcode.
+- applicantCount là tên field chuẩn cho số ứng viên.
+- Job bị xóa bằng soft delete và không xuất hiện trong danh sách; không hard delete Job hoặc
+  các Application liên quan trong quick action.
 ```

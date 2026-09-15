@@ -24,7 +24,7 @@ Xác định phạm vi backend cho task 'API JD Writer Proxy' trong US-12 Tao Jo
 - `/api/v1/ai/job-description/suggest`
 
 ## Request
-- Thông tin job draft và prompt bổ sung của HR.
+- Thông tin Job `INACTIVE` (chưa công khai/bản nháp) và prompt bổ sung của HR.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.

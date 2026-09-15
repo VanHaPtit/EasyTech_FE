@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    A[Chọn Job (DRAFT)] --> B[Nhấn Publish]
+    A[Chọn Job (INACTIVE)] --> B[Nhấn Publish]
     B --> C{Validate đầy đủ thông tin?}
     C -- Lỗi --> D[Báo lỗi các trường còn thiếu]
     C -- OK --> E[Đổi Job Status = ACTIVE]
@@ -19,14 +19,14 @@ graph TD
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
-- **Kịch bản 1: HR publish một Job đang là Draft**
-  - **VỚI ĐIỀU KIỆN** Job đang ở trạng thái `DRAFT` và đã điền đầy đủ các thông tin bắt buộc.
+- **Kịch bản 1: HR publish một Job đang `INACTIVE` (chưa công khai/bản nháp)**
+  - **VỚI ĐIỀU KIỆN** Job đang ở trạng thái `INACTIVE` và đã điền đầy đủ các thông tin bắt buộc.
   - **KHI** HR nhấn nút "Publish".
   - **THÌ** hệ thống cập nhật `jobs.status = ACTIVE` và gán `published_at = now()`.
   - Job ngay lập tức xuất hiện trên Career Site.
 
 - **Kịch bản 2: HR không thể Publish nếu thiếu thông tin bắt buộc**
-  - **VỚI ĐIỀU KIỆN** Job đang là `DRAFT` nhưng thiếu trường Tiêu đề hoặc Mô tả.
+  - **VỚI ĐIỀU KIỆN** Job đang là `INACTIVE` nhưng thiếu trường Tiêu đề hoặc Mô tả.
   - **KHI** HR nhấn "Publish".
   - **THÌ** hệ thống ngăn chặn và hiển thị lỗi rõ ràng.
 
@@ -44,15 +44,27 @@ graph TD
 
 ## 3. BUSINESS RULES
 - Trong MVP không dùng `Unpublish` như trạng thái riêng.
-- Job lifecycle chuẩn: `DRAFT → ACTIVE → CLOSED`, với `CLOSED → ACTIVE` khi reopen.
+- Job lifecycle chuẩn: `INACTIVE → ACTIVE → CLOSED`, với `CLOSED → ACTIVE` khi reopen.
 - `Close` là state transition; không phải là lỗi hệ thống.
 
 ### Job Status & Pipeline Behavior
 | Job Status | Candidate Apply | Pipeline hoạt động | Email Automation |
 |------------|-----------------|---------------------|------------------|
-| `DRAFT`    | ❌ Không được   | ❌ Chưa có          | ❌ Không gửi     |
+| `INACTIVE` | ❌ Không được   | ❌ Chưa có          | ❌ Không gửi     |
 | `ACTIVE`   | ✅ Được         | ✅ Đầy đủ           | ✅ Gửi bình thường |
 | `CLOSED`   | ❌ Bị chặn      | ✅ Vẫn hoạt động    | ✅ Vẫn gửi (ứng viên cũ vẫn đang trong process) |
+
+### Contract đã đồng bộ với US-07, US-12 và US-13
+- API nội bộ dùng ba endpoint riêng: `POST /api/v1/jobs/{jobId}/publish`,
+  `POST /api/v1/jobs/{jobId}/close` và `POST /api/v1/jobs/{jobId}/reopen`.
+- Backend kiểm tra role HR/HR_ADMIN, ownership theo `company_id`, `is_deleted` và trạng thái
+  hiện tại; frontend không tự quyết định state transition.
+- Publish yêu cầu tối thiểu title, description, location, khoảng lương hợp lệ và liên kết
+  category chưa soft delete. Category `INACTIVE` của một Job cũ vẫn được phép publish/reopen
+  theo quy tắc US-07; HR chỉ bị chặn dùng category đó khi tạo Job hoặc đổi `categoryId`.
+- Publish/reopen cập nhật `published_at`; close cập nhật `closed_at`. Close/reopen không đổi
+  application status, round result hoặc xóa pipeline.
+- Job tạo từ US-12 vẫn bắt đầu ở `INACTIVE`; API publish không nhận status từ request body.
 
 ### Khi Job chuyển sang CLOSED:
 - Trang Job trên Career Site ẩn đi / hiển thị "Đã đóng tuyển dụng".

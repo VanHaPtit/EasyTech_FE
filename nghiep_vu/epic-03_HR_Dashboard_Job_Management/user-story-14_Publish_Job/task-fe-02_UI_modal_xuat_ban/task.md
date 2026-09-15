@@ -37,4 +37,7 @@ Xác định phạm vi frontend cho task 'UI modal xuat ban' trong US-14 Publish
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, `POST /api/v1/jobs`, `PATCH /api/v1/jobs/{jobId}`, `POST /api/v1/jobs/{jobId}/publish` tùy component.
+- `GET /api/v1/jobs/{jobId}` để đọc trạng thái hiện tại.
+- `POST /api/v1/jobs/{jobId}/publish`, `POST /api/v1/jobs/{jobId}/close`,
+  `POST /api/v1/jobs/{jobId}/reopen` cho các state transition.
+- Modal không truyền `status`; action được backend quyết định theo endpoint và trạng thái hiện tại.
