@@ -18,13 +18,16 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
 ## HTTP Method
-- `PATCH`
+- `PUT`
 
 ## Endpoint
 - `/api/v1/jobs/{jobId}`
 
 ## Request
 - Các field job được phép chỉnh sửa.
+- `categoryId` là số nguyên JSON tương ứng với kiểu `Long`/`BIGINT`. Đây là field tùy chọn khi cập nhật:
+  - Nếu có truyền `categoryId`, chỉ chấp nhận category `ACTIVE` và `is_deleted = false`.
+  - Nếu bỏ qua `categoryId`, giữ nguyên liên kết category hiện tại, kể cả khi category đã chuyển `INACTIVE`.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -43,6 +46,7 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
+- 400: `categoryId` không tồn tại, đã xóa mềm hoặc không còn `ACTIVE`.
 - 401: chưa đăng nhập hoặc token không hợp lệ.
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
@@ -51,7 +55,7 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
 
 ## 3. API JSON Contract
 
-**Endpoint:** `PATCH /api/v1/jobs/{jobId}`
+**Endpoint:** `PUT /api/v1/jobs/{jobId}`
 **Mô tả:** Cập nhật các field được phép chỉnh sửa của job thuộc company hiện tại.
 
 ### Request Body
@@ -64,10 +68,17 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
   "salaryMax": 2800,
   "currency": "USD",
   "workingType": "HYBRID",
-  "employmentType": "FULL_TIME",
-  "experienceLevel": "SENIOR"
+    "employmentType": "FULL_TIME",
+    "experienceLevel": "SENIOR",
+    "categoryId": 1
 }
 ```
+
+`categoryId` không được dùng để gỡ liên kết category bằng cách gửi `null`; nếu không muốn đổi category, client bỏ field này khỏi request. Backend vẫn là nơi kiểm tra trạng thái category.
+
+### Category options cho form HR
+
+Frontend lấy danh sách lựa chọn từ `GET /api/v1/job-categories`. Endpoint yêu cầu đăng nhập và chỉ trả category có `status = ACTIVE`, `is_deleted = false` với các field `id` (number/Long), `name`, `slug`; không trả `jobCount` của màn hình Admin.
 
 ### Response (200 OK)
 ```json
@@ -78,7 +89,7 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
     "id": 101,
     "title": "Senior Frontend Developer",
     "slug": "senior-frontend-developer",
-    "status": "DRAFT",
+    "status": "INACTIVE",
     "updatedAt": "2026-08-31T10:30:00"
   }
 }

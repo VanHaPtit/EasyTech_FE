@@ -23,7 +23,7 @@ Xác định phạm vi backend cho task 'API xoa danh muc job' trong US-07 Admin
 
 ## Validation
 - Kiểm tra danh mục có tồn tại hay không.
-- **Rất quan trọng:** Kiểm tra bảng `jobs` xem có job nào đang tham chiếu tới `category_id` này không. Nếu `jobCount > 0`, bắt buộc chặn lại và trả về lỗi 409 Conflict.
+- **Rất quan trọng:** Kiểm tra bảng `jobs` xem có Job nào đang tham chiếu tới `category_id` này và `is_deleted = false` không. Job `CLOSED` nhưng chưa xóa mềm vẫn được tính. Nếu `jobCount > 0`, bắt buộc chặn lại và trả về lỗi 409 Conflict.
 - Cập nhật cờ `is_deleted = true`.
 
 ## Response

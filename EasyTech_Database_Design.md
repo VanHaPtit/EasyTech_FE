@@ -64,8 +64,8 @@ Lưu tài khoản đăng nhập của Admin và HR.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID người dùng. |
-| `company_id` | UUID/BIGINT | FK, nullable | Doanh nghiệp của HR. Admin có thể null. |
+| `id` | BIGINT | PK | ID người dùng. |
+| `company_id` | BIGINT | FK, nullable | Doanh nghiệp của HR. Admin có thể null. |
 | `email` | VARCHAR(255) | UNIQUE, NOT NULL | Email đăng nhập. |
 | `full_name` | VARCHAR(255) | NOT NULL | Họ tên. |
 | `avatar_url` | TEXT | nullable | Avatar từ Google OAuth. |
@@ -87,7 +87,7 @@ Lưu thông tin doanh nghiệp/tenant.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID doanh nghiệp. |
+| `id` | BIGINT | PK | ID doanh nghiệp. |
 | `name` | VARCHAR(255) | NOT NULL | Tên doanh nghiệp. |
 | `slug` | VARCHAR(255) | UNIQUE, NOT NULL | Slug dùng cho Career Site. |
 | `subdomain` | VARCHAR(255) | UNIQUE, nullable | Subdomain, ví dụ `techa`. |
@@ -98,7 +98,7 @@ Lưu thông tin doanh nghiệp/tenant.
 | `address` | TEXT | nullable | Địa chỉ. |
 | `onboarding_completed` | BOOLEAN | default false | Đánh dấu hoàn thành Onboarding 3 bước. |
 | `status` | VARCHAR(50) | NOT NULL | `PENDING`, `ACTIVE`, `REJECTED`, `BLOCKED`. |
-| `approved_by` | UUID/BIGINT | FK -> users.id, nullable | Admin duyệt. |
+| `approved_by` | BIGINT | FK -> users.id, nullable | Admin duyệt. |
 | `approved_at` | TIMESTAMP | nullable | Thời điểm duyệt. |
 | `rejected_reason` | TEXT | nullable | Lý do từ chối. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
@@ -114,8 +114,8 @@ Lưu branding và nội dung hiển thị cho Career Site.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID profile. |
-| `company_id` | UUID/BIGINT | FK, UNIQUE, NOT NULL | Doanh nghiệp. |
+| `id` | BIGINT | PK | ID profile. |
+| `company_id` | BIGINT | FK, UNIQUE, NOT NULL | Doanh nghiệp. |
 | `logo_url` | TEXT | nullable | Logo. |
 | `banner_url` | TEXT | nullable | Banner Career Site. |
 | `primary_color` | VARCHAR(20) | nullable | Màu thương hiệu (hex). |
@@ -133,18 +133,14 @@ Lưu cấu hình giao diện Career Site riêng cho từng doanh nghiệp.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID config. |
-| `company_id` | UUID/BIGINT | FK, UNIQUE, NOT NULL | Doanh nghiệp. |
-| `display_name` | VARCHAR(255) | nullable | Tên công ty hiển thị công khai (override `companies.name`). |
+| `id` | BIGINT | PK | ID config. |
+| `company_id` | BIGINT | FK, UNIQUE, NOT NULL | Doanh nghiệp. |
+| `site_title` | VARCHAR(255) | nullable | Tiêu đề Career Site; fallback về `companies.name`. |
 | `logo_url` | TEXT | nullable | Logo public (override `company_profiles.logo_url`). |
-| `banner_url` | TEXT | nullable | Banner public (override `company_profiles.banner_url`). |
-| `primary_color` | VARCHAR(20) | nullable | Màu thương hiệu public (hex). |
-| `site_title` | VARCHAR(255) | nullable | Tiêu đề trang Career Site. |
 | `tagline` | VARCHAR(255) | nullable | Slogan hiển thị trên trang chủ. |
 | `hero_image_url` | TEXT | nullable | Ảnh nền hero section. |
 | `accent_color` | VARCHAR(20) | nullable | Màu nhấn (hex), ví dụ `#47b1de`. |
 | `font_family` | VARCHAR(100) | nullable | Font hiển thị tùy chỉnh. |
-| `description` | TEXT | nullable | Mô tả công ty hiển thị trên Career Site. |
 | `show_company_description` | BOOLEAN | default true | Hiển thị mô tả công ty trên Career Site. |
 | `show_benefits` | BOOLEAN | default true | Hiển thị quyền lợi. |
 | `footer_text` | TEXT | nullable | Nội dung footer tùy chỉnh. |
@@ -152,7 +148,11 @@ Lưu cấu hình giao diện Career Site riêng cho từng doanh nghiệp.
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
-*Lưu ý Fallback:* Nếu `display_name` hoặc `logo_url` bị `NULL`, hệ thống tự động kế thừa dữ liệu mặc định từ `companies.name` và `company_profiles.logo_url`.
+*Lưu ý Fallback:* `site_title` và `logo_url` của `career_sites` có thể kế thừa lần lượt từ
+`companies.name` và `company_profiles.logo_url`. Banner và mô tả nằm ở
+`company_profiles.banner_url`/`description`; Career Site dùng `hero_image_url` nếu có,
+nếu không thì fallback về banner của profile. `is_published` được bổ sung bởi migration
+`V13__add_career_site_public_visibility.sql` và mặc định `TRUE` để không làm ẩn các Career Site hiện có.
 
 ---
 
@@ -160,15 +160,23 @@ Lưu cấu hình giao diện Career Site riêng cho từng doanh nghiệp.
 
 Danh mục phân loại công việc.
 
+> **Đồng bộ với schema hiện tại:** Các bảng nghiệp vụ trong database hiện dùng
+> `is_deleted` cho xóa mềm. Vì vậy `job_categories` không dùng `is_active`.
+> Trạng thái bật/tắt danh mục được lưu ở `status`; `is_deleted` chỉ dùng để
+> đánh dấu bản ghi đã xóa mềm. Schema này được tạo bởi migration
+> `V11__create_job_categories_and_category_fk.sql` của US-07.
+
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID danh mục. |
+| `id` | BIGINT | PK | ID danh mục. |
 | `name` | VARCHAR(255) | NOT NULL | Tên danh mục. Ví dụ: "Công nghệ thông tin". |
 | `slug` | VARCHAR(255) | UNIQUE, NOT NULL | Slug URL. Ví dụ: `technology`. |
 | `icon` | VARCHAR(100) | nullable | Icon name (lucide). |
-| `sort_order` | INT | default 0 | Thứ tự hiển thị. |
-| `is_active` | BOOLEAN | default true | Đang hiển thị hay ẩn. |
+| `sort_order` | INT | NOT NULL, default 0 | Thứ tự hiển thị; giá trị nhỏ hơn đứng trước. |
+| `status` | VARCHAR(20) | NOT NULL, default `ACTIVE` | Trạng thái danh mục: `ACTIVE` hoặc `INACTIVE`. |
+| `is_deleted` | BOOLEAN | NOT NULL, default false | Đánh dấu xóa mềm; danh sách mặc định loại bản ghi này. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
+| `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
 Dữ liệu mẫu:
 
@@ -189,15 +197,21 @@ Dữ liệu mẫu:
 
 Lưu tin tuyển dụng.
 
+> **Contract ID và trạng thái hiện tại:** PostgreSQL dùng `BIGSERIAL`/`BIGINT`, Java dùng
+> `Long`; không dùng UUID cho các entity hiện đang có trong EasyTech_HRM. Trạng thái Job
+> chuẩn trong code/database hiện tại là `INACTIVE`, `ACTIVE`, `CLOSED`. `INACTIVE` biểu thị
+> Job chưa công khai/bản nháp hoặc tạm dừng; `ACTIVE` là Job đã publish; `CLOSED` là Job đã
+> đóng tuyển dụng. `DRAFT` và `EXPIRED` chưa phải trạng thái được code hiện tại hỗ trợ.
+
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID job. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp sở hữu job. |
-| `category_id` | UUID/BIGINT | FK -> job_categories.id, nullable | Danh mục công việc. |
-| `created_by` | UUID/BIGINT | FK -> users.id | HR tạo job. |
+| `id` | BIGINT | PK | ID job; Java type là `Long`. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp sở hữu job. |
+| `category_id` | BIGINT | nullable, FK -> `job_categories.id` | ID danh mục công việc; category INACTIVE vẫn giữ liên kết Job cũ, còn soft delete bị chặn khi còn Job tham chiếu. |
+| `created_by` | BIGINT | FK -> users.id | HR tạo job. |
 | `title` | VARCHAR(255) | NOT NULL | Tên vị trí. |
 | `slug` | VARCHAR(255) | NOT NULL | Slug public URL. |
-| `description` | TEXT | NOT NULL | Mô tả công việc/JD (Markdown). |
+| `description` | TEXT | nullable | Mô tả công việc/JD (Markdown); bắt buộc trước khi publish. |
 | `requirements` | TEXT | nullable | Yêu cầu ứng viên. |
 | `benefits` | TEXT | nullable | Quyền lợi. |
 | `salary_min` | DECIMAL | nullable | Lương tối thiểu. |
@@ -205,11 +219,11 @@ Lưu tin tuyển dụng.
 | `currency` | VARCHAR(10) | default `VND` | Đơn vị tiền: `VND`, `USD`. |
 | `location` | VARCHAR(255) | nullable | Địa điểm làm việc. |
 | `working_type` | VARCHAR(50) | nullable | `ONSITE`, `REMOTE`, `HYBRID`. |
-| `employment_type` | VARCHAR(50) | nullable | `FULL_TIME`, `PART_TIME`, `CONTRACT`. |
-| `experience_level` | VARCHAR(50) | nullable | `INTERN`, `JUNIOR`, `MID_LEVEL`, `SENIOR`, `LEAD`. |
+| `employment_type` | VARCHAR(50) | nullable | `FULL_TIME`, `PART_TIME`, `CONTRACT`, `INTERNSHIP`. |
+| `experience_level` | VARCHAR(50) | nullable | `INTERN`, `JUNIOR`, `MID`, `SENIOR`, `LEAD`. |
 | `experience_years_min` | INT | nullable | Số năm kinh nghiệm tối thiểu. |
-| `round_count` | INT | default 1 | Số vòng phỏng vấn (cột tính toán/cached count; nguồn chân lý lấy từ `COUNT(hiring_rounds)`). |
-| `status` | VARCHAR(50) | NOT NULL | `INACTIVE`, `ACTIVE`, `CLOSED`, `EXPIRED`. |
+| `round_count` | INT | default 0 | Số vòng phỏng vấn đã cấu hình; Job mới chưa có round nên bắt đầu từ `0`. |
+| `status` | VARCHAR(50) | NOT NULL, default `INACTIVE` | `INACTIVE`, `ACTIVE`, `CLOSED`. |
 | `published_at` | TIMESTAMP | nullable | Ngày publish. |
 | `closed_at` | TIMESTAMP | nullable | Ngày đóng. |
 | `is_deleted` | BOOLEAN | default false | Đánh dấu xóa mềm. |
@@ -220,6 +234,10 @@ Unique: `(company_id, slug)`
 
 Index: `idx_jobs_company_id`, `idx_jobs_status`, `idx_jobs_category_id`
 
+`category_id` là `BIGINT`/Java `Long`, nullable và tham chiếu `job_categories.id`. Khi tạo Job
+hoặc thay đổi category, chỉ chấp nhận category `ACTIVE` và `is_deleted = false`. Category chuyển
+sang `INACTIVE` không làm mất liên kết của Job cũ.
+
 ---
 
 ### 3.7 `job_activities` *(Mới)*
@@ -228,11 +246,11 @@ Lưu lịch sử thay đổi trạng thái của job (publish, close, edit...).
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID log. |
-| `job_id` | UUID/BIGINT | FK, NOT NULL | Job liên quan. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp. |
-| `actor_id` | UUID/BIGINT | FK -> users.id | HR thực hiện. |
-| `action` | VARCHAR(100) | NOT NULL | `CREATED`, `PUBLISHED`, `CLOSED`, `EDITED`, `EXPIRED`. |
+| `id` | BIGINT | PK | ID log. |
+| `job_id` | BIGINT | FK, NOT NULL | Job liên quan. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `actor_id` | BIGINT | FK -> users.id | HR thực hiện. |
+| `action` | VARCHAR(100) | NOT NULL | `CREATED`, `PUBLISHED`, `CLOSED`, `EDITED`. |
 | `from_status` | VARCHAR(50) | nullable | Trạng thái trước thay đổi. |
 | `to_status` | VARCHAR(50) | nullable | Trạng thái sau thay đổi. |
 | `note` | TEXT | nullable | Ghi chú. |
@@ -248,14 +266,14 @@ Lưu pipeline/vòng tuyển dụng của từng job.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID vòng. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp. |
-| `job_id` | UUID/BIGINT | FK, NOT NULL | Job chứa vòng này. |
+| `id` | BIGINT | PK | ID vòng. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `job_id` | BIGINT | FK, NOT NULL | Job chứa vòng này. |
 | `name` | VARCHAR(255) | NOT NULL | Tên vòng. Ví dụ: `CV Screening`, `Online Test`. |
 | `description` | TEXT | nullable | Mô tả vòng. |
 | `order_index` | INT | NOT NULL | Thứ tự vòng (bắt đầu từ 0). |
-| `pass_email_template_id` | UUID/BIGINT | FK -> email_templates.id, nullable | Template khi Pass. |
-| `fail_email_template_id` | UUID/BIGINT | FK -> email_templates.id, nullable | Template khi Fail. |
+| `pass_email_template_id` | BIGINT | FK -> email_templates.id, nullable | Template khi Pass. |
+| `fail_email_template_id` | BIGINT | FK -> email_templates.id, nullable | Template khi Fail. |
 | `test_link` | TEXT | nullable | Link bài test Online nếu có. |
 | `is_final_round` | BOOLEAN | default false | Vòng cuối cùng (Offer). |
 | `is_deleted` | BOOLEAN | default false | Đánh dấu xóa mềm. |
@@ -274,15 +292,15 @@ Lưu câu hỏi đánh giá/bài test gắn với từng vòng tuyển dụng.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID form. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp. |
-| `round_id` | UUID/BIGINT | FK, NOT NULL | Vòng sử dụng form này. |
+| `id` | BIGINT | PK | ID form. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `round_id` | BIGINT | FK, NOT NULL | Vòng sử dụng form này. |
 | `title` | VARCHAR(255) | NOT NULL | Tiêu đề form đánh giá. |
 | `questions` | JSON/TEXT | NOT NULL | Mảng câu hỏi (dạng JSON). |
 | `total_score` | INT | nullable | Điểm tối đa. |
 | `min_pass_score` | INT | nullable | Điểm tối thiểu để pass. |
 | `is_active` | BOOLEAN | default true | Form đang dùng hay đã hủy. |
-| `created_by` | UUID/BIGINT | FK -> users.id | HR tạo form. |
+| `created_by` | BIGINT | FK -> users.id | HR tạo form. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
@@ -305,17 +323,20 @@ Lưu cấu hình câu hỏi/trường dữ liệu động cho form ứng tuyển
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID trường. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp. |
-| `job_id` | UUID/BIGINT | FK, NOT NULL | Job áp dụng. |
+| `id` | BIGINT | PK | ID trường. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `job_id` | BIGINT | FK, NOT NULL | Job áp dụng. |
 | `field_name` | VARCHAR(255) | NOT NULL | Tên biến/trường (VD: `github_link`). |
 | `label` | VARCHAR(255) | NOT NULL | Nhãn hiển thị cho ứng viên. |
 | `field_type` | VARCHAR(50) | NOT NULL | `TEXT`, `TEXTAREA`, `URL`, `FILE`, `SELECT`. |
 | `is_required` | BOOLEAN | default false | Bắt buộc điền không? |
 | `options` | JSON/TEXT | nullable | Các lựa chọn nếu field_type là SELECT. |
 | `order_index` | INT | default 0 | Thứ tự hiển thị trên form. |
+| `is_deleted` | BOOLEAN | NOT NULL, default false | Xóa mềm field; giữ lại để bảo toàn câu trả lời của đơn cũ. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
+
+`field_type` chỉ nhận `TEXT`, `TEXTAREA`, `URL`, `FILE`, `SELECT`. `options` được lưu dạng JSON text; chỉ `SELECT` được có options. `field_name` duy nhất trong phạm vi các field chưa bị xóa của cùng một Job. Field bị xóa mềm không được trả về form public và không được dùng khi sắp xếp form.
 
 ### 3.11 `candidates`
 
@@ -323,8 +344,8 @@ Lưu thông tin ứng viên. Đã thiết kế dạng Tenant-specific để cô 
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID ứng viên. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp ứng viên đã nộp đơn. |
+| `id` | BIGINT | PK | ID ứng viên. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp ứng viên đã nộp đơn. |
 | `full_name` | VARCHAR(255) | NOT NULL | Họ tên. |
 | `email` | VARCHAR(255) | NOT NULL | Email. |
 | `phone` | VARCHAR(50) | nullable | Số điện thoại. |
@@ -344,11 +365,11 @@ Lưu đơn ứng tuyển của Candidate vào Job.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID hồ sơ ứng tuyển. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp nhận hồ sơ. |
-| `job_id` | UUID/BIGINT | FK, NOT NULL | Job ứng tuyển. |
-| `candidate_id` | UUID/BIGINT | FK, NOT NULL | Ứng viên. |
-| `current_round_id` | UUID/BIGINT | FK -> hiring_rounds.id, nullable | Vòng hiện tại đang ở (hiring_rounds). |
+| `id` | BIGINT | PK | ID hồ sơ ứng tuyển. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp nhận hồ sơ. |
+| `job_id` | BIGINT | FK, NOT NULL | Job ứng tuyển. |
+| `candidate_id` | BIGINT | FK, NOT NULL | Ứng viên. |
+| `current_round_id` | BIGINT | FK -> hiring_rounds.id, nullable | Vòng hiện tại đang ở (hiring_rounds). |
 | `current_step` | INT | default 0 | Index vòng hiện tại (0-based). |
 | `cv_url` | TEXT | NOT NULL | Đường dẫn file CV (S3/local). |
 | `cover_letter` | TEXT | nullable | Thư giới thiệu/ghi chú. |
@@ -374,9 +395,9 @@ Lưu câu trả lời của ứng viên cho các trường động trong form �
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID. |
-| `application_id` | UUID/BIGINT | FK, NOT NULL | Hồ sơ ứng tuyển liên quan. |
-| `form_field_id` | UUID/BIGINT | FK, NOT NULL | Trường câu hỏi liên quan. |
+| `id` | BIGINT | PK | ID. |
+| `application_id` | BIGINT | FK, NOT NULL | Hồ sơ ứng tuyển liên quan. |
+| `form_field_id` | BIGINT | FK, NOT NULL | Trường câu hỏi liên quan. |
 | `answer_value` | TEXT | nullable | Giá trị câu trả lời (Text/URL). |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 
@@ -388,12 +409,12 @@ Lưu lịch sử ứng viên đi qua từng vòng.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID trạng thái vòng. |
-| `application_id` | UUID/BIGINT | FK, NOT NULL | Hồ sơ ứng tuyển. |
-| `round_id` | UUID/BIGINT | FK, NOT NULL | Vòng tuyển dụng. |
+| `id` | BIGINT | PK | ID trạng thái vòng. |
+| `application_id` | BIGINT | FK, NOT NULL | Hồ sơ ứng tuyển. |
+| `round_id` | BIGINT | FK, NOT NULL | Vòng tuyển dụng. |
 | `status` | VARCHAR(50) | NOT NULL | `PENDING`, `PASSED`, `FAILED`, `SKIPPED`. |
 | `score` | DECIMAL(5,2) | nullable | Điểm đánh giá (nếu có form). |
-| `evaluated_by` | UUID/BIGINT | FK -> users.id, nullable | HR đánh giá. |
+| `evaluated_by` | BIGINT | FK -> users.id, nullable | HR đánh giá. |
 | `evaluated_at` | TIMESTAMP | nullable | Thời điểm đánh giá. |
 | `note` | TEXT | nullable | Ghi chú đánh giá chung. |
 | `evaluation_details`| JSON/TEXT | nullable | Chi tiết điểm cho từng câu hỏi trong `evaluation_forms`. |
@@ -410,8 +431,8 @@ Lưu kết quả AI phân tích CV.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID phân tích. |
-| `application_id` | UUID/BIGINT | FK, NOT NULL | Hồ sơ được phân tích. |
+| `id` | BIGINT | PK | ID phân tích. |
+| `application_id` | BIGINT | FK, NOT NULL | Hồ sơ được phân tích. |
 | `raw_text` | LONGTEXT/TEXT | nullable | Text trích xuất từ CV. |
 | `summary` | TEXT | nullable | Tóm tắt CV. |
 | `matching_score` | DECIMAL(5,2) | nullable | Điểm khớp 0–100. |
@@ -442,10 +463,10 @@ Lưu kết quả AI tự động quét và gợi ý ứng viên cũ cho Job mớ
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp. |
-| `job_id` | UUID/BIGINT | FK, NOT NULL | Job mới được publish. |
-| `candidate_id` | UUID/BIGINT | FK, NOT NULL | Ứng viên cũ được gợi ý. |
+| `id` | BIGINT | PK | ID. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `job_id` | BIGINT | FK, NOT NULL | Job mới được publish. |
+| `candidate_id` | BIGINT | FK, NOT NULL | Ứng viên cũ được gợi ý. |
 | `matching_score` | DECIMAL(5,2) | NOT NULL | Điểm khớp do AI đánh giá. |
 | `reason` | TEXT | nullable | Lý do gợi ý. |
 | `status` | VARCHAR(50) | default 'PENDING' | `PENDING`, `VIEWED`, `INVITED`, `REJECTED`. |
@@ -459,8 +480,8 @@ Lưu mẫu email của từng doanh nghiệp.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID template. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp sở hữu template. |
+| `id` | BIGINT | PK | ID template. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp sở hữu template. |
 | `name` | VARCHAR(255) | NOT NULL | Tên template nội bộ. |
 | `type` | VARCHAR(100) | NOT NULL | `APPLICATION_RECEIVED`, `PASS`, `FAIL`, `INTERVIEW_INVITE`, `OFFER`. |
 | `subject` | VARCHAR(255) | NOT NULL | Tiêu đề email. |
@@ -486,10 +507,10 @@ Lưu lịch sử gửi email.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID log. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp. |
-| `application_id` | UUID/BIGINT | FK, nullable | Hồ sơ liên quan. |
-| `email_template_id` | UUID/BIGINT | FK, nullable | Template đã dùng. |
+| `id` | BIGINT | PK | ID log. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `application_id` | BIGINT | FK, nullable | Hồ sơ liên quan. |
+| `email_template_id` | BIGINT | FK, nullable | Template đã dùng. |
 | `recipient_email` | VARCHAR(255) | NOT NULL | Email người nhận. |
 | `subject` | VARCHAR(255) | NOT NULL | Tiêu đề đã gửi. |
 | `body` | TEXT | NOT NULL | Nội dung đã render (sau khi thay biến). |
@@ -510,11 +531,11 @@ Lưu lịch phỏng vấn.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID lịch. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp. |
-| `application_id` | UUID/BIGINT | FK, NOT NULL | Hồ sơ ứng tuyển. |
-| `round_id` | UUID/BIGINT | FK, nullable | Vòng phỏng vấn. |
-| `scheduled_by` | UUID/BIGINT | FK -> users.id | HR đặt lịch. |
+| `id` | BIGINT | PK | ID lịch. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `application_id` | BIGINT | FK, NOT NULL | Hồ sơ ứng tuyển. |
+| `round_id` | BIGINT | FK, nullable | Vòng phỏng vấn. |
+| `scheduled_by` | BIGINT | FK -> users.id | HR đặt lịch. |
 | `proposed_slots` | JSON/TEXT | nullable | Mảng các khung giờ HR đề xuất cho UV chọn (JSON array). |
 | `interview_time` | TIMESTAMP | nullable | Thời gian phỏng vấn đã được ứng viên chọn chốt. |
 | `duration` | INT | nullable | Thời lượng dự kiến (phút). |
@@ -537,13 +558,13 @@ Lưu thao tác quan trọng.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID log. |
-| `company_id` | UUID/BIGINT | FK, nullable | Doanh nghiệp liên quan. |
-| `actor_user_id` | UUID/BIGINT | FK -> users.id, nullable | Người thực hiện. |
+| `id` | BIGINT | PK | ID log. |
+| `company_id` | BIGINT | FK, nullable | Doanh nghiệp liên quan. |
+| `actor_user_id` | BIGINT | FK -> users.id, nullable | Người thực hiện. |
 | `actor_role` | VARCHAR(50) | nullable | Role tại thời điểm thao tác. |
 | `action` | VARCHAR(100) | NOT NULL | `APPROVE_BUSINESS`, `PUBLISH_JOB`, `EVALUATE_APPLICATION`, `SEND_EMAIL`, ... |
 | `target_type` | VARCHAR(100) | NOT NULL | Loại đối tượng bị tác động. |
-| `target_id` | UUID/BIGINT | nullable | ID đối tượng. |
+| `target_id` | BIGINT | nullable | ID đối tượng. |
 | `metadata` | JSON/TEXT | nullable | Dữ liệu bổ sung. |
 | `created_at` | TIMESTAMP | NOT NULL | Thời điểm ghi log. |
 
@@ -555,9 +576,9 @@ Lưu thông báo nội bộ cho HR.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID thông báo. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp. |
-| `user_id` | UUID/BIGINT | FK -> users.id, nullable | Người nhận cụ thể. |
+| `id` | BIGINT | PK | ID thông báo. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `user_id` | BIGINT | FK -> users.id, nullable | Người nhận cụ thể. |
 | `title` | VARCHAR(255) | NOT NULL | Tiêu đề. |
 | `content` | TEXT | nullable | Nội dung chi tiết. |
 | `type` | VARCHAR(100) | nullable | `NEW_APPLICATION`, `ROUND_PASSED`, `INTERVIEW_REMINDER`, `JOB_EXPIRED`. |
@@ -573,8 +594,8 @@ Lưu cấu hình AI provider theo doanh nghiệp.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | UUID/BIGINT | PK | ID config. |
-| `company_id` | UUID/BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `id` | BIGINT | PK | ID config. |
+| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
 | `provider_name` | VARCHAR(100) | NOT NULL | OpenAI, Google, Anthropic... |
 | `provider_code` | VARCHAR(100) | NOT NULL | `OPENAI`, `GOOGLE_GEMINI`, `ANTHROPIC`. |
 | `api_key_encrypted` | TEXT | nullable | API key đã mã hóa AES-256. |
@@ -642,7 +663,6 @@ BLOCKED → ACTIVE
 ```
 INACTIVE → ACTIVE (Publish)
 ACTIVE → CLOSED (HR đóng thủ công)
-ACTIVE → EXPIRED (Hết hạn tự động)
 CLOSED → ACTIVE (Mở lại)
 ```
 
@@ -713,7 +733,7 @@ CONFIRMED → DONE                         (Hoàn tất phỏng vấn)
 - `api_key_encrypted` không trả nguyên văn về frontend (chỉ trả masked).
 - File CV cần validate định dạng (PDF, DOCX) và dung lượng (tối đa 5MB).
 - Các thao tác quan trọng phải ghi `audit_logs`.
-- Áp dụng **Soft Delete** (Xóa mềm): Các bảng cốt lõi (`jobs`, `hiring_rounds`, `candidates`) sử dụng cờ `is_deleted` để bảo toàn dữ liệu lịch sử ứng tuyển thay vì xóa vật lý. Các truy vấn mặc định cần có thêm điều kiện `is_deleted = false`.
+- Áp dụng **Soft Delete** (Xóa mềm): Các bảng cốt lõi (`jobs`, `hiring_rounds`, `candidates`) sử dụng cờ `is_deleted` để bảo toàn dữ liệu lịch sử ứng tuyển thay vì xóa vật lý. `job_categories` khi được thêm bằng migration của US-07 cũng sử dụng cờ này. Các truy vấn mặc định cần có thêm điều kiện `is_deleted = false`.
 
 ---
 

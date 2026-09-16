@@ -15,6 +15,7 @@ Xác định phạm vi backend cho task 'API cong ty public' trong US-25 Xem Car
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
 - Endpoint public; Candidate không cần đăng nhập. Backend chỉ trả dữ liệu public hợp lệ theo trạng thái của Job/Career Site.
+- Company phải ở trạng thái `ACTIVE`, Career Site phải tồn tại và `career_sites.is_published = true`; nếu không, trả `404` với thông báo Career Site không khả dụng.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
 ## HTTP Method
@@ -72,7 +73,13 @@ Không có request body.
     "website": "https://easytech.vn",
     "publicEmail": "hr@easytech.vn",
     "publicPhone": "0901234567",
-    "primaryColor": "#0EA5E9"
+    "primaryColor": "#0EA5E9",
+    "accentColor": "#2563EB",
+    "categories": [
+      { "id": 1, "name": "Công nghệ thông tin", "slug": "cong-nghe-thong-tin" }
+    ]
   }
 }
 ```
+
+`categories` chỉ gồm `job_categories.status = ACTIVE` và `is_deleted = false`, được sắp xếp theo `sort_order`.

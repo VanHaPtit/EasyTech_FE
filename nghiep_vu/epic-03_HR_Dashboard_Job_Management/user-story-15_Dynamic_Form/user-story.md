@@ -46,3 +46,18 @@ graph TD
 - **KHÔNG** hỗ trợ các loại câu hỏi dạng matrix, rating scale hoặc conditional logic (hiển thị câu hỏi B khi câu hỏi A có giá trị X) trong phiên bản này.
 - **KHÔNG** cho phép ứng viên lưu nháp (save draft) form ứng tuyển giữa chừng.
 - **KHÔNG** tích hợp với các dịch vụ form bên ngoài (Google Form, Typeform,...).
+
+## 4. CONTRACT ĐÃ CHỐT KHI TRIỂN KHAI
+
+- Cấu hình form dùng bảng `form_fields` và migration `V14__create_form_fields.sql`. ID, `job_id` và `company_id` dùng `BIGINT`/Java `Long`.
+- API nội bộ của HR/HR_ADMIN:
+  - `GET /api/v1/jobs/{jobId}/form-fields`
+  - `POST /api/v1/jobs/{jobId}/form-fields`
+  - `PUT /api/v1/jobs/{jobId}/form-fields/{fieldId}`
+  - `PUT /api/v1/jobs/{jobId}/form-fields/reorder`
+  - `DELETE /api/v1/jobs/{jobId}/form-fields/{fieldId}`
+- Loại field trong phiên bản này là `TEXT`, `TEXTAREA`, `URL`, `FILE`, `SELECT`. `fieldName` có thể bỏ trống ở request tạo và sẽ được backend sinh từ `label`; tên đang hiệu lực phải duy nhất trong Job.
+- `SELECT` bắt buộc có danh sách options không trống và không trùng. Các loại khác không được có options. `displayOrder` được backend kiểm tra lại, không tin thứ tự do frontend gửi riêng lẻ.
+- HR chỉ được thao tác trên Job cùng `company_id`. Job `INACTIVE` và `ACTIVE` được sửa form; Job `CLOSED` trả lỗi `409`. Thay đổi ghi audit log.
+- Xóa field là soft delete bằng `is_deleted = true`, vì vậy các câu trả lời cũ không bị xóa; field đã xóa không hiển thị cho ứng viên mới.
+- Chi tiết Job public được mở rộng với `applicationForm.fields`. Các field mặc định Họ tên, Email, Số điện thoại và CV, cùng API submit `POST /api/v1/public/jobs/{jobId}/applications`, thuộc flow US-26.

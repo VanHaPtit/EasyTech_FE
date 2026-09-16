@@ -22,25 +22,25 @@ graph TD
 - **Kịch bản 1: HR cấu hình thông tin cơ bản Career Site**
   - **VỚI ĐIỀU KIỆN** HR đang đăng nhập và truy cập `/dashboard/career-site`.
   - **KHI** HR điền/cập nhật các thông tin: Tên công ty hiển thị, Slogan/Tagline, Mô tả công ty (rich text), Địa chỉ, Website, Quy mô nhân sự.
-  - **THÌ** hệ thống lưu dữ liệu vào bảng `career_site_settings` với `company_id` tương ứng thông qua API `PUT /api/v1/career-site/settings`.
+  - **THÌ** hệ thống lưu dữ liệu vào bảng `career_sites` và các trường nội dung tương ứng trong `company_profiles` với `company_id` tương ứng thông qua API cấu hình Career Site.
   - Có nút "Xem trước" để HR preview Career Site trước khi lưu chính thức.
 
 - **Kịch bản 2: HR upload Logo công ty**
   - **VỚI ĐIỀU KIỆN** HR đang ở trang cấu hình Career Site, section "Hình ảnh thương hiệu".
   - **KHI** HR nhấn "Tải lên Logo", chọn file ảnh (PNG/JPG/SVG, tối đa 2MB, khuyến nghị 200x200px) và nhấn "Lưu".
-  - **THÌ** hệ thống upload file lên Cloud Storage (S3/Cloudinary), lưu URL vào `career_site_settings.logo_url` và hiển thị logo mới ngay lập tức trên preview.
+  - **THÌ** hệ thống upload file lên Cloud Storage (S3/Cloudinary), lưu URL vào `career_sites.logo_url` và hiển thị logo mới ngay lập tức trên preview.
   - Nếu file vượt 2MB: hiển thị lỗi "File logo không được vượt quá 2MB."
 
 - **Kịch bản 3: HR tùy chỉnh Banner ảnh bìa**
   - **VỚI ĐIỀU KIỆN** HR đang ở section "Hình ảnh thương hiệu".
   - **KHI** HR upload ảnh banner (JPEG/PNG, tối đa 5MB, khuyến nghị 1200x400px).
-  - **THÌ** hệ thống upload và lưu URL vào `career_site_settings.banner_url`.
+  - **THÌ** hệ thống upload và lưu URL vào `company_profiles.banner_url`; `career_sites.hero_image_url` có thể override ảnh hero public.
   - Trang Career Site công khai cập nhật banner mới ngay sau khi HR lưu (không cần deploy lại).
 
 - **Kịch bản 4: HR tùy chỉnh màu chủ đạo thương hiệu**
   - **VỚI ĐIỀU KIỆN** HR đang ở section "Màu sắc thương hiệu".
   - **KHI** HR chọn màu primary (màu nút CTA, thanh navigation) thông qua color picker hoặc nhập mã HEX.
-  - **THÌ** hệ thống lưu `primary_color` vào `career_site_settings`.
+  - **THÌ** hệ thống lưu `company_profiles.primary_color`; `career_sites.accent_color` dùng cho màu nhấn của giao diện.
   - Trang Career Site tự động áp dụng màu mới cho tất cả các element (nút "Ứng tuyển", header, link).
   - Nếu mã màu không hợp lệ: hiển thị lỗi và revert về màu trước.
 
@@ -52,7 +52,7 @@ graph TD
 - **Kịch bản 6: HR bật/tắt Career Site công khai**
   - **VỚI ĐIỀU KIỆN** HR đang ở trang cấu hình Career Site.
   - **KHI** HR toggle switch "Hiển thị Career Site công khai" sang OFF.
-  - **THÌ** hệ thống cập nhật `career_site_settings.is_published = false`. Khi ứng viên truy cập URL Career Site, hệ thống trả về trang "404 – Career Site hiện không khả dụng."
+  - **THÌ** hệ thống cập nhật `career_sites.is_published = false`. Khi ứng viên truy cập URL Career Site, hệ thống trả về trang "404 – Career Site hiện không khả dụng."
 
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ chỉnh sửa layout/template Career Site (thêm/xóa section, drag-drop blocks) trong phiên bản này.

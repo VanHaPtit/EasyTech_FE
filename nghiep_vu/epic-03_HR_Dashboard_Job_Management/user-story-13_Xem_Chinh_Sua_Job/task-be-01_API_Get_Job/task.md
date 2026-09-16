@@ -33,6 +33,7 @@ Xác định phạm vi backend cho task 'API Get Job' trong US-13 Xem Chinh Sua 
 
 ## Response
 - Thành công: BaseResponse(status = 1, message, data); Chi tiết job.
+- Response chi tiết trả `categoryId` (number/Long), `categoryName` và `categorySlug` khi Job đang liên kết category; các field này là `null` nếu Job chưa có category.
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
@@ -66,6 +67,9 @@ Không có request body.
     "id": 101,
     "title": "Senior Frontend Developer",
     "slug": "senior-frontend-developer",
+    "categoryId": 1,
+    "categoryName": "Công nghệ thông tin",
+    "categorySlug": "cong-nghe-thong-tin",
     "description": "JD details...",
     "requirements": "ReactJS, TypeScript",
     "salaryMin": 1500,
@@ -74,7 +78,7 @@ Không có request body.
     "workingType": "HYBRID",
     "employmentType": "FULL_TIME",
     "experienceLevel": "SENIOR",
-    "status": "DRAFT",
+    "status": "INACTIVE",
     "createdAt": "2026-08-31T10:00:00",
     "updatedAt": "2026-08-31T10:00:00"
   }

@@ -20,10 +20,11 @@ Xác định phạm vi backend cho task 'API danh sach danh muc job' trong US-07
 - `/api/v1/admin/job-categories`
 
 ## Request
-- Query parameters (Tùy chọn): `page`, `size`, `search` (theo tên danh mục).
+- Query parameters (Tùy chọn): `page`, `limit`, `search` (theo tên danh mục).
+- `page` bắt đầu từ `1`; `limit` là số bản ghi mỗi trang và mặc định theo controller/backend hiện tại.
 
 ## Response
-- Thành công: `BaseResponse(status = 1, message, data)` chứa mảng các categories, bao gồm `id`, `name`, `slug`, `status`, `jobCount` (số lượng job đang dùng category này), `createdAt`.
+- Thành công: `BaseResponse(status = 1, message, data)` chứa mảng các categories, bao gồm `id` (`BIGINT`/JSON number), `name`, `slug`, `sortOrder`, `status`, `jobCount` (chỉ đếm Job có `is_deleted = false`) và `createdAt`.
 
 ## API JSON Contract
 ```json
@@ -31,37 +32,55 @@ Xác định phạm vi backend cho task 'API danh sach danh muc job' trong US-07
   "status": 1,
   "message": "Lấy danh sách danh mục ngành nghề thành công.",
   "data": {
-    "content": [
+    "current_page": 1,
+    "data": [
       {
         "id": 1,
         "name": "Công nghệ thông tin",
         "slug": "cong-nghe-thong-tin",
+        "sortOrder": 0,
         "status": "ACTIVE",
         "jobCount": 15,
         "createdAt": "2026-08-31T10:00:00"
       }
     ],
-    "totalElements": 1,
-    "totalPages": 1
+    "last_page": 1,
+    "total": 1
   }
 }
 ```
+
+## API sắp xếp danh mục
+
+- `PUT /api/v1/admin/job-categories/reorder`
+- Request body:
+
+```json
+{
+  "orderedIds": [3, 1, 2]
+}
+```
+
+- `orderedIds` dùng ID kiểu `BIGINT` và phải chứa đầy đủ, không trùng lặp tất cả danh mục có `is_deleted = false`, bao gồm cả danh mục `INACTIVE`.
+- Backend cập nhật `sort_order` theo chỉ số từ `0` và trả về danh sách đã sắp xếp.
+- Danh mục đã xóa mềm không được đưa vào request; request thiếu/thừa/trùng ID trả về `400`.
+- Thao tác được ghi vào `audit_logs` với `target_type = JOB_CATEGORY`.
 
 ---
 
 ## Thiết kế Database – Bảng job_categories
 
 ## Bảng/entity liên quan
-- Bảng chính: `companies`, `company_profiles`, `users`, `audit_logs`, `job_categories`.
-- Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
-- Các bảng thuộc tenant phải có company_id và index theo company_id.
+- Bảng chính của task: `job_categories`; bảng tham chiếu để tính `jobCount`: `jobs`.
+- `job_categories` là catalog dùng chung toàn hệ thống, không có `company_id`.
+- Migration `V11__create_job_categories_and_category_fk.sql` tạo bảng với `status` và `is_deleted` theo database convention.
+- Mỗi bản ghi có `id`, `created_at`, `updated_at` và `is_deleted`.
 
 ## Column và kiểu dữ liệu
-- Dùng UUID cho khóa chính/khóa ngoại.
-- Dùng VARCHAR cho mã, email, slug, enum dạng text.
-- Dùng TEXT cho nội dung dài như mô tả, lý do từ chối, email body hoặc AI explanation.
-- Dùng TIMESTAMP cho thời điểm tạo/cập nhật/gửi email/đánh giá.
-- - Enum/status liên quan: Job Status = `DRAFT`/`ACTIVE`/`CLOSED`.
+- Dùng `BIGINT` cho khóa chính và khóa tham chiếu, phù hợp với schema/migration hiện tại; JSON trả về ID dạng number.
+- Các cột chính của `job_categories`: `name VARCHAR(255) NOT NULL`, `slug VARCHAR(255) UNIQUE NOT NULL`, `sort_order INT DEFAULT 0`, `status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE'`, `is_deleted BOOLEAN NOT NULL DEFAULT FALSE`.
+- `status` chỉ nhận `ACTIVE` hoặc `INACTIVE`; không tạo cột `is_active`.
+- Dùng `TIMESTAMP` cho thời điểm tạo/cập nhật.
 
 ## Khóa và ràng buộc
 - Primary Key: id.
@@ -72,8 +91,9 @@ ound_id, user_id.
 
 ## Migration
 - Tạo migration idempotent theo thứ tự triển khai.
-- Có giá trị mặc định rõ ràng cho status và boolean flag.
+- Có giá trị mặc định rõ ràng: `status = 'ACTIVE'`, `sort_order = 0`, `is_deleted = false`.
 
 ## Relationship
-- Dữ liệu phải giữ đúng multi-tenant boundary theo company_id.
+- `jobs.category_id` là khóa ngoại nullable tới `job_categories.id` với `ON DELETE SET NULL`.
+- `job_categories` là catalog cấp hệ thống, không có `company_id`; `jobCount` dùng query trên `jobs.category_id` với điều kiện `jobs.is_deleted = false`.
 - Xóa mềm không được làm mất audit/history cần phục vụ báo cáo hoặc truy vết.

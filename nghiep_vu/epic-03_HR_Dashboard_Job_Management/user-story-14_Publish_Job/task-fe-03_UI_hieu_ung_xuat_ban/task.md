@@ -30,11 +30,15 @@ Xác định phạm vi frontend cho task 'UI hieu ung xuat ban' trong US-14 Publ
 
 ## Phản hồi thành công
 - Hiển thị toast hoặc trạng thái xác nhận sau khi hành động thành công.
-- Điều hướng theo flow cụ thể của user story.
+- Sau publish hiển thị banner xác nhận Job đã xuất hiện trên Career Site; sau close/reopen
+  cập nhật lại badge, danh sách và thống kê mà không làm mất context hiện tại.
+- UI vô hiệu hóa nút trong lúc request chạy và hiển thị lỗi backend nếu validation/state
+  transition không hợp lệ.
 
 ## Xử lý lỗi
 - Hiển thị lỗi có thể hành động được: điều gì sai và user cần sửa gì.
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, `POST /api/v1/jobs`, `PATCH /api/v1/jobs/{jobId}`, `POST /api/v1/jobs/{jobId}/publish` tùy component.
+- `POST /api/v1/jobs/{jobId}/publish`, `POST /api/v1/jobs/{jobId}/close`,
+  `POST /api/v1/jobs/{jobId}/reopen`.

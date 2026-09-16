@@ -24,6 +24,7 @@ Xác định phạm vi backend cho task 'API tao danh muc job' trong US-07 Admin
 ## Validation
 - Tên danh mục không được trống, không được trùng lặp với danh mục đã tồn tại trong DB (kể cả đã xóa mềm hoặc chưa xóa).
 - Backend tự động sinh `slug` từ `name`.
+- Category mới được tạo với `status = ACTIVE` và `is_deleted = false`.
 
 ## Response
 - Thành công: `BaseResponse(status = 1, message, data)` trả về thông tin category vừa tạo.

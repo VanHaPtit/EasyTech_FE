@@ -24,6 +24,8 @@ Xác định phạm vi backend cho task 'API sua danh muc job' trong US-07 Admin
 
 ## Validation
 - Nếu đổi `name`, kiểm tra trùng lặp với các danh mục khác. Nếu đổi `name` thì cập nhật lại luôn `slug`.
+- `status` được lưu ở cột `status` với giá trị `ACTIVE` hoặc `INACTIVE`; không sử dụng cột `is_active`.
+- Chỉ được sửa danh mục có `is_deleted = false`.
 
 ## Response
 - Thành công: Trả về thông tin category đã cập nhật.

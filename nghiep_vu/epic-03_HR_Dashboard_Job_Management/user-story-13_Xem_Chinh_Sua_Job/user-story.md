@@ -13,7 +13,7 @@ graph TD
     A[Vào chi tiết Job] --> B[Hiển thị dữ liệu hiện tại]
     B --> C{Thao tác chỉnh sửa}
     C -- Sửa form --> D[Lưu thay đổi]
-    C -- Đổi trạng thái --> E[Draft/Closed/Published]
+    C -- Đổi trạng thái --> E[Inactive/Closed/Active]
     D --> F[Lưu Database]
     E --> F
 ```
@@ -28,8 +28,13 @@ graph TD
 - **Kịch bản 2: HR chỉnh sửa và lưu thành công**
   - **VỚI ĐIỀU KIỆN** HR đang ở màn hình chỉnh sửa Job.
   - **KHI** HR thay đổi một số thông tin (ví dụ: mô tả, ngày hết hạn) và nhấn "Cập nhật".
-  - **THÌ** hệ thống gọi API `PUT /api/v1/jobs/{job_id}`, validate dữ liệu và cập nhật database.
-  - Hiển thị toast thông báo "Cập nhật thành công!".
+- **THÌ** hệ thống gọi API `PUT /api/v1/jobs/{job_id}`, validate dữ liệu và cập nhật database.
+
+- **KHI** HR mở form chỉnh sửa Job
+- **THÌ** hệ thống tải danh mục từ `GET /api/v1/job-categories`; chỉ category `ACTIVE` và chưa xóa mềm được chọn cho thay đổi mới.
+- **VÀ** nếu category cũ đã `INACTIVE`, hệ thống vẫn hiển thị quan hệ hiện tại và giữ nguyên nếu HR không chọn category khác.
+- **VÀ** sau khi cập nhật thành công, hiển thị toast thông báo "Cập nhật thành công!".
+- `roundCount` dùng số nguyên không âm; `roundCount = 0` là hợp lệ cho Job không có vòng phỏng vấn. Khi Edit Job không có vòng nào, request vẫn được lưu thành công và không được báo lỗi tối thiểu một vòng.
 
 - **Kịch bản 3: HR chỉnh sửa Job đang ACTIVE**
   - **VỚI ĐIỀU KIỆN** Job đang có trạng thái `ACTIVE` (đã hiển thị công khai).
@@ -43,4 +48,4 @@ graph TD
 
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** theo dõi lịch sử chỉnh sửa (version history) của Job – chỉ lưu dữ liệu mới nhất.
-- Chỉnh sửa Form ứng tuyển và Cấu hình Pipeline thuộc các User Story riêng biệt.
+- Chỉnh sửa Form ứng tuyển thuộc US-15 và dùng các endpoint `form-fields` riêng; form được chỉnh khi Job `INACTIVE` hoặc `ACTIVE`, còn Job `CLOSED` chỉ đọc và trả `409` nếu có request mutation. Cấu hình Pipeline thuộc User Story riêng.

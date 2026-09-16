@@ -64,7 +64,7 @@ Không có request body.
   "message": "Lấy thống kê job thành công",
   "data": {
     "totalJobs": 12,
-    "draftJobs": 3,
+    "inactiveJobs": 3,
     "activeJobs": 8,
     "closedJobs": 1
   }

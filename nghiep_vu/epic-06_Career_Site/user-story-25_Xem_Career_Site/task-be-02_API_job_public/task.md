@@ -15,6 +15,7 @@ Xác định phạm vi backend cho task 'API job public' trong US-25 Xem Career 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
 - Endpoint public; Candidate không cần đăng nhập. Backend chỉ trả dữ liệu public hợp lệ theo trạng thái của Job/Career Site.
+- Company phải ở trạng thái `ACTIVE` và Career Site phải có `is_published = true`; nếu không, endpoint trả `404` và không làm lộ dữ liệu company/job.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
 ## HTTP Method
@@ -24,7 +25,12 @@ Xác định phạm vi backend cho task 'API job public' trong US-25 Xem Career 
 - `/api/v1/public/companies/{companySlug}/jobs`
 
 ## Request
-- Query params: keyword, location, category, page, size.
+- Query params: `keyword`, `location`, `category`, `page`, `limit`.
+- `page` bắt đầu từ `1`; `limit` là số bản ghi mỗi trang và dùng thống nhất với `PaginationRequest` của backend.
+- Backend giới hạn `limit` trong khoảng `1..100`; mặc định là `20` cho public listing.
+- `category` là `slug` của `job_categories`, ví dụ `technology`; không dùng `categoryId` trong public URL.
+- Backend chỉ trả Job có `status = ACTIVE` và `is_deleted = false`.
+- Category filter chỉ chấp nhận category có `status = ACTIVE` và `is_deleted = false`. Nếu slug trỏ tới category `INACTIVE`, đã soft delete hoặc không tồn tại, trả trang rỗng theo response phân trang chuẩn.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -50,7 +56,7 @@ Xác định phạm vi backend cho task 'API job public' trong US-25 Xem Career 
 
 
 ## 3. API JSON Contract
-**Endpoint:** `GET /api/v1/public/companies/{companySlug}/jobs?keyword=frontend&location=HCM&page=1&limit=20`
+**Endpoint:** `GET /api/v1/public/companies/{companySlug}/jobs?keyword=frontend&location=HCM&category=technology&page=1&limit=20`
 
 ### Request Body
 Không có request body.

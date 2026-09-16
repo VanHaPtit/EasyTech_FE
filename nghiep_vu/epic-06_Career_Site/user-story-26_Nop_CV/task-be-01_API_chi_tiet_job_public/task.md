@@ -21,10 +21,10 @@ Xác định phạm vi backend cho task 'API chi tiet job public' trong US-26 No
 - `GET`
 
 ## Endpoint
-- `/api/v1/public/jobs/{jobSlug}`
+- `/api/v1/public/companies/{companySlug}/jobs/{jobSlug}`
 
 ## Request
-- Path variable định danh job.
+- Path variables `companySlug` và `jobSlug`; `jobSlug` chỉ unique trong phạm vi company.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -51,7 +51,7 @@ Xác định phạm vi backend cho task 'API chi tiet job public' trong US-26 No
 
 ## 3. API JSON Contract
 
-**Endpoint:** `GET /api/v1/public/jobs/{jobSlug}`
+**Endpoint:** `GET /api/v1/public/companies/{companySlug}/jobs/{jobSlug}`
 **Mô tả:** Lấy chi tiết tin tuyển dụng public để candidate xem và nộp CV.
 
 ### Request Body
@@ -74,17 +74,27 @@ Không có request body.
     "employmentType": "FULL_TIME",
     "salaryMin": 15000000,
     "salaryMax": 30000000,
-    "company": {
+      "applicationForm": {
+        "fields": [
+          {
+            "id": 12,
+            "fieldName": "portfolio_url",
+            "label": "Portfolio URL",
+            "fieldType": "URL",
+            "required": false,
+            "options": [],
+            "displayOrder": 0
+          }
+        ]
+      },
+      "company": {
       "id": 101,
       "companyName": "EasyTech",
       "companySlug": "easytech",
       "logoUrl": "https://storage.easytech.vn/logos/easytech.png"
-    },
-    "applicationForm": {
-      "requirePhone": true,
-      "requireCoverLetter": false,
-      "questions": []
     }
   }
 }
 ```
+
+> `applicationForm.fields` được US-15 cung cấp từ cấu hình `form_fields` đang hiệu lực của Job. API này chỉ đọc cấu hình public; các field mặc định và việc nhận câu trả lời/submit đơn thuộc US-26.

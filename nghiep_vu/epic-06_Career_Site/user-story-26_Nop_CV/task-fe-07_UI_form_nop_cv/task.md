@@ -37,4 +37,4 @@ Xác định phạm vi frontend cho task 'UI form nop cv' trong US-26 Nop CV, l�
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/public/companies/{companySlug}`, `GET /api/v1/public/jobs/{jobSlug}`, `POST /api/v1/public/jobs/{jobId}/applications`.
+- `GET /api/v1/public/companies/{companySlug}`, `GET /api/v1/public/companies/{companySlug}/jobs/{jobSlug}`, `POST /api/v1/public/jobs/{jobId}/applications`.

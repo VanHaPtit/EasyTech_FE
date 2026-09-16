@@ -22,6 +22,8 @@ Xác định phạm vi backend cho task 'API xuat ban job' trong US-14 Publish J
 
 ## Endpoint
 - `/api/v1/jobs/{jobId}/publish`
+- `/api/v1/jobs/{jobId}/close`
+- `/api/v1/jobs/{jobId}/reopen`
 
 ## Request
 - Path variable `jobId`; không cần body nếu publish theo cấu hình hiện tại.
@@ -36,10 +38,17 @@ Xác định phạm vi backend cho task 'API xuat ban job' trong US-14 Publish J
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
-- Job Status: DRAFT -> ACTIVE.
+- Publish: `INACTIVE` -> `ACTIVE`.
+- Close: `ACTIVE` -> `CLOSED`.
+- Reopen: `CLOSED` -> `ACTIVE`.
+- Không nhận `status` trong request body.
 
 ## Side Effects
-- Public job trên Career Site và ghi audit log.
+- Publish/reopen làm Job public trên Career Site và ghi audit log; close ẩn Job khỏi public list
+  nhưng không xóa application hoặc pipeline hiện tại.
+- Nếu Job cũ đang gắn category `INACTIVE`, publish/reopen vẫn được phép nếu category chưa
+  soft delete; đây là quy tắc giữ liên kết của US-07. Category đã soft delete hoặc không tồn tại
+  thì không được publish/reopen.
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
@@ -66,3 +75,9 @@ Không có request body.
   }
 }
 ```
+
+### Contract đã triển khai
+- Publish, close và reopen đều trả `BaseResponse` với Job sau chuyển trạng thái.
+- Publish kiểm tra title, description, location, khoảng lương và category chưa soft delete.
+- Nếu state hiện tại không phù hợp, backend trả `409`; nếu Job không thuộc company hiện tại
+  hoặc đã soft delete, backend trả `404`.

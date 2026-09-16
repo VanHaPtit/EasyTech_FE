@@ -37,4 +37,4 @@ Xác định phạm vi frontend cho task 'Dashboard' trong US-10 Dashboard Tong 
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, `POST /api/v1/jobs`, `PATCH /api/v1/jobs/{jobId}`, `POST /api/v1/jobs/{jobId}/publish` tùy component.
+- `GET /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, `POST /api/v1/jobs`, `PUT /api/v1/jobs/{jobId}`, `POST /api/v1/jobs/{jobId}/publish` tùy component.
