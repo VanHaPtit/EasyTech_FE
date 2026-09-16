@@ -33,7 +33,8 @@ graph TD
 - **KHI** HR mở form chỉnh sửa Job
 - **THÌ** hệ thống tải danh mục từ `GET /api/v1/job-categories`; chỉ category `ACTIVE` và chưa xóa mềm được chọn cho thay đổi mới.
 - **VÀ** nếu category cũ đã `INACTIVE`, hệ thống vẫn hiển thị quan hệ hiện tại và giữ nguyên nếu HR không chọn category khác.
-  - **VÀ** sau khi cập nhật thành công, hiển thị toast thông báo "Cập nhật thành công!".
+- **VÀ** sau khi cập nhật thành công, hiển thị toast thông báo "Cập nhật thành công!".
+- `roundCount` dùng số nguyên không âm; `roundCount = 0` là hợp lệ cho Job không có vòng phỏng vấn. Khi Edit Job không có vòng nào, request vẫn được lưu thành công và không được báo lỗi tối thiểu một vòng.
 
 - **Kịch bản 3: HR chỉnh sửa Job đang ACTIVE**
   - **VỚI ĐIỀU KIỆN** Job đang có trạng thái `ACTIVE` (đã hiển thị công khai).

@@ -51,6 +51,7 @@ graph TD
 - **THÌ** hệ thống hiển thị thông báo thân thiện: _"Dịch vụ AI hiện không khả dụng. Vui lòng thử lại hoặc tiếp tục nhập JD thủ công."_ Trình soạn thảo vẫn khả dụng để gõ thủ công và giữ nguyên dữ liệu HR đã nhập.
 
 - Cấu hình form ứng tuyển không nằm trong request tạo Job của US-12. US-15 đã bổ sung bảng `form_fields` và migration V14; màn hình tạo Job lưu các field tùy chỉnh sau khi Job được tạo thành công qua API form-fields. Việc ứng viên gửi các câu trả lời vẫn thuộc flow submit của US-26.
+- Số vòng phỏng vấn là tùy chọn: Job không cần phỏng vấn được phép có `roundCount = 0`; mọi giá trị âm đều không hợp lệ. Job mới bắt đầu với `round_count = 0` và có thể publish khi thỏa các điều kiện publish khác, dù chưa cấu hình pipeline.
 
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ AI tự động dịch JD sang nhiều ngôn ngữ cùng lúc.
