@@ -14,8 +14,11 @@ Xác định phạm vi backend cho task 'API xoa vong' trong US-16 Cau Hinh Pipe
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
+- User có role `HR` hoặc `HR_ADMIN`.
 - User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
+- Backend re-check user thuộc company hiện tại và user/company đều `ACTIVE`; không tin riêng vào company ID trong token.
+- Job không bị xóa và không ở trạng thái `CLOSED`.
 
 ## HTTP Method
 - `DELETE`
@@ -32,7 +35,7 @@ Xác định phạm vi backend cho task 'API xoa vong' trong US-16 Cau Hinh Pipe
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
 ## Response
-- Thành công: BaseResponse(status = 1, message, data); Kết quả xóa mềm round.
+- Thành công: HTTP `200`, BaseResponse(status = 1, message, data = null); round được xóa mềm.
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
@@ -40,6 +43,8 @@ Xác định phạm vi backend cho task 'API xoa vong' trong US-16 Cau Hinh Pipe
 
 ## Side Effects
 - Không được làm mất lịch sử ứng viên đã đi qua round.
+- Nếu còn ứng viên có `current_round_id` trỏ tới round, API trả `400` và không thay đổi dữ liệu.
+- Nếu xóa thành công, các round còn lại được chuẩn hóa `orderIndex` và `jobs.round_count` được cập nhật.
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
@@ -47,6 +52,8 @@ Xác định phạm vi backend cho task 'API xoa vong' trong US-16 Cau Hinh Pipe
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+Thông báo lỗi khi còn ứng viên phải là: `Vòng này đang có ứng viên. Bạn cần chuyển họ sang vòng khác trước khi xóa.` Thành công ghi audit log `DELETE_HIRING_ROUND`.
 
 
 ## 3. API JSON Contract
@@ -62,9 +69,6 @@ Không có request body.
 {
   "status": 1,
   "message": "Xóa vòng tuyển dụng thành công",
-  "data": {
-    "id": 202,
-    "deleted": true
-  }
+  "data": null
 }
 ```

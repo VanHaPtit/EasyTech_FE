@@ -14,8 +14,11 @@ Xác định phạm vi backend cho task 'API tao vong' trong US-16 Cau Hinh Pipe
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
+- User có role `HR` hoặc `HR_ADMIN`.
 - User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
+- Backend re-check user thuộc company hiện tại và user/company đều `ACTIVE`; không tin riêng vào company ID trong token.
+- Job không bị xóa và không ở trạng thái `CLOSED`.
 
 ## HTTP Method
 - `POST`
@@ -24,7 +27,9 @@ Xác định phạm vi backend cho task 'API tao vong' trong US-16 Cau Hinh Pipe
 - `/api/v1/jobs/{jobId}/rounds`
 
 ## Request
-- Tên vòng, thứ tự, template email và cấu hình đánh giá.
+- `name` bắt buộc, tối đa 255 ký tự.
+- `description`, `passEmailTemplateId`, `failEmailTemplateId`, `testLink` và `isFinalRound` là tùy chọn.
+- Backend tự gán `orderIndex` ở cuối danh sách; client không truyền thứ tự trong API tạo vòng.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -32,7 +37,7 @@ Xác định phạm vi backend cho task 'API tao vong' trong US-16 Cau Hinh Pipe
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
 ## Response
-- Thành công: BaseResponse(status = 1, message, data); Round vừa tạo.
+- Thành công: HTTP `200`, BaseResponse(status = 1, message, data); Round vừa tạo.
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
@@ -48,6 +53,8 @@ Xác định phạm vi backend cho task 'API tao vong' trong US-16 Cau Hinh Pipe
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
 
+Thành công ghi audit log `CREATE_HIRING_ROUND`; `passEmailTemplateId`/`failEmailTemplateId` là `Long` nullable và không được nhận ID mock từ frontend.
+
 
 ## 3. API JSON Contract
 **Endpoint:** `POST /api/v1/jobs/{jobId}/rounds`
@@ -55,14 +62,14 @@ Xác định phạm vi backend cho task 'API tao vong' trong US-16 Cau Hinh Pipe
 ```json
 {
   "name": "HR Interview",
-  "order": 1,
-  "type": "INTERVIEW",
+  "description": "Phỏng vấn với HR",
   "passEmailTemplateId": 301,
   "failEmailTemplateId": 302,
-  "isRequired": true
+  "testLink": null,
+  "isFinalRound": false
 }
 ```
-### Response (201 Created)
+### Response (200 OK)
 ```json
 {
   "status": 1,
@@ -70,36 +77,39 @@ Xác định phạm vi backend cho task 'API tao vong' trong US-16 Cau Hinh Pipe
   "data": {
     "id": 202,
     "name": "HR Interview",
-    "order": 1,
-    "type": "INTERVIEW",
-    "isRequired": true,
-    "createdAt": "2026-08-31T10:00:00"
+    "description": "Phỏng vấn với HR",
+    "orderIndex": 1,
+    "passEmailTemplateId": 301,
+    "failEmailTemplateId": 302,
+    "testLink": null,
+    "isFinalRound": false,
+    "createdAt": "2026-08-31T10:00:00",
+    "updatedAt": "2026-08-31T10:00:00"
   }
 }
 ```
 
 ---
 
-## Thiết kế Database – Bảng job_rounds
+## Thiết kế Database – Bảng `hiring_rounds`
 
 ## Bảng/entity liên quan
-- Bảng chính: `job_rounds`, `round_statuses`, `email_templates`, `email_logs`, `interview_schedules`.
-- Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
-- Các bảng thuộc tenant phải có company_id và index theo company_id.
+- Bảng chính của US-16: `hiring_rounds`.
+- `hiring_rounds` liên kết với `jobs` và `companies`; các bảng email template, evaluation và interview là scope của US khác.
+- Bảng có `id`, `company_id`, `job_id`, `created_at`, `updated_at` và `is_deleted`.
+- Index hiện tại: `hiring_rounds(job_id, is_deleted, order_index)`.
 
 ## Column và kiểu dữ liệu
-- Dùng UUID cho khóa chính/khóa ngoại.
-- Dùng VARCHAR cho mã, email, slug, enum dạng text.
-- Dùng TEXT cho nội dung dài như mô tả, lý do từ chối, email body hoặc AI explanation.
-- Dùng TIMESTAMP cho thời điểm tạo/cập nhật/gửi email/đánh giá.
-- - Enum/status liên quan: Round Result = `IN_PROGRESS`/`PASSED`/`FAILED`; Application Status = `ACTIVE`/`REJECTED`/`HIRED` nếu task trực tiếp cập nhật hồ sơ.
+- Dùng `BIGINT` cho khóa chính/khóa ngoại, tương ứng `Long` trong backend.
+- Các cột chính: `name VARCHAR(255)`, `description TEXT`, `order_index INT`, `pass_email_template_id BIGINT`, `fail_email_template_id BIGINT`, `test_link TEXT`, `is_final_round BOOLEAN`, `is_deleted BOOLEAN`.
+- Dùng `TIMESTAMP` cho `created_at` và `updated_at`.
+- US-16 hiện không có cột `type`, `is_required` hoặc bảng `round_statuses` trong schema triển khai.
 
 ## Khóa và ràng buộc
 - Primary Key: id.
-- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, 
-ound_id, user_id.
-- Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
-- Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
+- Foreign Key: `company_id` trỏ `companies.id`, `job_id` trỏ `jobs.id`.
+- `company_id` trong round phải trùng company của Job; service kiểm tra ownership trước mọi thao tác.
+- Round đã xóa mềm không được xuất hiện trong danh sách hoặc được nhận trong request reorder.
 
 ## Migration
 - Tạo migration idempotent theo thứ tự triển khai.
@@ -107,4 +117,5 @@ ound_id, user_id.
 
 ## Relationship
 - Dữ liệu phải giữ đúng multi-tenant boundary theo company_id.
-- Xóa mềm không được làm mất audit/history cần phục vụ báo cáo hoặc truy vết.
+- Xóa mềm không được làm mất dữ liệu round cần phục vụ truy vết; round có ứng viên đang ở đó không được xóa.
+- `jobs.round_count` được đồng bộ sau thao tác tạo/xóa và khi lưu pipeline tổng hợp.

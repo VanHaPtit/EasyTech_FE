@@ -14,17 +14,22 @@ Xác định phạm vi backend cho task 'API sua vong' trong US-16 Cau Hinh Pipe
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
+- User có role `HR` hoặc `HR_ADMIN`.
 - User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
+- Backend re-check user thuộc company hiện tại và user/company đều `ACTIVE`; không tin riêng vào company ID trong token.
+- Job không bị xóa và không ở trạng thái `CLOSED`.
 
 ## HTTP Method
-- `PATCH`
+- `PUT`
 
 ## Endpoint
 - `/api/v1/jobs/{jobId}/rounds/{roundId}`
 
 ## Request
-- Field round được phép sửa.
+- `name` bắt buộc, tối đa 255 ký tự.
+- Có thể cập nhật `description`, `passEmailTemplateId`, `failEmailTemplateId`, `testLink` và `isFinalRound`.
+- Không cập nhật `orderIndex` ở endpoint này; dùng endpoint reorder riêng.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -48,21 +53,23 @@ Xác định phạm vi backend cho task 'API sua vong' trong US-16 Cau Hinh Pipe
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
 
+Thành công ghi audit log `UPDATE_HIRING_ROUND`; round đang được application sử dụng vẫn được phép sửa các metadata của round.
+
 
 ## 3. API JSON Contract
 
-**Endpoint:** `PATCH /api/v1/jobs/{jobId}/rounds/{roundId}`
+**Endpoint:** `PUT /api/v1/jobs/{jobId}/rounds/{roundId}`
 **Mô tả:** Cập nhật thông tin vòng tuyển dụng thuộc job hiện tại.
 
 ### Request Body
 ```json
 {
   "name": "Technical Interview",
-  "order": 2,
-  "type": "INTERVIEW",
+  "description": "Đánh giá chuyên môn",
   "passEmailTemplateId": 301,
   "failEmailTemplateId": 302,
-  "isRequired": true
+  "testLink": null,
+  "isFinalRound": false
 }
 ```
 
@@ -74,9 +81,13 @@ Xác định phạm vi backend cho task 'API sua vong' trong US-16 Cau Hinh Pipe
   "data": {
     "id": 202,
     "name": "Technical Interview",
-    "order": 2,
-    "type": "INTERVIEW",
-    "isRequired": true,
+    "description": "Đánh giá chuyên môn",
+    "orderIndex": 1,
+    "passEmailTemplateId": 301,
+    "failEmailTemplateId": 302,
+    "testLink": null,
+    "isFinalRound": false,
+    "createdAt": "2026-08-31T10:00:00",
     "updatedAt": "2026-08-31T10:30:00"
   }
 }

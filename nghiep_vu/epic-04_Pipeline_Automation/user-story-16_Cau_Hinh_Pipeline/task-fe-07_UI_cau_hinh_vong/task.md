@@ -22,6 +22,8 @@ Xác định phạm vi frontend cho task 'UI cau hinh vong' trong US-16 Cau Hinh
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
+- Khi xóa một round đã lưu, UI phải xác nhận trước; nếu round đang có ứng viên, giữ nguyên dữ liệu và hiển thị thông báo backend trả về.
+- Form tạo/sửa phải cho phép chọn `isFinalRound`; khi tải danh sách thất bại phải có CTA `Thử lại`.
 
 ## Validation
 - Validate trường bắt buộc ngay trên FE để cải thiện UX.
@@ -37,4 +39,4 @@ Xác định phạm vi frontend cho task 'UI cau hinh vong' trong US-16 Cau Hinh
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/jobs/{jobId}/rounds`, `PATCH /api/v1/jobs/{jobId}/rounds/reorder`, `POST /api/v1/applications/{applicationId}/rounds/{roundId}/evaluate`, `POST /api/v1/applications/{applicationId}/interviews`.
+- `GET /api/v1/jobs/{jobId}/rounds`, `POST /api/v1/jobs/{jobId}/rounds`, `PUT /api/v1/jobs/{jobId}/rounds/{roundId}`, `DELETE /api/v1/jobs/{jobId}/rounds/{roundId}`, `PUT /api/v1/jobs/{jobId}/rounds/reorder`.

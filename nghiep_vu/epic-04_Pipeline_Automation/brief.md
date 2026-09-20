@@ -2,8 +2,8 @@
 
 ## 1. Tóm tắt
 - **Nghiệp vụ:** Thiết lập pipeline tuyển dụng, tự động hóa email và lịch phỏng vấn cho ứng viên.
-- **Điều kiện tiên quyết:** Job đã `ACTIVE` hoặc `DRAFT` với default pipeline đã được gán.
-- **Luồng chính:** HR publish Job → default pipeline sẵn sàng → ứng viên đi qua các stage → email automation chỉ gửi thư mời/cập nhật sau khi HR xác nhận side effect.
+- **Điều kiện tiên quyết:** Job thuộc company hiện tại và đang ở `INACTIVE` hoặc `ACTIVE`; pipeline có thể rỗng nếu vị trí không cần phỏng vấn.
+- **Luồng chính:** HR tạo/publish Job → tùy chỉnh pipeline nếu cần → ứng viên đi qua các stage → email automation chỉ gửi thư mời/cập nhật sau khi HR xác nhận side effect.
 
 ## 2. Giá trị nghiệp vụ và chỉ số
 - **Giá trị nghiệp vụ:** Giảm thao tác thủ công, đảm bảo candidate nhận email đúng thời điểm và HR không phải gửi email tay từng vòng.
@@ -14,7 +14,7 @@
 ## 3. Quy trình nghiệp vụ
 ```mermaid
 graph TD
-  A[HR publish job] --> B[Hệ thống gán pipeline mặc định]
+  A[HR publish job] --> B[Pipeline rỗng hoặc do HR cấu hình]
   B --> C[Candidate nộp hồ sơ ứng tuyển]
   C --> D[HR chuyển Candidate sang stage]
   D --> E{Kích hoạt email automation?}
@@ -26,7 +26,7 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-16 | Config pipeline | Must Have | To-do |
+| US-16 | Config pipeline | Must Have | Contract regression verified 2026-09-18; US-29 template dependency/E2E pending |
 | US-17 | Email automation | Must Have | To-do |
 | US-18 | Đặt lịch phỏng vấn | Must Have | To-do |
 | US-19 | Evaluation form | Must Have | To-do |
@@ -34,7 +34,7 @@ graph TD
 | US-21 | Notifications | Should Have | To-do |
 
 ## 5. Business Rules
-- Pipeline default phải sẵn sàng khi Job mới tạo; không yêu cầu HR tự tạo từ đầu.
+- Job mới bắt đầu ở `INACTIVE` với `round_count = 0`; pipeline rỗng là hợp lệ và hệ thống không tự tạo round mặc định.
 - Nếu HR xóa một round đang có ứng viên, phải hiện cảnh báo rõ ràng và có CTA xem ứng viên hoặc chuyển họ đi.
 - Email automation với trigger "chuyển vòng" và "FAILED" luôn hiển thị Confirmation Modal trước khi gửi.
 - Email auto-reply khi Candidate nộp CV (trigger = apply) KHÔNG cần confirmation — gửi tự động.

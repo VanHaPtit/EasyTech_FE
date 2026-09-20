@@ -14,8 +14,10 @@ Xác định phạm vi backend cho task 'API danh sach vong' trong US-16 Cau Hin
 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
+- User có role `HR` hoặc `HR_ADMIN`.
 - User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
+- Backend re-check user thuộc company hiện tại và user/company đều `ACTIVE`; không tin riêng vào company ID trong token.
 
 ## HTTP Method
 - `GET`
@@ -32,14 +34,14 @@ Xác định phạm vi backend cho task 'API danh sach vong' trong US-16 Cau Hin
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
 ## Response
-- Thành công: BaseResponse(status = 1, message, data); Danh sách hiring rounds của job.
+- Thành công: HTTP `200`, `BaseResponse(status = 1, message, data)`; `data` là mảng round đang hiệu lực, sắp xếp theo `orderIndex` tăng dần.
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
 - Không có state transition trực tiếp.
 
 ## Side Effects
-- Ghi audit log nếu task tạo/cập nhật/xóa dữ liệu nghiệp vụ.
+- Không có side effect; chỉ đọc các round thuộc Job và company hiện tại.
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
@@ -47,6 +49,8 @@ Xác định phạm vi backend cho task 'API danh sach vong' trong US-16 Cau Hin
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+
+Đọc danh sách không ghi audit log và vẫn cho phép đọc Job `CLOSED`; Job khác tenant hoặc đã soft delete trả `404`.
 
 
 ## 3. API JSON Contract
@@ -62,18 +66,21 @@ Không có request body.
 {
   "status": 1,
   "message": "Lấy danh sách vòng tuyển dụng thành công",
-  "data": {
-    "items": [
-      {
-        "id": 201,
-        "name": "CV Screening",
-        "order": 1,
-        "type": "CV_SCREENING",
-        "isRequired": true,
-        "createdAt": "2026-08-31T10:00:00"
-      }
-    ],
-    "total": 1
-  }
+  "data": [
+    {
+      "id": 201,
+      "name": "CV Screening",
+      "description": "Sàng lọc hồ sơ",
+      "orderIndex": 0,
+      "passEmailTemplateId": 301,
+      "failEmailTemplateId": 302,
+      "testLink": null,
+      "isFinalRound": false,
+      "createdAt": "2026-08-31T10:00:00",
+      "updatedAt": "2026-08-31T10:00:00"
+    }
+  ]
 }
 ```
+
+`id`, `orderIndex`, `passEmailTemplateId` và `failEmailTemplateId` là số JSON tương ứng với kiểu `Long`/`BIGINT`. Round có `is_deleted = true` không xuất hiện trong response. Job `CLOSED` vẫn được phép đọc danh sách round nhưng không được mutation.
