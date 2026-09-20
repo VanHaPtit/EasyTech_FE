@@ -27,6 +27,7 @@ Xác định phạm vi frontend cho task 'UI form nop cv' trong US-26 Nop CV, l�
 - Validate trường bắt buộc ngay trên FE để cải thiện UX.
 - Không coi FE validation là source-of-truth; BE vẫn phải validate lại.
 - Hiển thị lỗi gần trường nhập liệu và không xóa dữ liệu user đã nhập khi validation không đạt.
+- Với CV, UI kiểm tra dung lượng tối đa 5 MB và đọc chữ ký nội dung `%PDF-` ở vùng đầu file. Không dùng tên file hoặc `File.type` làm điều kiện chặn duy nhất vì một số trình duyệt mobile có thể gửi tên không có phần mở rộng, MIME rỗng hoặc `application/octet-stream`; backend vẫn xác thực lại.
 
 ## Phản hồi thành công
 - Hiển thị toast hoặc trạng thái xác nhận sau khi hành động thành công.

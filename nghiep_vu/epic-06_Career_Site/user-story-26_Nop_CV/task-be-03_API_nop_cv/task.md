@@ -30,6 +30,7 @@ Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm r�
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
 - Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
+- Với `cvFile`, backend kiểm tra dung lượng không vượt quá 5 MB và chữ ký nội dung `%PDF-` trong vùng đầu file. Tên file và MIME type của multipart part do trình duyệt gửi chỉ là thông tin tham khảo; chúng có thể rỗng, không có phần mở rộng hoặc là `application/octet-stream` trên mobile browser mà không được làm cho một PDF hợp lệ bị từ chối.
 
 ## Response
 - Thành công: BaseResponse(status = 1, message, data); Application confirmation và tracking token/magic link.
