@@ -17,6 +17,12 @@ Xác định phạm vi backend cho task 'API danh sach ung vien' trong US-23 Lis
 ## Endpoint đề xuất
 - GET /api/v1/applications
 
+### Query parameters
+- `jobId` (Long, optional): chỉ lấy hồ sơ thuộc một Job của company hiện tại.
+- `status` (optional): chỉ nhận `ACTIVE`, `REJECTED` hoặc `HIRED`; bỏ trống để lấy tất cả.
+- `keyword` (string, optional): tìm theo tên, email, số điện thoại ứng viên hoặc tiêu đề Job.
+- `page` (number, optional, mặc định 1) và `limit` (number, optional, mặc định 10): dùng bộ tham số pagination chuẩn của backend.
+
 ## API JSON Contract
 
 ### Response (200 OK)
@@ -28,14 +34,12 @@ Xác định phạm vi backend cho task 'API danh sach ung vien' trong US-23 Lis
     "content": [
       {
         "applicationId": 2001,
-        "candidateName": "Tran Van B",
-        "email": "tranvanb@example.com",
-        "phone": "0987654321",
+        "candidateId": 3001,
+        "fullName": "Tran Van B",
         "jobTitle": "Java Backend Developer",
-        "applicationStatus": "ACTIVE",
-        "currentStage": "Technical Interview",
-        "source": "CAREER_SITE",
-        "appliedAt": "2026-08-31T09:00:00"
+        "phone": "0987654321",
+        "email": "tranvanb@example.com",
+        "applicationStatus": "ACTIVE"
       }
     ],
     "current_page": 1,
