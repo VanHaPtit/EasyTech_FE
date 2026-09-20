@@ -35,10 +35,18 @@ Xác định phạm vi backend cho task 'API xac thuc magic link' trong US-27 Ma
   "data": {
     "applicationId": 2001,
     "candidateName": "Tran Van B",
-    "expiresAt": "2026-09-30T10:00:00"
+    "jobTitle": "Java Backend Developer",
+    "companyName": "Tech A",
+    "applicationStatus": "ACTIVE",
+    "currentStage": "Technical Interview",
+    "lastUpdatedAt": "2026-08-31T10:00:00",
+    "expiresAt": "2026-09-30T10:00:00",
+    "interviews": []
   }
 }
 ```
+
+`email` phải khớp với email của hồ sơ. API không cấp JWT, session hoặc quyền truy cập Admin/HR. Token hết hạn sau 30 ngày; dữ liệu hồ sơ không được trả về khi token không tồn tại, hết hạn hoặc email không khớp.
 
 ### Response lỗi
 ```json

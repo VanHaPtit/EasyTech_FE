@@ -30,6 +30,7 @@ Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm r�
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
 - Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
+- Với `cvFile`, backend kiểm tra dung lượng không vượt quá 5 MB và chữ ký nội dung `%PDF-` trong vùng đầu file. Tên file và MIME type của multipart part do trình duyệt gửi chỉ là thông tin tham khảo; chúng có thể rỗng, không có phần mở rộng hoặc là `application/octet-stream` trên mobile browser mà không được làm cho một PDF hợp lệ bị từ chối.
 
 ## Response
 - Thành công: BaseResponse(status = 1, message, data); Application confirmation và tracking token/magic link.
@@ -43,6 +44,7 @@ Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm r�
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
+- 415: `Content-Type` không được hỗ trợ; endpoint này yêu cầu request `multipart/form-data`.
 - 401: chưa đăng nhập hoặc token không hợp lệ.
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
@@ -58,7 +60,7 @@ Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm r�
 - `phone`: "0901234567"
 - `coverLetter`: "Tôi quan tâm đến vị trí này."
 - `cvFile`: [File PDF]
-- `answers`: "[{\"questionId\":1,\"answer\":\"React 4 năm\"}]"
+- `answers`: "[{\"questionId\":1,\"answer\":\"React 4 năm\"}]"; `questionId` là `form_fields.id` kiểu `BIGINT`/Java `Long`
 - `consentAccepted`: true
 
 ### Response (201 Created)
@@ -80,12 +82,12 @@ Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm r�
 ## Thiết kế Database – Bảng candidates và applications
 
 ## Bảng/entity liên quan
-- Bảng chính: `career_sites`, `jobs`, `candidates`, `applications`, `interview_responses`.
+- Bảng chính: `career_sites`, `jobs`, `candidates`, `applications`, `application_answers`.
 - Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
 - Các bảng thuộc tenant phải có company_id và index theo company_id.
 
 ## Column và kiểu dữ liệu
-- Dùng UUID cho khóa chính/khóa ngoại.
+- Repository hiện dùng PostgreSQL `BIGSERIAL`/`BIGINT` và Java `Long` cho khóa chính/khóa ngoại; API trả ID dạng number. Không dùng UUID cho các entity hiện có.
 - Dùng VARCHAR cho mã, email, slug, enum dạng text.
 - Dùng TEXT cho nội dung dài như mô tả, lý do từ chối, email body hoặc AI explanation.
 - Dùng TIMESTAMP cho thời điểm tạo/cập nhật/gửi email/đánh giá.
@@ -97,6 +99,7 @@ Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm r�
 ound_id, user_id.
 - Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
 - Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
+- `applications` không dùng unique tuyệt đối `(job_id, candidate_id)`: migration US-26 thay bằng partial unique index `(job_id, candidate_id) WHERE status = 'ACTIVE'`, để giữ lịch sử `REJECTED` và cho phép ứng viên nộp lại.
 
 ## Migration
 - Tạo migration idempotent theo thứ tự triển khai.
@@ -105,6 +108,21 @@ ound_id, user_id.
 ## Relationship
 - Dữ liệu phải giữ đúng multi-tenant boundary theo company_id.
 - Xóa mềm không được làm mất audit/history cần phục vụ báo cáo hoặc truy vết.
+
+## Đồng bộ với implementation hiện tại
+
+- Job phải có `status = ACTIVE`, chưa bị xóa mềm, Company = `ACTIVE` và Career Site có `is_published = true` thì mới nhận hồ sơ public.
+- `application_answers` lưu câu trả lời text/URL/SELECT theo `application_id` và `form_field_id`; các field bắt buộc được backend kiểm tra trước khi lưu Application.
+- `cv_url` hiện lưu private storage key (`private://...`) do adapter local `private-uploads` cung cấp; vùng này không được expose qua `/uploads`. Product decision vẫn là AWS S3 cho môi trường triển khai, cần adapter S3 riêng trước khi production.
+- Email xác nhận cho Candidate và thông báo HR được gọi qua `EmailService`; cấu hình SMTP thực tế quyết định việc gửi thành công.
+- Trong Docker local, `APP_UPLOAD_DIR=/app/uploads` được mount vào volume private `uploads_data`; SMTP local dùng Mailpit (`MAIL_HOST=mailpit`, `MAIL_PORT=1025`, tắt auth/STARTTLS). Có thể thay bằng SMTP thật qua `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_SMTP_AUTH`, `MAIL_STARTTLS_ENABLE` và `MAIL_FROM`.
+
+### Verification đã thực hiện
+
+- Flyway validate thành công và áp dụng V15 (`application_answers`, partial unique index cho application ACTIVE) cùng V16 (kiểm tra orphan `jobs.category_id`) trên PostgreSQL 16.
+- E2E `POST /api/v1/public/jobs/{jobId}/applications` trả `201`, lưu Application `ACTIVE`, lưu đủ câu trả lời động, ghi private storage key và nhận đủ email candidate + HR trong Mailpit.
+- Submit lại cùng email vào cùng Job trả `409`; backend chặn trước khi lưu file mới.
+- V11 được giữ checksum bất biến sau khi đã apply; validation category được chuyển sang migration V16 để không dùng `flyway repair` trên database đã có lịch sử.
 
 ---
 

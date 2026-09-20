@@ -16,6 +16,8 @@ Xác định phạm vi backend cho task 'API trang thai nop don' trong US-27 Mag
 ## Endpoint đề xuất
 - GET /api/v1/candidates/application-status
 
+Query bắt buộc: `token` và `email`. Ví dụ: `/api/v1/candidates/application-status?token=magic_link_token&email=candidate%40example.com`.
+
 ## API JSON Contract
 
 ### Response (200 OK)
@@ -29,10 +31,15 @@ Xác định phạm vi backend cho task 'API trang thai nop don' trong US-27 Mag
     "jobTitle": "Java Backend Developer",
     "applicationStatus": "ACTIVE",
     "currentStage": "Technical Interview",
-    "lastUpdatedAt": "2026-08-31T10:00:00"
+    "companyName": "Tech A",
+    "lastUpdatedAt": "2026-08-31T10:00:00",
+    "expiresAt": "2026-09-30T10:00:00",
+    "interviews": []
   }
 }
 ```
+
+`interviews` chỉ chứa thông tin lịch phỏng vấn cần hiển thị cho ứng viên, không bao gồm ghi chú nội bộ hoặc dữ liệu CV. Request không dùng Header Authorization; backend xác thực bằng cặp `token + email`.
 
 ### Response lỗi
 ```json

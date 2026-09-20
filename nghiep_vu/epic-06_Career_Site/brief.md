@@ -27,9 +27,9 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-25 | Xem Career Site | Must Have | Implemented locally; authenticated/public E2E pending |
-| US-26 | Nộp CV | Must Have | To-do |
-| US-27 | Magic Link tracking | Must Have | To-do |
+| US-25 | Xem Career Site | Must Have | Public API/UI contract and regression tests implemented locally; Docker/browser E2E pending due local Docker engine permission |
+| US-26 | Nộp CV | Must Have | Implemented locally; PostgreSQL migration and Mailpit SMTP/storage E2E verified 2026-09-18; production S3 adapter pending |
+| US-27 | Magic Link tracking | Must Have | Backend/UI contract implemented locally; PostgreSQL migration, recovery email and browser/API E2E verification pending 2026-09-19 |
 | US-28 | Interview Response | Must Have | To-do |
 
 > US-07 là Admin Job Categories trong EP-02.
@@ -51,22 +51,14 @@ graph TD
 ### 7.1. API Ứng viên nộp hồ sơ (Apply Job)
 - **Endpoint:** `POST /api/v1/public/jobs/{jobId}/applications`
 - **Content-Type:** `multipart/form-data`
-- **Payload:**
-```json
-{
-  "full_name": "Tran Van B",
-  "email": "tranvanb@gmail.com",
-  "phone": "0987654321",
-  "cover_letter": "Tôi rất mong muốn tham gia công ty...",
-  "file_cv": "(File Binary Object)"
-}
-```
+- **Payload (`multipart/form-data`):** `fullName`, `email`, `phone`, `coverLetter`, `cvFile`, `answers` (JSON array với `questionId` kiểu number) và `consentAccepted`.
 - **Response (201 Created):**
 ```json
 {
-  "application_id": "app-uuid-1234",
-  "status": "ACTIVE",
-  "message": "Nộp hồ sơ thành công. Vui lòng kiểm tra email để nhận Magic Link."
+  "id": 301,
+  "applicationStatus": "ACTIVE",
+  "trackingToken": "magic_link_token",
+  "submittedAt": "2026-08-31T10:00:00"
 }
 ```
 
