@@ -371,16 +371,18 @@ Lưu đơn ứng tuyển của Candidate vào Job.
 | `candidate_id` | BIGINT | FK, NOT NULL | Ứng viên. |
 | `current_round_id` | BIGINT | FK -> hiring_rounds.id, nullable | Vòng hiện tại đang ở (hiring_rounds). |
 | `current_step` | INT | default 0 | Index vòng hiện tại (0-based). |
-| `cv_url` | TEXT | NOT NULL | Đường dẫn file CV (S3/local). |
+| `cv_url` | TEXT | nullable trong schema hiện tại | Private storage key của file CV (service US-26 bắt buộc file hợp lệ trước khi tạo Application; không expose public URL). |
 | `cover_letter` | TEXT | nullable | Thư giới thiệu/ghi chú. |
 | `status` | VARCHAR(50) | NOT NULL | `ACTIVE`, `REJECTED`, `HIRED`. |
 | `source` | VARCHAR(100) | default `CAREER_SITE` | Nguồn ứng tuyển: `CAREER_SITE`, `MANUAL`, `REFERRAL`. |
 | `secure_token` | VARCHAR(255) | UNIQUE, nullable | Token bảo mật để ứng viên tra cứu hồ sơ (Magic Link). |
+| `consent_accepted` | BOOLEAN | NOT NULL, default true cho dữ liệu legacy | Candidate đã đồng ý xử lý dữ liệu cá nhân; Application mới chỉ được tạo khi request gửi `true`. |
+| `consent_accepted_at` | TIMESTAMP | nullable | Thời điểm ghi nhận consent. |
 | `applied_at` | TIMESTAMP | NOT NULL | Thời điểm ứng tuyển. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
-Unique: `(job_id, candidate_id)`
+Unique active application: partial unique index `(job_id, candidate_id) WHERE status = 'ACTIVE'`. Application `REJECTED` được giữ làm lịch sử và không ngăn Candidate nộp lại.
 
 Index: `idx_applications_company_id`, `idx_applications_job_id`, `idx_applications_status`, `idx_applications_current_round_id`
 
@@ -389,7 +391,7 @@ Index: `idx_applications_company_id`, `idx_applications_job_id`, `idx_applicatio
 
 ---
 
-### 3.13 `application_answers` *(Mới)*
+### 3.13 `application_answers` *(V15 — US-26)*
 
 Lưu câu trả lời của ứng viên cho các trường động trong form ứng tuyển.
 
@@ -402,6 +404,8 @@ Lưu câu trả lời của ứng viên cho các trường động trong form �
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 
 Unique: `(application_id, form_field_id)`
+
+Implementation hiện tại dùng `BIGSERIAL`/`BIGINT` và Java `Long`, không dùng UUID. `answer_value` nhận text/URL/SELECT từ multipart field `answers`; file upload cho custom field `FILE` chưa thuộc contract US-26 hiện tại.
 
 ### 3.14 `application_progress`
 
@@ -566,6 +570,9 @@ Lưu thao tác quan trọng.
 | `target_type` | VARCHAR(100) | NOT NULL | Loại đối tượng bị tác động. |
 | `target_id` | BIGINT | nullable | ID đối tượng. |
 | `metadata` | JSON/TEXT | nullable | Dữ liệu bổ sung. |
+| `ip_address` | VARCHAR(100) | nullable | Địa chỉ IP của request tại thời điểm ghi log. |
+| `user_agent` | TEXT | nullable | User-Agent của request. |
+| `request_id` | VARCHAR(100) | nullable | Mã trace/request nếu client hoặc gateway cung cấp. |
 | `created_at` | TIMESTAMP | NOT NULL | Thời điểm ghi log. |
 
 ---
