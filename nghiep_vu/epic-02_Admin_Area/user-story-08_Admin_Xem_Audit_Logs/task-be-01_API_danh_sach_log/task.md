@@ -21,13 +21,13 @@ Xác định phạm vi backend cho task 'API danh sach log' trong US-08 Admin Xe
 
 ## Request
 - Query parameters (Tùy chọn):
-  - `page`, `size` (mặc định 50).
+  - `page`, `limit` (mặc định `page = 1`, `limit = 50`, tối đa 100). Backend dùng thống nhất bộ query parameter này với các API phân trang hiện tại.
   - `startDate`, `endDate` (lọc theo khoảng thời gian).
   - `action` (lọc theo loại hành động, ví dụ: LOGIN, CREATE_JOB...).
   - `email` (lọc theo email người thực hiện).
 
 ## Response
-- Thành công: `BaseResponse(status = 1, message, data)` chứa pageable của audit logs, bao gồm `id`, `action`, `createdAt`, thông tin `actor` (id, email, fullName), `targetType`, `targetId`, `ipAddress`. Không trả về toàn bộ payload metadata to để tối ưu.
+- Thành công: `BaseResponse(status = 1, message, data)` chứa `current_page`, `last_page`, `total`, `data` theo `BasePagination`; mỗi log gồm `id` kiểu `Long`, `action`, `createdAt`, thông tin `actor` (id, email, fullName, role), `companyId/companyName`, `targetType`, `targetId`, `ipAddress`. Không trả về toàn bộ metadata ở danh sách để tối ưu.
 
 ## API JSON Contract
 ```json
@@ -35,23 +35,27 @@ Xác định phạm vi backend cho task 'API danh sach log' trong US-08 Admin Xe
   "status": 1,
   "message": "Lấy danh sách audit logs thành công.",
   "data": {
-    "content": [
+    "data": [
       {
-        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "id": 123,
         "action": "CREATE_JOB",
         "actor": {
           "id": 10,
           "email": "hr@techa.com",
-          "fullName": "Nguyen Van A"
+          "fullName": "Nguyen Van A",
+          "role": "HR"
         },
+        "companyId": 1,
+        "companyName": "TechA Solutions",
         "targetType": "JOB",
-        "targetId": "987",
+        "targetId": 987,
         "ipAddress": "192.168.1.1",
         "createdAt": "2026-08-31T10:05:00"
       }
     ],
-    "totalElements": 1500,
-    "totalPages": 30
+    "current_page": 1,
+    "last_page": 30,
+    "total": 1500
   }
 }
 ```

@@ -22,6 +22,8 @@ Xác định phạm vi frontend cho task 'UI nut xu ly cong ty' trong US-06 Admi
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
+- Phê duyệt phải mở hộp thoại xác nhận trước khi gọi API vì thao tác chuyển Company sang `ACTIVE`, kích hoạt HR đang chờ và tạo Career Site mặc định.
+- Từ chối phải mở form lý do; nút submit chỉ bật khi lý do sau khi trim dài từ 10 đến 1000 ký tự. Backend vẫn kiểm tra lại điều kiện này.
 
 ## Validation
 - Validate trường bắt buộc ngay trên FE để cải thiện UX.

@@ -32,7 +32,7 @@ Xác định phạm vi backend cho task 'API chi tiet cong ty' trong US-06 Admin
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
 ## Response
-- Thành công: BaseResponse(status = 1, message, data); Chi tiết company, profile, user đăng ký và duplicate warnings nếu có.
+- Thành công: BaseResponse(status = 1, message, data); Chi tiết company, profile, tài khoản HR đăng ký (`registrant`) và duplicate warnings nếu có. `registrant` chỉ chứa thông tin hiển thị, không bao giờ chứa password/token.
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
@@ -70,6 +70,16 @@ Không có request body.
     "email": "hr@techa.vn",
     "taxCode": "0123456789",
     "status": "PENDING",
+    "registrant": {
+      "id": 21,
+      "email": "hr@techa.vn",
+      "fullName": "Nguyễn Văn A",
+      "role": "HR_ADMIN",
+      "status": "PENDING",
+      "companyId": 1,
+      "companyStatus": "PENDING",
+      "createdAt": "2026-08-31T10:00:00"
+    },
     "createdAt": "2026-08-31T10:00:00",
     "duplicateWarnings": []
   }

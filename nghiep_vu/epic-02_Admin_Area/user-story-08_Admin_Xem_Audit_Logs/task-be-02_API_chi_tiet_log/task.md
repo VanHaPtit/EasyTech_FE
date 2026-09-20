@@ -19,10 +19,10 @@ Xác định phạm vi backend cho task 'API chi tiet log' trong US-08 Admin Xem
 - `/api/v1/admin/audit-logs/{id}`
 
 ## Request
-- Path variable: `id` (UUID hoặc ID của log).
+- Path variable: `id` kiểu `Long`/`BIGINT`, theo khóa chính `audit_logs.id`.
 
 ## Response
-- Thành công: `BaseResponse(status = 1, message, data)` chứa chi tiết log, bao gồm trường `metadata` chứa JSON thông tin thay đổi (before/after), User Agent, và các thông tin sâu hơn.
+- Thành công: `BaseResponse(status = 1, message, data)` chứa chi tiết log, gồm `ipAddress`, `userAgent`, `requestId` và `metadata` dạng `TEXT` theo schema hiện tại. Các producer mới có thể ghi JSON `before`/`after`; API không tự suy diễn các trường này cho log cũ chỉ có mô tả text.
 - Thất bại: Lỗi 404 nếu không tìm thấy log.
 
 ## API JSON Contract
@@ -31,7 +31,7 @@ Xác định phạm vi backend cho task 'API chi tiet log' trong US-08 Admin Xem
   "status": 1,
   "message": "Lấy chi tiết audit log thành công.",
   "data": {
-    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "id": 123,
     "action": "UPDATE_COMPANY_STATUS",
     "actor": {
       "id": 1,
@@ -39,17 +39,13 @@ Xác định phạm vi backend cho task 'API chi tiet log' trong US-08 Admin Xem
       "fullName": "System Admin"
     },
     "targetType": "COMPANY",
-    "targetId": "45",
+    "companyId": 1,
+    "companyName": "TechA Solutions",
+    "targetId": 45,
     "ipAddress": "192.168.1.1",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",
-    "metadata": {
-      "before": {
-        "status": "PENDING"
-      },
-      "after": {
-        "status": "ACTIVE"
-      }
-    },
+    "requestId": "req-123",
+    "metadata": "Phê duyệt doanh nghiệp",
     "createdAt": "2026-08-31T10:05:00"
   }
 }

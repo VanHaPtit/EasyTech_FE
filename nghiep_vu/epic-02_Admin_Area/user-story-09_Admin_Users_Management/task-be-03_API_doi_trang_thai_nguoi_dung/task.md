@@ -13,7 +13,7 @@ Xác định phạm vi backend cho task 'API doi trang thai nguoi dung' trong US
 - User phải có quyền System Admin (`role = ADMIN`).
 
 ## HTTP Method
-- `PUT`
+- `PATCH`
 
 ## Endpoint
 - `/api/v1/admin/users/{id}/status`
@@ -22,10 +22,14 @@ Xác định phạm vi backend cho task 'API doi trang thai nguoi dung' trong US
 - Path variable: `id`.
 - Body: `status` (ACTIVE hoặc INACTIVE), `reason` (Lý do thay đổi - bắt buộc nếu INACTIVE).
 
+> `BLOCKED` không thuộc contract thao tác của US-09; trạng thái này vẫn được giữ trong database/enum cho các luồng hiện hữu.
+
 ## Validation
 - Kiểm tra tài khoản tồn tại.
-- Nếu đổi sang `INACTIVE`, hệ thống **BẮT BUỘC** phải thu hồi (revoke) toàn bộ Refresh Tokens và Access Tokens đang hoạt động của tài khoản này để buộc đăng xuất ngay lập tức.
+- Nếu đổi sang `INACTIVE`, hệ thống **BẮT BUỘC** phải tăng `users.token_version`. Jwt filter kiểm tra version ở mỗi request và refresh token kiểm tra version khi cấp token mới, qua đó vô hiệu hóa toàn bộ phiên hiện có.
 - Ghi nhận Audit Log kèm theo `reason`.
+- Không cho tự đổi trạng thái tài khoản Admin đang đăng nhập hoặc đổi trạng thái tài khoản có role `ADMIN` từ endpoint này.
+- `id` là `Long`/`BIGINT`; response thành công dùng `data: null`.
 
 ## Response
 - Thành công: Cập nhật thành công.

@@ -11,7 +11,7 @@ Xác định phạm vi frontend cho task 'UI quan ly tai khoan' trong US-09 Admi
 
 ## Screen/Component
 - Component chính: UI Admin Accounts.
-- Hiển thị trong đúng route/layout của epic hiện tại.
+- Hiển thị trong route `/admin/users` và đúng Admin layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user
@@ -37,4 +37,6 @@ Xác định phạm vi frontend cho task 'UI quan ly tai khoan' trong US-09 Admi
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/admin/users`, `GET /api/v1/admin/users/{userId}`, `PATCH /api/v1/admin/users/{userId}/status`.
+- `GET /api/v1/admin/users?page=1&limit=20&search=&companyId=&role=&status=`, `GET /api/v1/admin/users/{userId}`, `PATCH /api/v1/admin/users/{userId}/status`.
+- Phân trang dùng duy nhất `page` + `limit`; user/company ID truyền dạng số `Long`/`BIGINT`.
+- UI phải có loading, empty, error/retry, detail drawer và confirmation; lý do bắt buộc khi vô hiệu hóa, không hiển thị mật khẩu và không cho thao tác với tài khoản `ADMIN`.

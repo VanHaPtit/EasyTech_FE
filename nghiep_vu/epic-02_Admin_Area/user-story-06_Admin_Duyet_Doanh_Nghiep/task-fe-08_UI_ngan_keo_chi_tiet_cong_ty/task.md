@@ -13,6 +13,7 @@ Xác định phạm vi frontend cho task 'UI ngan keo chi tiet cong ty' trong US
 - Component chính: Business Drawer.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
+- Tab tài khoản đại diện HR hiển thị dữ liệu `registrant` do API trả về (họ tên, email, role, status); không hardcode tài khoản và không hiển thị password/token.
 
 ## Hành động của user
 - Người dùng mở màn hình và thực hiện hành động chính của component.

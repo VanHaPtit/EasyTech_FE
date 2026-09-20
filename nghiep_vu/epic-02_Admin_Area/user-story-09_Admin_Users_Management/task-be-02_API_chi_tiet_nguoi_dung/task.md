@@ -22,7 +22,8 @@ Xác định phạm vi backend cho task 'API chi tiet nguoi dung' trong US-09 Ad
 - Path variable: `id` (ID của user).
 
 ## Response
-- Thành công: `BaseResponse(status = 1, message, data)` chứa thông tin cơ bản, `company` (nếu có), danh sách 10 lần đăng nhập gần nhất, và thống kê Job đã tạo.
+- Thành công: `BaseResponse(status = 1, message, data)` chứa thông tin cơ bản, `company` (nếu có), danh sách tối đa 10 audit session gần nhất và thống kê Job đã tạo còn hiệu lực (`jobs.is_deleted = false`). ID là `Long`/`BIGINT`.
+- Vì schema hiện tại chưa có bảng login history riêng, `recentLogins` được đọc từ `audit_logs` với các action session hiện có; IP/User-Agent có thể null đối với log cũ trước migration bổ sung metadata.
 - Thất bại: Lỗi 404 nếu không tìm thấy user.
 
 ## API JSON Contract

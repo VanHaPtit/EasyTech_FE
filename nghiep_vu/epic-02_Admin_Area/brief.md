@@ -34,10 +34,10 @@ graph TD
 ## 4. Phạm vi và Backlog
 | ID | Tên Story | Ưu tiên | Trạng thái |
 |---|---|---|---|
-| US-06 | Admin duyệt doanh nghiệp | Must Have | To-do |
-| US-07 | Admin quản lý job categories | Should Have | To-do |
-| US-08 | Admin xem audit logs | Should Have | To-do |
-| US-09 | Admin quản lý users | Should Have | To-do |
+| US-06 | Admin duyệt doanh nghiệp | Must Have | Backend/UI contract regression implemented locally; E2E email and browser verification pending 2026-09-18 |
+| US-07 | Admin quản lý job categories | P0 | Implementation locally; migration, delete protection, reorder and public category filter verified 2026-09-18 |
+| US-08 | Admin xem audit logs | Should Have | API/UI implemented locally; E2E and structured before/after producers pending 2026-09-18 |
+| US-09 | Admin quản lý users | Should Have | API/UI và audit/token invalidation implemented locally; E2E login lockout and browser verification pending 2026-09-18 |
 
 ## 5. Business Rules
 
@@ -55,11 +55,12 @@ graph TD
 - HR có thể authentication thành công khi credentials hợp lệ, nhưng quyền vào workspace phụ thuộc Company Status và User Status.
 
 ### Admin Individual User Management (US-09)
-- Admin có thể INACTIVE hoặc BLOCK một User cụ thể trong một Company mà **không ảnh hưởng đến Company Status**.
-- Kịch bản: HR vi phạm policy cá nhân trong khi Company vẫn hợp lệ → Admin block User đó.
-- Khi User bị BLOCKED / INACTIVE: User không thể login vào HR Workspace (Login bị từ chối với thông báo "Tài khoản đã bị vô hiệu hóa / khóa").
+- US-09 dùng `ACTIVE` và `INACTIVE` cho thao tác quản lý trạng thái tài khoản cá nhân; `BLOCKED` vẫn là trạng thái có trong enum/luồng cũ nhưng không được endpoint US-09 tự đặt.
+- Admin có thể vô hiệu hóa hoặc kích hoạt lại một User cụ thể trong một Company mà **không ảnh hưởng đến Company Status**.
+- Khi User bị `INACTIVE`: backend tăng `users.token_version`, khiến access token hiện tại bị từ chối ở request kế tiếp và refresh token không còn hợp lệ.
 - Company vẫn ACTIVE → các HR khác trong cùng Company không bị ảnh hưởng.
-- Admin phải ghi lý do khi BLOCK/INACTIVE một User (Audit Log bắt buộc).
+- Admin phải ghi lý do khi chuyển sang `INACTIVE`; thao tác được ghi vào Audit Log.
+- Không cho Admin tự vô hiệu hóa hoặc đổi trạng thái tài khoản `ADMIN` từ màn hình US-09 để tránh khóa toàn bộ đường quản trị.
 
 ## 6. Cải tiến trong tương lai và quyết định sản phẩm
 - Luồng REQUEST_CHANGES là `Cải tiến trong tương lai` nếu Product muốn quy trình chi tiết hơn trạng thái REJECTED.

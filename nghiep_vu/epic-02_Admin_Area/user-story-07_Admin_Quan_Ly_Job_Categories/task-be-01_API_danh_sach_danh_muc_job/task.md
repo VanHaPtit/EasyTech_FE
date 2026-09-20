@@ -92,6 +92,8 @@ ound_id, user_id.
 ## Migration
 - Tạo migration idempotent theo thứ tự triển khai.
 - Có giá trị mặc định rõ ràng: `status = 'ACTIVE'`, `sort_order = 0`, `is_deleted = false`.
+- V11 tạo FK `jobs.category_id -> job_categories.id`; PostgreSQL sẽ kiểm tra toàn bộ dữ liệu hiện có khi thêm FK và fail-fast nếu còn `jobs.category_id` không có category tương ứng, không tự đổi hoặc xóa liên kết.
+- Không sửa checksum của migration đã chạy. Với database đã áp dụng V11, V16 thực hiện kiểm tra orphan tương thích trước khi đánh dấu schema đã đồng bộ; nếu phát hiện dữ liệu mồ côi thì migration fail-fast để yêu cầu xử lý dữ liệu.
 
 ## Relationship
 - `jobs.category_id` là khóa ngoại nullable tới `job_categories.id` với `ON DELETE SET NULL`.

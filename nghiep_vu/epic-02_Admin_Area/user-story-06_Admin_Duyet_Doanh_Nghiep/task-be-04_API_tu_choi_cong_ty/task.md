@@ -24,7 +24,7 @@ Xác định phạm vi backend cho task 'API tu choi cong ty' trong US-06 Admin 
 - `/api/v1/admin/companies/{companyId}/status`
 
 ## Request
-- `status = REJECTED`, `reason` bắt buộc và đủ rõ.
+- `status = REJECTED`, `reason` bắt buộc, sau khi trim dài từ 10 đến 1000 ký tự.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -37,6 +37,7 @@ Xác định phạm vi backend cho task 'API tu choi cong ty' trong US-06 Admin 
 
 ## State Transition
 - Company = REJECTED, User = PENDING.
+- `approvedBy` và `approvedAt` phải để trống khi từ chối; đây là metadata chỉ dành cho lần phê duyệt ACTIVE.
 
 ## Side Effects
 - Gửi email reject kèm lý do và ghi audit log.

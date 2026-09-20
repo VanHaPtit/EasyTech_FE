@@ -21,9 +21,9 @@ graph TD
 
 - **Kịch bản 1: Admin xem danh sách Audit Logs**
   - **VỚI ĐIỀU KIỆN** Admin đang đăng nhập vào Admin Dashboard.
-  - **KHI** Admin truy cập `/admin/audit-logs`.
+  - **KHI** Admin truy cập `/admin/audit-logs` (route tương thích cũ `/admin/logs` chuyển hướng về route này).
   - **THÌ** hệ thống hiển thị bảng nhật ký hoạt động với các cột: Thời gian, Tên người dùng, Email, Công ty, Hành động (action), Đối tượng (entity_type / entity_id), IP Address.
-  - Mặc định hiển thị 50 bản ghi gần nhất, sắp xếp theo thời gian giảm dần.
+  - Mặc định hiển thị 50 bản ghi gần nhất, sắp xếp theo thời gian giảm dần. ID log dùng `BIGINT`/`Long` theo database.
 
 - **Kịch bản 2: Admin lọc Audit Logs theo điều kiện**
   - **VỚI ĐIỀU KIỆN** Admin đang xem trang Audit Logs.

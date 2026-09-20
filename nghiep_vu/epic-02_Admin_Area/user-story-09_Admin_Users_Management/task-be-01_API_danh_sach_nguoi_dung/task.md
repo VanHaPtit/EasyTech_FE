@@ -20,14 +20,15 @@ Xác định phạm vi backend cho task 'API danh sach nguoi dung' trong US-09 A
 
 ## Request
 - Query parameters (Tùy chọn):
-  - `page`, `size` (mặc định 20).
+  - `page`, `limit` (mặc định 20, tối đa 100). Backend dùng `page` bắt đầu từ 1.
   - `search` (tìm theo tên, email).
   - `companyId` (lọc theo công ty).
   - `role` (lọc theo quyền: HR, HR_ADMIN, ADMIN).
-  - `status` (lọc theo trạng thái: ACTIVE, INACTIVE, PENDING).
+  - `status` (lọc theo trạng thái hiện có: ACTIVE, INACTIVE, PENDING, BLOCKED).
 
 ## Response
-- Thành công: `BaseResponse(status = 1, message, data)` chứa pageable của users, bao gồm `id`, `fullName`, `email`, `companyName`, `role`, `status`, `createdAt`, `lastLoginAt`.
+- Thành công: `BaseResponse(status = 1, message, data)` chứa `BasePagination` theo contract chung (`current_page`, `last_page`, `total`, `data`), bao gồm `id`, `fullName`, `email`, `companyId`, `companyName`, `role`, `status`, `createdAt`, `lastLoginAt`.
+- ID của user/company là `Long` tương ứng `BIGINT`; không chuyển sang UUID.
 
 ## API JSON Contract
 ```json

@@ -11,6 +11,7 @@ Xác định phạm vi frontend cho task 'UI xem log he thong' trong US-08 Admin
 
 ## Screen/Component
 - Component chính: UI Audit Logs.
+- Route chính: `/admin/audit-logs`; `/admin/logs` chỉ là route tương thích và chuyển hướng.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
@@ -38,3 +39,4 @@ Xác định phạm vi frontend cho task 'UI xem log he thong' trong US-08 Admin
 
 ## API dependency cụ thể
 - `GET /api/v1/admin/audit-logs`, `GET /api/v1/admin/audit-logs/{id}`.
+- Query phân trang dùng `page` và `limit`; UI hiển thị loading, empty, error/retry, pagination và drawer chi tiết chỉ đọc. Không có action sửa/xóa log.
