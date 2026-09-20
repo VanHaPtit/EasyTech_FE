@@ -22,7 +22,7 @@ Xác định phạm vi backend cho task 'API quan ly truong form' trong US-15 Dy
 - PUT /api/v1/jobs/{jobId}/form-fields/reorder
 - DELETE /api/v1/jobs/{jobId}/form-fields/{fieldId}
 
-`GET`, `POST`, `PUT` và `DELETE` là endpoint nội bộ dành cho HR/HR_ADMIN của company sở hữu Job. `PUT /reorder` nhận toàn bộ danh sách ID field đang còn hiệu lực và lưu lại thứ tự từ `0`.
+`GET`, `POST`, `PUT` và `DELETE` là endpoint nội bộ dành cho HR/HR_ADMIN có tài khoản và company ở trạng thái `ACTIVE`, thuộc company sở hữu Job. `PUT /reorder` nhận toàn bộ danh sách ID field đang còn hiệu lực và lưu lại thứ tự từ `0`.
 
 Job ở `INACTIVE` hoặc `ACTIVE` được chỉnh sửa form. Job `CLOSED` không cho thay đổi form và trả `409`. Mọi query đều kiểm tra `company_id`; mọi thao tác thay đổi ghi audit log theo actor hiện tại.
 

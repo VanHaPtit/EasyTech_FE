@@ -15,6 +15,7 @@ Xác định phạm vi backend cho task 'API xuat ban job' trong US-14 Publish J
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
 - User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
+- Company và User phải đang ở trạng thái `ACTIVE` tại thời điểm gọi API; Company/User bị `PENDING`, `REJECTED`, `INACTIVE` hoặc `BLOCKED` bị từ chối `403`.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
 ## HTTP Method
@@ -79,5 +80,7 @@ Không có request body.
 ### Contract đã triển khai
 - Publish, close và reopen đều trả `BaseResponse` với Job sau chuyển trạng thái.
 - Publish kiểm tra title, description, location, khoảng lương và category chưa soft delete.
+- Khoảng lương khi publish phải có `salaryMin` và `salaryMax`, cả hai không âm, đồng thời `salaryMax >= salaryMin`; rule này vẫn được kiểm tra với dữ liệu Job đã tồn tại.
+- Publish/close/reopen đều re-check workspace `ACTIVE` ở backend, không chỉ dựa vào trạng thái trong access token.
 - Nếu state hiện tại không phù hợp, backend trả `409`; nếu Job không thuộc company hiện tại
   hoặc đã soft delete, backend trả `404`.

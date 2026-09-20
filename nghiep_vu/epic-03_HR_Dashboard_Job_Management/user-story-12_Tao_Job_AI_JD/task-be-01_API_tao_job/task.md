@@ -15,6 +15,7 @@ Xác định phạm vi backend cho task 'API tao job' trong US-12 Tao Job AI JD,
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
 - User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
+- `Company.status = ACTIVE` và `User.status = ACTIVE`; nếu doanh nghiệp hoặc tài khoản đang `PENDING`, `REJECTED`, `INACTIVE` hoặc `BLOCKED` thì endpoint trả `403` và không tạo Job.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
 ## HTTP Method
@@ -30,6 +31,7 @@ Xác định phạm vi backend cho task 'API tao job' trong US-12 Tao Job AI JD,
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
+- `categoryId` bắt buộc là số nguyên dương, tương ứng với Java `Long`/PostgreSQL `BIGINT`.
 - Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
@@ -88,6 +90,8 @@ Xác định phạm vi backend cho task 'API tao job' trong US-12 Tao Job AI JD,
 
 - `POST /api/v1/jobs` đã hỗ trợ tạo Job thủ công với category ACTIVE.
 - `categoryId` là JSON number tương ứng Java `Long`/PostgreSQL `BIGINT`.
+- Chỉ Company và User đang `ACTIVE` mới được tạo Job; backend kiểm tra cả ownership và trạng thái workspace.
+- `categoryId` phải là số nguyên dương; category được chọn phải `ACTIVE` và chưa soft delete.
 - `status` không nhận từ client; backend luôn tạo Job mới ở `INACTIVE`.
 - AI JD Writer là phần phụ thuộc riêng, không dùng mock response trong API tạo Job khi provider chưa được chốt. Cấu hình form ứng tuyển là contract riêng của US-15.
 

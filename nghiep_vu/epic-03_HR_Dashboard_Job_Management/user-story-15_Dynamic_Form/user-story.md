@@ -58,6 +58,6 @@ graph TD
   - `DELETE /api/v1/jobs/{jobId}/form-fields/{fieldId}`
 - Loại field trong phiên bản này là `TEXT`, `TEXTAREA`, `URL`, `FILE`, `SELECT`. `fieldName` có thể bỏ trống ở request tạo và sẽ được backend sinh từ `label`; tên đang hiệu lực phải duy nhất trong Job.
 - `SELECT` bắt buộc có danh sách options không trống và không trùng. Các loại khác không được có options. `displayOrder` được backend kiểm tra lại, không tin thứ tự do frontend gửi riêng lẻ.
-- HR chỉ được thao tác trên Job cùng `company_id`. Job `INACTIVE` và `ACTIVE` được sửa form; Job `CLOSED` trả lỗi `409`. Thay đổi ghi audit log.
+- HR/HR_ADMIN phải có tài khoản `ACTIVE`, thuộc company đang `ACTIVE`, và chỉ được thao tác trên Job cùng `company_id`. Job `INACTIVE` và `ACTIVE` được sửa form; Job `CLOSED` trả lỗi `409`. Thay đổi ghi audit log.
 - Xóa field là soft delete bằng `is_deleted = true`, vì vậy các câu trả lời cũ không bị xóa; field đã xóa không hiển thị cho ứng viên mới.
 - Chi tiết Job public được mở rộng với `applicationForm.fields`. Các field mặc định Họ tên, Email, Số điện thoại và CV, cùng API submit `POST /api/v1/public/jobs/{jobId}/applications`, thuộc flow US-26.

@@ -15,6 +15,7 @@ Xác định phạm vi backend cho task 'API Get Job' trong US-13 Xem Chinh Sua 
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
 - User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
+- Endpoint chỉ dành cho role `HR` hoặc `HR_ADMIN`; dữ liệu phải thuộc đúng `company_id` hiện tại.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
 ## HTTP Method
@@ -34,6 +35,7 @@ Xác định phạm vi backend cho task 'API Get Job' trong US-13 Xem Chinh Sua 
 ## Response
 - Thành công: BaseResponse(status = 1, message, data); Chi tiết job.
 - Response chi tiết trả `categoryId` (number/Long), `categoryName` và `categorySlug` khi Job đang liên kết category; các field này là `null` nếu Job chưa có category.
+- Response chi tiết trả `applicantCount` (number/Long), là tổng số hồ sơ ứng tuyển thuộc Job và company hiện tại.
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
@@ -46,7 +48,7 @@ Xác định phạm vi backend cho task 'API Get Job' trong US-13 Xem Chinh Sua 
 - 400: request không hợp lệ hoặc enum/status sai.
 - 401: chưa đăng nhập hoặc token không hợp lệ.
 - 403: không đủ quyền hoặc workspace bị hạn chế.
-- 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
+- 404: không tìm thấy tài nguyên hoặc Job không thuộc workspace hiện tại; không làm lộ dữ liệu tenant khác.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
 
 
@@ -78,6 +80,8 @@ Không có request body.
     "workingType": "HYBRID",
     "employmentType": "FULL_TIME",
     "experienceLevel": "SENIOR",
+    "roundCount": 4,
+    "applicantCount": 86,
     "status": "INACTIVE",
     "createdAt": "2026-08-31T10:00:00",
     "updatedAt": "2026-08-31T10:00:00"

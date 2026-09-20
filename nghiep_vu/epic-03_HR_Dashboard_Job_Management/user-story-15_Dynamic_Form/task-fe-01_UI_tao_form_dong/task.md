@@ -13,6 +13,7 @@ Xác định phạm vi frontend cho task 'UI tao form dong' trong US-15 Dynamic 
 - Component chính: Form Builder.
 - Hiển thị trong wizard tạo Job và modal chỉnh sửa Job của HR; dùng pattern layout, spacing, control và toast của EasyTech_FE.
 - Form Builder hỗ trợ thêm, sửa, xóa mềm, kéo-thả hoặc nút lên/xuống để sắp xếp field. Field `SELECT` có editor danh sách options.
+- Khi xóa field đã lưu, UI phải yêu cầu xác nhận với nội dung: “Xóa câu hỏi sẽ không ảnh hưởng đến các đơn đã nộp, nhưng câu hỏi sẽ không còn hiển thị cho ứng viên mới.”
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user

@@ -27,10 +27,10 @@ graph TD
 |---|---|---|---|
 | US-10 | Dashboard tổng quan | Must Have | To-do |
 | US-11 | Xem danh sách Job | Must Have | To-do |
-| US-12 | Tạo Job với AI JD | Must Have | To-do |
-| US-13 | Xem & chỉnh sửa Job | Must Have | To-do |
-| US-14 | Publish Job | Must Have | To-do |
-| US-15 | Dynamic Form | Must Have | Done |
+| US-12 | Tạo Job với AI JD | Must Have | Manual create implemented locally; AI provider/E2E pending |
+| US-13 | Xem & chỉnh sửa Job | Must Have | Contract regression verified 2026-09-18; E2E pending |
+| US-14 | Publish Job | Must Have | Contract regression verified 2026-09-18; E2E pending |
+| US-15 | Dynamic Form | Must Have | Contract regression verified 2026-09-18; E2E pending |
 
 ## 5. Business Rules
 - Job mới bắt đầu ở `INACTIVE` với `round_count = 0`; API tạo Job không tự tạo form hoặc pipeline.

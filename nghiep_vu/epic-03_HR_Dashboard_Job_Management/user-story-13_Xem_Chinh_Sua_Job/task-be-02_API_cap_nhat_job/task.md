@@ -15,6 +15,8 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
 ## Điều kiện tiên quyết
 - User đã authentication nếu endpoint thuộc workspace/admin.
 - User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
+- Endpoint chỉ dành cho role `HR` hoặc `HR_ADMIN`; Job phải thuộc đúng `company_id` hiện tại.
+- `Company.status = ACTIVE` và `User.status = ACTIVE`; nếu workspace hoặc tài khoản đang `PENDING`, `REJECTED`, `INACTIVE` hoặc `BLOCKED`, backend trả `403` và không cập nhật Job.
 - Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
 
 ## HTTP Method
@@ -28,9 +30,16 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
 - `categoryId` là số nguyên JSON tương ứng với kiểu `Long`/`BIGINT`. Đây là field tùy chọn khi cập nhật:
   - Nếu có truyền `categoryId`, chỉ chấp nhận category `ACTIVE` và `is_deleted = false`.
   - Nếu bỏ qua `categoryId`, giữ nguyên liên kết category hiện tại, kể cả khi category đã chuyển `INACTIVE`.
+- `roundCount` là số nguyên không âm và là field tùy chọn:
+  - `roundCount = 0` hợp lệ khi Job không có hiring round đang hiệu lực.
+  - Nếu truyền `roundCount`, giá trị phải khớp với số bản ghi `hiring_rounds` của Job có `is_deleted = false`; API không cho phép lưu số vòng chỉ tồn tại ở `jobs` nhưng lệch pipeline thực tế.
+- Muốn thay đổi số lượng hoặc thứ tự vòng, client dùng contract pipeline của US-16; API pipeline sẽ tính lại `jobs.round_count` từ danh sách `rounds` đã lưu.
+- Frontend hiện dùng `PUT /api/v1/jobs/{jobId}/pipeline` để lưu Job và toàn bộ pipeline trong một transaction; endpoint aggregate này áp dụng cùng rule US-16 về Job `CLOSED`, tenant, workspace ACTIVE, ID round/template dạng `Long` và audit.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
+- `title` bắt buộc và phải được trim; các field tùy chọn không truyền trong request được giữ nguyên giá trị hiện tại.
+- Khi truyền salary, `salaryMin`/`salaryMax` phải không âm và `salaryMax >= salaryMin`; các giá trị enum (`currency`, `workingType`, `employmentType`, `experienceLevel`) được backend kiểm tra và chuẩn hóa.
 - Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
@@ -46,11 +55,11 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
-- 400: `categoryId` không tồn tại, đã xóa mềm hoặc không còn `ACTIVE`.
+- 400: `categoryId` không tồn tại, đã xóa mềm hoặc không còn `ACTIVE`; request có salary/enum không hợp lệ.
 - 401: chưa đăng nhập hoặc token không hợp lệ.
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
-- 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+- 409: Job đang `CLOSED` nên không thể chỉnh sửa; các conflict khác theo trạng thái hiện tại.
 
 
 ## 3. API JSON Contract
@@ -70,7 +79,8 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
   "workingType": "HYBRID",
     "employmentType": "FULL_TIME",
     "experienceLevel": "SENIOR",
-    "categoryId": 1
+    "categoryId": 1,
+    "roundCount": 0
 }
 ```
 
