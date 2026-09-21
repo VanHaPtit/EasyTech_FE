@@ -6,6 +6,16 @@
 - **Để** tôi có thể kiểm tra xem ứng viên đã được thông báo chưa, phát hiện email gửi lỗi và gửi lại nếu cần thiết.
 - **Story Points:** 3
 
+## Contract đã triển khai
+
+- UI chính: `/dashboard/email-logs`.
+- API danh sách: `GET /api/v1/email-logs?page={page}&limit={limit}&status={SUCCESS|FAILED}&templateCode={code}`.
+- API xem chi tiết: `GET /api/v1/email-logs/{logId}`.
+- API gửi lại: `POST /api/v1/email-logs/{logId}/retry`.
+- ID dùng `BIGINT`/`Long`; trạng thái log là `SUCCESS` hoặc `FAILED`.
+- Các API HR chỉ đọc log thuộc `company_id` của người dùng hiện tại.
+- Bộ lọc status/template code đã có; lọc theo khoảng thời gian và tab lịch sử riêng trong Candidate Drawer chưa có trong code hiện tại.
+
 ## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
 
 ```mermaid

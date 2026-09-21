@@ -14,8 +14,10 @@ Xác định phạm vi backend cho task 'API danh sach email log' trong US-20 Em
 - Đảm bảo cơ chế phân quyền (multi-tenant theo company_id).
 - Cập nhật đúng các trường trong cơ sở dữ liệu dựa theo Database Design.
 
-## Endpoint đề xuất
-- GET /api/v1/admin/email-logs
+## Endpoint hiện hành
+- `GET /api/v1/email-logs`
+- Role: `HR` hoặc `HR_ADMIN`; dữ liệu luôn giới hạn theo `company_id` của người dùng đăng nhập.
+- Query params pagination dùng chung backend: `page` (mặc định 1), `limit` (mặc định 10), ngoài ra có `status` (`SUCCESS|FAILED`) và `templateCode`.
 
 ## API JSON Contract
 
@@ -23,17 +25,22 @@ Xác định phạm vi backend cho task 'API danh sach email log' trong US-20 Em
 ```json
 {
   "status": 1,
-  "message": "Lấy danh sách lịch sử email thành công.",
+  "message": "success",
   "data": {
-    "content": [
+    "data": [
       {
         "id": 9001,
+        "applicationId": 1201,
         "recipientEmail": "candidate@example.com",
-        "templateCode": "INTERVIEW_INVITATION",
-        "status": "SENT",
+        "templateCode": "APPLICATION_RECEIVED",
+        "status": "SUCCESS",
         "subject": "Thư mời phỏng vấn",
+        "bodyHtml": "<p>Nội dung email...</p>",
         "sentAt": "2026-08-31T10:00:00",
-        "errorMessage": null
+        "retriedAt": null,
+        "errorMessage": null,
+        "attemptCount": 1,
+        "createdAt": "2026-08-31T10:00:00"
       }
     ],
     "current_page": 1,
@@ -54,31 +61,30 @@ Xác định phạm vi backend cho task 'API danh sach email log' trong US-20 Em
 
 ---
 
-## Thiết kế Database – Bảng email_logs
+## Thiết kế Database – Bảng `email_logs`
 
 ## Bảng/entity liên quan
-- Bảng chính: `job_rounds`, `round_statuses`, `email_templates`, `email_logs`, `interview_schedules`.
-- Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
-- Các bảng thuộc tenant phải có company_id và index theo company_id.
+- Bảng chính: `email_logs`; liên kết tùy chọn với `applications` và bắt buộc với `companies`.
+- `id`, `company_id`, `application_id` và các ID liên quan dùng `BIGINT` ở PostgreSQL, tương ứng `Long` trong Java/JSON number.
+- Bảng lưu `created_at`, `updated_at`, `sent_at`, `retried_at`; không dùng `is_deleted` vì log là dữ liệu truy vết.
+- Có index theo `company_id`, `status`, `created_at` và `application_id`.
 
 ## Column và kiểu dữ liệu
-- Dùng UUID cho khóa chính/khóa ngoại.
-- Dùng VARCHAR cho mã, email, slug, enum dạng text.
-- Dùng TEXT cho nội dung dài như mô tả, lý do từ chối, email body hoặc AI explanation.
-- Dùng TIMESTAMP cho thời điểm tạo/cập nhật/gửi email/đánh giá.
-- - Enum/status liên quan: Round Result = `IN_PROGRESS`/`PASSED`/`FAILED`; Application Status = `ACTIVE`/`REJECTED`/`HIRED` nếu task trực tiếp cập nhật hồ sơ.
+- Dùng `BIGINT/BIGSERIAL` cho khóa chính/khóa ngoại.
+- Dùng `VARCHAR` cho mã, email, enum dạng text.
+- Dùng `TEXT` cho nội dung email và thông báo lỗi.
+- Dùng `TIMESTAMP` cho thời điểm tạo/cập nhật/gửi email/ retry.
+- Enum/status của log: `SUCCESS` hoặc `FAILED`.
 
 ## Khóa và ràng buộc
-- Primary Key: id.
-- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, 
-ound_id, user_id.
-- Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
-- Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
+- Primary Key: `id`.
+- Foreign Key: `company_id` trỏ `companies(id)` với `ON DELETE RESTRICT`; `application_id` trỏ `applications(id)` với `ON DELETE SET NULL`.
+- Constraint bắt buộc cho recipient, template code, subject, body, status và attempt_count.
 
 ## Migration
-- Tạo migration idempotent theo thứ tự triển khai.
-- Có giá trị mặc định rõ ràng cho status và boolean flag.
+- Migration hiện hành: `V20__create_email_logs.sql`.
+- Có giá trị mặc định rõ ràng cho status và attempt_count.
 
 ## Relationship
-- Dữ liệu phải giữ đúng multi-tenant boundary theo company_id.
-- Xóa mềm không được làm mất audit/history cần phục vụ báo cáo hoặc truy vết.
+- Dữ liệu phải giữ đúng multi-tenant boundary theo `company_id`.
+- Log không bị xóa mềm theo nghiệp vụ hiện tại; giữ lại để truy vết gửi email.

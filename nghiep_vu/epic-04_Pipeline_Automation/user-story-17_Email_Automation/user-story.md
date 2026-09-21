@@ -6,6 +6,12 @@
 - **Để** tôi không phải viết email thủ công, đảm bảo ứng viên luôn được thông báo kịp thời, tăng trải nghiệm ứng viên (Candidate Experience).
 - **Story Points:** 5
 
+## Ranh giới triển khai hiện tại
+
+- Luồng gửi email xác nhận sau khi ứng viên nộp đơn và luồng gửi Magic Link recovery đã ghi nhận kết quả gửi vào `email_logs` với trạng thái `SUCCESS|FAILED`.
+- Chức năng xem log/gửi lại dùng chung contract của US-20 tại `/api/v1/email-logs`.
+- Automation khi HR chuyển vòng hoặc đánh giá `PASSED/FAILED`, confirmation modal, background retry tối đa 3 lần và trạng thái `SKIPPED` chưa có endpoint/persistence đầy đủ trong code hiện tại; không suy diễn các phần này là đã hoàn thành.
+
 ## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
 
 ```mermaid

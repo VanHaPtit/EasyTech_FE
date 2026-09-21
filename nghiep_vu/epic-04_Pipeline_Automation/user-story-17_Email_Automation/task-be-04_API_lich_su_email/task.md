@@ -14,6 +14,13 @@ Xác định phạm vi backend cho task 'API lich su email' trong US-17 Email Au
 - Context tenant gồm company_id, user_id, role và trạng thái truy cập nếu có.
 - Cấu hình hệ thống cần thiết như SMTP, AI provider, template hoặc storage.
 
+## Endpoint hiện hành
+
+- `GET /api/v1/email-logs` để liệt kê log theo company.
+- `GET /api/v1/email-logs/{logId}` để xem nội dung email read-only.
+- `POST /api/v1/email-logs/{logId}/retry` để gửi lại log `FAILED`.
+- Role: `HR` hoặc `HR_ADMIN`; ID dùng `Long`/`BIGINT`.
+
 ## Xử lý
 - Xử lý gửi/lưu email theo template và trạng thái gửi thực tế.
 - Xử lý gửi/lưu email theo template và trạng thái gửi thực tế.

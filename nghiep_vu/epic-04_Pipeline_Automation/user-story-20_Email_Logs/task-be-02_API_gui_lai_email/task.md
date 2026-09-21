@@ -15,8 +15,10 @@ Xác định phạm vi backend cho task 'API gui lai email' trong US-20 Email Lo
 - Cập nhật đúng các trường trong cơ sở dữ liệu dựa theo Database Design.
 - Quản lý Audit Log cho các hành động thay đổi dữ liệu quan trọng.
 
-## Endpoint đề xuất
-- POST /api/v1/admin/email-logs/{logId}/retry
+## Endpoint hiện hành
+
+- `POST /api/v1/email-logs/{logId}/retry`
+- Role: `HR` hoặc `HR_ADMIN`; `logId` dùng `Long`/`BIGINT` và chỉ được truy cập trong `company_id` hiện tại.
 
 ## API JSON Contract
 
@@ -27,7 +29,7 @@ Xác định phạm vi backend cho task 'API gui lai email' trong US-20 Email Lo
   "message": "Gửi lại email thành công.",
   "data": {
     "logId": 9001,
-    "status": "SENT",
+    "status": "SUCCESS",
     "retriedAt": "2026-08-31T10:05:00"
   }
 }
