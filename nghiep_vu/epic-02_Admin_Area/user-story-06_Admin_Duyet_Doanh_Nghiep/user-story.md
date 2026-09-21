@@ -50,6 +50,12 @@ graph TD
   - **KHI** Admin mở chi tiết.
   - **THÌ** hệ thống có thể cảnh báo nếu Mã số thuế hoặc Tên công ty tương đồng với company đang `ACTIVE`.
 
+- **Kịch bản 6: Admin cập nhật trực tiếp Company Detail**
+  - **VỚI ĐIỀU KIỆN** Admin đang mở drawer chi tiết một company.
+  - **KHI** Admin chỉnh sửa và lưu các trường hồ sơ doanh nghiệp hoặc nội dung hiển thị Career Site.
+  - **THÌ** hệ thống gọi `PATCH /api/v1/admin/companies/{companyId}`, kiểm tra trùng mã số thuế/subdomain, cập nhật trong đúng company và ghi Audit Log.
+  - Trạng thái company, slug, thông tin người đăng ký, người duyệt và thời điểm duyệt vẫn chỉ đọc; Admin không được dùng API này để tự phê duyệt hoặc thay đổi quyền truy cập.
+
 ## 3. BUSINESS RULES
 
 ### Company & User Status Transitions
@@ -69,4 +75,4 @@ graph TD
 
 ## 4. NGOÀI PHẠM VI
 - **KHÔNG** tích hợp API quốc gia để tự động xác thực Mã số thuế.
-- **KHÔNG** cho phép Admin chỉnh sửa thông tin công ty trước khi duyệt, trừ khi có quyết định sản phẩm riêng.
+- Admin được phép cập nhật trực tiếp hồ sơ company từ Company Detail theo quyết định sản phẩm đã chốt. Việc cập nhật không thay đổi status và không kích hoạt lại tài khoản HR.

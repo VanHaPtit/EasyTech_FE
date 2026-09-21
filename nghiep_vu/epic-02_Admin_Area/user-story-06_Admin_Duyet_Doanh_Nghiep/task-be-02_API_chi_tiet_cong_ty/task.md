@@ -38,6 +38,18 @@ Xác định phạm vi backend cho task 'API chi tiet cong ty' trong US-06 Admin
 ## State Transition
 - Không có state transition trực tiếp.
 
+## API cập nhật trực tiếp từ Company Detail
+
+**Endpoint:** `PATCH /api/v1/admin/companies/{companyId}`
+
+- Chỉ role `ADMIN` đang `ACTIVE` được gọi API.
+- Request có thể chứa các field nullable của company, `companyProfile` và Career Site; field không truyền được giữ nguyên.
+- Cho phép cập nhật: `name`, `taxCode`, `subdomain`, `phone`, `email`, `website`, `address`, `industry`, `companySize`, `businessType`, `contactEmail`, `description`, `benefits`, `socialLinks`, `bannerUrl`, `primaryColor`, `siteTitle`, `tagline`, `heroImageUrl`, `accentColor`, `fontFamily`, `showCompanyDescription`, `showBenefits`, `footerText`.
+- Không cho cập nhật qua API này: `id`, `slug`, `status`, `approvedBy`, `approvedAt`, `rejectedReason`, `registrant`, `isPublished` và các token/password.
+- Backend kiểm tra unique `taxCode`/`subdomain`, giữ tenant theo `companyId` và ghi action `UPDATE_COMPANY` vào Audit Log.
+
+Response thành công trả lại `CompanyDetailResponseDTO` mới nhất trong `BaseResponse`.
+
 ## Side Effects
 - Ghi audit log nếu task tạo/cập nhật/xóa dữ liệu nghiệp vụ.
 
