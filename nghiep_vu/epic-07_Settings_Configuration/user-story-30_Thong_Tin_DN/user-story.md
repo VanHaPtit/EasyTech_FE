@@ -2,7 +2,7 @@
 
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR Admin),
-- **Tôi muốn** cập nhật các thông tin cơ bản về doanh nghiệp mình trong hệ thống (Tên, Mã số thuế, Logo nội bộ, Email liên hệ, Múi giờ),
+- **Tôi muốn** cập nhật hồ sơ doanh nghiệp của mình trong hệ thống (mô tả, website, địa chỉ, hotline, lĩnh vực, quy mô và thông tin hiển thị Career Site),
 - **Để** dữ liệu công ty luôn chính xác, các báo cáo hoặc hóa đơn hiển thị đúng thông tin, và cài đặt hệ thống phù hợp với khu vực hoạt động.
 - **Story Points:** 2
 
@@ -22,14 +22,16 @@ graph TD
 - **Kịch bản 1: HR Admin xem và cập nhật thông tin công ty**
   - **VỚI ĐIỀU KIỆN** HR có quyền Admin truy cập `/dashboard/settings/general`.
   - **KHI** form hiển thị thông tin hiện tại. HR sửa một số trường như Tên công ty, Website, Số điện thoại và nhấn "Lưu thay đổi".
-  - **THÌ** hệ thống xác thực (validate) dữ liệu, gọi API `PUT /api/v1/companies/me`, cập nhật database và hiển thị thông báo "Cập nhật thành công".
+  - **THÌ** hệ thống xác thực dữ liệu, gọi API `PATCH /api/v1/company-profiles/me`, cập nhật database và hiển thị thông báo "Cập nhật thành công".
+  - Tên công ty và mã số thuế là dữ liệu đăng ký; hiện chỉ hiển thị read-only ở màn này, không nằm trong request PATCH hồ sơ.
   - Các thông tin mới hiển thị ngay lập tức trên giao diện chung của Dashboard.
+  - Địa chỉ có thể chọn tỉnh/thành phố rồi xã/phường từ dữ liệu `full_json_generated_data_vn_units.json`; database hiện vẫn lưu chuỗi địa chỉ đã ghép trong cột `companies.address`, chưa tách bảng địa giới.
 
 - **Kịch bản 2: Quản lý Logo nội bộ**
   - **VỚI ĐIỀU KIỆN** HR đang ở trang Cài đặt thông tin.
   - **KHI** HR upload một logo (<= 2MB, JPG/PNG).
   - **THÌ** ảnh được tải lên thành công, thay thế logo cũ trên thanh điều hướng góc trái Dashboard.
-  - _Lưu ý: Logo này (`companies.logo_url`) dùng riêng cho giao diện nội bộ HR (Dashboard sidebar). Logo công khai trên Career Site được quản lý riêng tại **US-33 Career Site Settings** (`career_site_settings.logo_url`). Hai trường độc lập, thay đổi ở đây KHÔNG ảnh hưởng Career Site._
+  - Logo được gửi qua `POST /api/v1/company-profiles/me/logo` và hiện lưu vào cấu hình Career Site (`career_sites.logo_url`) để hiển thị trên site công khai.
 
 - **Kịch bản 3: HR không có quyền Admin cố gắng chỉnh sửa**
   - **VỚI ĐIỀU KIỆN** HR (không có quyền Admin) truy cập trang này.

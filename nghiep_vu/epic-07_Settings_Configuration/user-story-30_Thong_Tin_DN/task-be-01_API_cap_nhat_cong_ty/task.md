@@ -15,20 +15,27 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
 - Cập nhật đúng các trường trong cơ sở dữ liệu dựa theo Database Design.
 - Quản lý Audit Log cho các hành động thay đổi dữ liệu quan trọng.
 
-## Endpoint đề xuất
-- PUT /api/v1/companies/me
+## Endpoint hiện hành
+- `PATCH /api/v1/company-profiles/me`
+- Alias đọc thông tin hiện tại: `GET /api/v1/companies/me` hoặc `GET /api/v1/company-profiles/me`.
+- Request được giới hạn theo company của user HR/HR_ADMIN hiện tại và có CSRF cho request thay đổi.
 
 ## API JSON Contract
 
 ### Request Body
 ```json
 {
-  "companyName": "TechA Solutions",
-  "taxCode": "0123456789",
+  "industry": "Công nghệ thông tin",
+  "companySize": "51-200",
   "phone": "0987654321",
   "address": "123 Tech Street, Hà Nội",
   "website": "https://techa.vn",
-  "description": "Công ty công nghệ chuyên phát triển phần mềm."
+  "description": "Công ty công nghệ chuyên phát triển phần mềm.",
+  "businessType": "Công ty cổ phần",
+  "contactEmail": "hr@techa.vn",
+  "benefits": "Bảo hiểm, đào tạo",
+  "primaryColor": "#2563eb",
+  "onboardingCompleted": true
 }
 ```
 
@@ -36,10 +43,10 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
 ```json
 {
   "status": 1,
-  "message": "Cập nhật thông tin doanh nghiệp thành công.",
+  "message": "Cập nhật hồ sơ công ty thành công",
   "data": {
-    "companyId": 5,
-    "companyName": "TechA Solutions",
+    "id": 5,
+    "name": "TechA Solutions",
     "taxCode": "0123456789",
     "phone": "0987654321",
     "address": "123 Tech Street, Hà Nội",

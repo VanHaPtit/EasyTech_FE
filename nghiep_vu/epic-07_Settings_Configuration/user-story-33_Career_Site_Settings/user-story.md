@@ -54,6 +54,10 @@ graph TD
   - **KHI** HR toggle switch "Hiển thị Career Site công khai" sang OFF.
   - **THÌ** hệ thống cập nhật `career_sites.is_published = false`. Khi ứng viên truy cập URL Career Site, hệ thống trả về trang "404 – Career Site hiện không khả dụng."
 
+- **Kịch bản 7: Footer không hiển thị liên kết giả**
+  - Footer chỉ hiển thị các liên kết có đích hợp lệ trong hệ thống (`/careers`, `/login`) hoặc liên hệ hỗ trợ qua email.
+  - Không dùng `href="#"` hoặc nhãn điều khoản/chính sách khi trang đích tương ứng chưa tồn tại. Quy tắc này áp dụng cho cả footer ở các màn hình đăng nhập do frontend HRM render.
+
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ chỉnh sửa layout/template Career Site (thêm/xóa section, drag-drop blocks) trong phiên bản này.
 - **KHÔNG** hỗ trợ custom domain (sử dụng tên miền riêng của công ty) – chỉ subdomain dạng `/{company_slug}`.
