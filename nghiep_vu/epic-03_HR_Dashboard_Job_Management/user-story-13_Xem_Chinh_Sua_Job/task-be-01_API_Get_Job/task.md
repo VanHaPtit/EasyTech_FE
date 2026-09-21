@@ -36,6 +36,7 @@ Xác định phạm vi backend cho task 'API Get Job' trong US-13 Xem Chinh Sua 
 - Thành công: BaseResponse(status = 1, message, data); Chi tiết job.
 - Response chi tiết trả `categoryId` (number/Long), `categoryName` và `categorySlug` khi Job đang liên kết category; các field này là `null` nếu Job chưa có category.
 - Response chi tiết trả `applicantCount` (number/Long), là tổng số hồ sơ ứng tuyển thuộc Job và company hiện tại.
+- Response trả `startDate` và `endDate` dạng `YYYY-MM-DD`, nullable; không suy diễn các field này từ `publishedAt` hoặc `closedAt`.
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition

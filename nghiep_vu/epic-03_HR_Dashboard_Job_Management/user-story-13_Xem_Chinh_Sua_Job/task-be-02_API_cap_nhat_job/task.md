@@ -34,6 +34,7 @@ Xác định phạm vi backend cho task 'API cap nhat job' trong US-13 Xem Chinh
   - `roundCount = 0` hợp lệ khi Job không có hiring round đang hiệu lực.
   - Nếu truyền `roundCount`, giá trị phải khớp với số bản ghi `hiring_rounds` của Job có `is_deleted = false`; API không cho phép lưu số vòng chỉ tồn tại ở `jobs` nhưng lệch pipeline thực tế.
 - Muốn thay đổi số lượng hoặc thứ tự vòng, client dùng contract pipeline của US-16; API pipeline sẽ tính lại `jobs.round_count` từ danh sách `rounds` đã lưu.
+- `startDate`/`endDate` được nhận ở request hiện tại theo `YYYY-MM-DD`/`LocalDate`/`DATE`, nullable; nếu cả hai có giá trị thì từ chối request khi `endDate < startDate`. Khi field không truyền, giá trị hiện tại được giữ nguyên.
 - Frontend hiện dùng `PUT /api/v1/jobs/{jobId}/pipeline` để lưu Job và toàn bộ pipeline trong một transaction; endpoint aggregate này áp dụng cùng rule US-16 về Job `CLOSED`, tenant, workspace ACTIVE, ID round/template dạng `Long` và audit.
 
 ## Validation

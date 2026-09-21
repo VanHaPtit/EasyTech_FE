@@ -28,6 +28,7 @@ Xác định phạm vi backend cho task 'API tao job' trong US-12 Tao Job AI JD,
 - Thông tin job: title, description, location, salary và `categoryId`. Cấu hình form tùy chỉnh không nằm trong body của API tạo Job; frontend gọi các endpoint form-fields của US-15 sau khi nhận được Job ID.
 - `categoryId` là số nguyên JSON tương ứng với `Long`/`BIGINT` trong backend/database.
 - Khi tạo hoặc đổi category, backend chỉ chấp nhận category có `status = ACTIVE` và `is_deleted = false`.
+- `startDate`/`endDate` thuộc request/response triển khai hiện tại: JSON `YYYY-MM-DD`, Java `LocalDate`, PostgreSQL `DATE`, nullable. Nếu cả hai có giá trị, backend từ chối khi `endDate < startDate`.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.

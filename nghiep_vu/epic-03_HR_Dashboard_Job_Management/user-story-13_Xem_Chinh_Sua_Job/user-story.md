@@ -36,6 +36,13 @@ graph TD
 - **VÀ** sau khi cập nhật thành công, hiển thị toast thông báo "Cập nhật thành công!".
 - `roundCount` dùng số nguyên không âm; `roundCount = 0` là hợp lệ cho Job không có vòng phỏng vấn. Khi Edit Job không có vòng nào, request vẫn được lưu thành công và không được báo lỗi tối thiểu một vòng.
 
+### Contract cửa sổ tuyển dụng (đã triển khai)
+
+- `startDate`/`endDate` biểu diễn ngày nhận hồ sơ, dùng JSON `YYYY-MM-DD`, Java `LocalDate` và PostgreSQL `DATE`.
+- Hai field đều nullable để không làm hỏng dữ liệu Job cũ; nếu cùng có giá trị thì bắt buộc `endDate >= startDate`.
+- Hai field không điều khiển tự động `status`, không thay thế `publishedAt`/`closedAt`; status vẫn giữ nguyên contract `INACTIVE`/`ACTIVE`/`CLOSED`.
+- API GET/PUT và API aggregate pipeline trả/nhận hai field; migration lưu ở `jobs.start_date`/`jobs.end_date` kiểu `DATE`.
+
 - **Kịch bản 3: HR chỉnh sửa Job đang ACTIVE**
   - **VỚI ĐIỀU KIỆN** Job đang có trạng thái `ACTIVE` (đã hiển thị công khai).
   - **KHI** HR chỉnh sửa và lưu lại.

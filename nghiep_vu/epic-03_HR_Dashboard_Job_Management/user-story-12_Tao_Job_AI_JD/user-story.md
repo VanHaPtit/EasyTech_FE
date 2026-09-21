@@ -53,6 +53,14 @@ graph TD
 - Cấu hình form ứng tuyển không nằm trong request tạo Job của US-12. US-15 đã bổ sung bảng `form_fields` và migration V14; màn hình tạo Job lưu các field tùy chỉnh sau khi Job được tạo thành công qua API form-fields. Việc ứng viên gửi các câu trả lời vẫn thuộc flow submit của US-26.
 - Số vòng phỏng vấn là tùy chọn: Job không cần phỏng vấn được phép có `roundCount = 0`; mọi giá trị âm đều không hợp lệ. Job mới bắt đầu với `round_count = 0` và có thể publish khi thỏa các điều kiện publish khác, dù chưa cấu hình pipeline.
 
+### Contract cửa sổ tuyển dụng (đã triển khai)
+
+- `startDate` và `endDate` là ngày bắt đầu/kết thúc nhận hồ sơ, không thay thế `publishedAt`, `closedAt` hoặc `status`.
+- JSON dùng tên camelCase và định dạng `YYYY-MM-DD`; kiểu backend dự kiến là Java `LocalDate`, kiểu database dự kiến là PostgreSQL `DATE`.
+- Hai field nullable để tương thích các Job đã tồn tại. Nếu cùng truyền, backend phải validate `endDate >= startDate`.
+- `POST /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, danh sách Job và pipeline update đều đồng bộ hai field; migration thêm `jobs.start_date DATE` và `jobs.end_date DATE` với check constraint tương ứng.
+- UI tạo/sửa Job dùng input ngày và hiển thị cửa sổ nhận hồ sơ. Hai field không tự đổi `INACTIVE`/`ACTIVE`/`CLOSED`; việc public vẫn do status và thao tác publish/close quyết định.
+
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ AI tự động dịch JD sang nhiều ngôn ngữ cùng lúc.
 - **KHÔNG** có tính năng "Chat" liên tục với AI để chỉnh sửa từng đoạn nhỏ (chỉ tạo một lần dựa trên prompt).
