@@ -22,42 +22,44 @@
 
 ```mermaid
 graph TD
-    A[Vào mục cấu hình Job] --> B[Mở tab Hiring Pipeline]
-    B --> C[Xem các Round hiện tại]
-    C --> D{Thao tác}
-    D -- Thêm Round --> E[Tạo mới DB]
-    D -- Kéo thả (Drag&Drop) --> F[Gửi API Reorder]
-    D -- Sửa/Xóa --> G[Cập nhật DB]
-    F --> H[Cập nhật UI]
+    A[Xem chi tiết Job] --> B[Xem danh sách các Round]
+    B --> C[Click một Round để xem chi tiết]
+    A --> D[Chỉnh sửa Job]
+    D --> E[Bước 1: Chỉnh sửa thông tin Job]
+    E --> F[Tiếp tục]
+    F --> G[Bước 2: Thêm/Sửa/Xóa/Sắp xếp Round trong bộ nhớ]
+    G --> H[Lưu tất cả thay đổi]
+    H --> I[Transaction: cập nhật Job và Pipeline]
+    I --> J[Cập nhật UI]
 ```
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
-- **Kịch bản 1: HR thêm vòng tuyển dụng cho Job**
-- **VỚI ĐIỀU KIỆN** HR đang ở màn hình cấu hình vòng của Job (`/dashboard/jobs/{jobId}/rounds`), thuộc company hiện tại.
-- **KHI** HR nhấn nút "Thêm vòng" và điền tên, mô tả tùy chọn, email template khi đạt/trượt, link bài test nếu có và đánh dấu vòng cuối nếu cần.
-- **THÌ** hệ thống lưu vòng mới vào bảng `hiring_rounds` với `job_id` tương ứng và `order_index` tự động gán cuối danh sách.
-- `jobs.round_count` được tăng theo số round đang hiệu lực. Danh sách vòng hiện tại cập nhật và hiển thị đủ thông tin vòng vừa tạo.
+- **Kịch bản 1: HR chỉnh sửa Job và Pipeline theo hai bước**
+  - **VỚI ĐIỀU KIỆN** HR đang ở màn hình chi tiết Job (`/dashboard/jobs/{job_id}`). Màn này hiển thị danh sách các Round; HR có thể click từng Round để xem chi tiết.
+  - **KHI** HR nhấn "Chỉnh sửa", cập nhật thông tin Job ở bước 1, sau đó nhấn "Tiếp tục" để sang bước 2.
+  - **THÌ** HR có thể thêm, sửa, xóa, sắp xếp các Round và chọn `Email Pass`/`Email False` theo tên mẫu email; không hiển thị hay yêu cầu nhập ID template.
+  - **VÀ KHI** HR nhấn "Lưu tất cả thay đổi" ở bước 2, hệ thống lưu Job và toàn bộ pipeline trong **một transaction**. Nếu bất kỳ dữ liệu nào không hợp lệ, toàn bộ thay đổi bị rollback và dữ liệu trước đó được giữ nguyên.
 
-- **Kịch bản 2: HR sắp xếp lại thứ tự vòng bằng Drag & Drop**
-  - **VỚI ĐIỀU KIỆN** HR đã có ít nhất 2 vòng tuyển dụng trong danh sách.
-  - **KHI** HR kéo-thả để thay đổi vị trí của một vòng.
-- **THÌ** hệ thống gọi API `PUT /api/v1/jobs/{jobId}/rounds/reorder` với payload `{ "orderedIds": [201, 202, ...] }`.
-- `orderedIds` phải chứa đầy đủ mỗi `Long` ID của round đang hiệu lực đúng một lần; không được chứa ID của Job khác, ID không tồn tại hoặc ID round đã xóa mềm.
-  - Kanban Board tự động cập nhật thứ tự cột tương ứng.
+- **Kịch bản 2: HR sắp xếp lại thứ tự vòng**
+  - **VỚI ĐIỀU KIỆN** HR đang ở bước 2 và có ít nhất 2 vòng tuyển dụng.
+  - **KHI** HR thay đổi thứ tự vòng.
+  - **THÌ** frontend chỉ cập nhật trạng thái tạm thời; thứ tự mới được gửi trong yêu cầu lưu tổng hợp ở bước cuối.
+  - Sau khi lưu thành công, Kanban Board sử dụng thứ tự cột mới.
+
 
 - **Kịch bản 3: HR chỉnh sửa thông tin một vòng tuyển dụng**
-  - **VỚI ĐIỀU KIỆN** HR muốn thay đổi tên vòng hoặc email template gắn với vòng.
-  - **KHI** HR nhấn icon "Sửa" trên vòng tương ứng và lưu.
-  - **THÌ** hệ thống cập nhật bản ghi `hiring_rounds` và mọi đơn ứng tuyển đang ở vòng đó giữ nguyên trạng thái.
+  - **VỚI ĐIỀU KIỆN** HR muốn thay đổi tên vòng hoặc email template gắn với vòng ở bước 2.
+  - **KHI** HR chỉnh sửa vòng và lưu toàn bộ ở bước cuối.
+  - **THÌ** hệ thống cập nhật bản ghi `hiring_rounds`; mọi đơn ứng tuyển đang ở vòng đó giữ nguyên trạng thái.
 
 - **Kịch bản 4: HR xóa một vòng tuyển dụng**
-  - **VỚI ĐIỀU KIỆN** một vòng tuyển dụng đang tồn tại trong Job.
-  - **KHI** HR nhấn nút "Xóa" trên vòng đó.
-- **THÌ** nếu vòng **chưa có ứng viên đang ở vòng đó**: hệ thống xóa mềm, cập nhật lại `order_index` của các vòng còn lại và đồng bộ `jobs.round_count`.
-- Nếu vòng **đang có ứng viên ở `current_round_id`**: hệ thống trả lỗi để UI hiển thị cảnh báo: _"Vòng này đang có ứng viên. Bạn cần chuyển họ sang vòng khác trước khi xóa."_ và không thực hiện xóa.
 
-- Nếu request truy cập Job thuộc company khác hoặc Job đã bị xóa mềm: trả `404` theo tenant boundary, không tiết lộ tài nguyên của company khác.
+  - **VỚI ĐIỀU KIỆN** một vòng tuyển dụng đang tồn tại trong Job và HR đang ở bước 2.
+  - **KHI** HR nhấn nút "Xóa" trên vòng đó, vòng chỉ bị đánh dấu xóa trong trạng thái tạm thời.
+  - **THÌ** khi HR nhấn "Lưu tất cả thay đổi", nếu vòng **chưa có ứng viên nào** hệ thống xóa mềm vòng và chuẩn hóa lại `order_index` trong cùng transaction.
+  - Nếu vòng **đã có ứng viên**: hệ thống từ chối toàn bộ lần lưu và hiển thị cảnh báo: _"Vòng này đang có ứng viên. Bạn cần chuyển họ sang vòng khác trước khi xóa."_ Dữ liệu đang nhập trên frontend được giữ nguyên.
+
 
 - **Kịch bản 5: Job được publish mà không có vòng nào**
   - **VỚI ĐIỀU KIỆN** HR tạo Job nhưng chưa cấu hình vòng tuyển dụng.

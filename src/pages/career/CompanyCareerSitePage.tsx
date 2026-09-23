@@ -89,7 +89,7 @@ export const CompanyCareerSitePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-slate-200">
+      <header className="sticky top-0 z-20 bg-white/70 backdrop-blur-xl border-b border-white/50 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to={`/company/${companySlug || COMPANY.slug}`} className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-primary-500 flex items-center justify-center text-white">
@@ -109,31 +109,33 @@ export const CompanyCareerSitePage: React.FC = () => {
 
       <main>
         <section className="relative overflow-hidden bg-slate-950">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(71,177,222,0.28),transparent_38%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.18),transparent_35%)]" />
-          <div className="relative max-w-6xl mx-auto px-6 py-20 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-7 text-left">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-primary-100 text-xs font-bold mb-6">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950/80 to-slate-900" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.25),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(52,211,153,0.2),transparent_40%)]" />
+          
+          <div className="relative max-w-6xl mx-auto px-6 py-24 lg:py-32 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-7 text-left animate-in slide-in-from-bottom-8 duration-700 fade-in">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sky-300 text-xs font-bold mb-6 shadow-xl shadow-sky-500/10">
                 <Globe2 className="h-3.5 w-3.5" />
                 {companySlug || COMPANY.slug}.easytech.vn
               </span>
-              <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+              <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-sky-100 to-sky-400 tracking-tight leading-tight">
                 Cơ hội nghề nghiệp tại {COMPANY.name}
               </h1>
-              <p className="text-base md:text-lg text-slate-300 font-semibold leading-relaxed mt-6 max-w-2xl">
+              <p className="text-base md:text-lg text-slate-300/90 font-medium leading-relaxed mt-6 max-w-2xl">
                 {COMPANY.description}
               </p>
               <div className="flex flex-wrap gap-2 mt-8">
                 {COMPANY.services.map((service) => (
-                  <span key={service} className="px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white text-xs font-bold">
+                  <span key={service} className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-white text-xs font-bold hover:bg-white/10 transition-colors cursor-default">
                     {service}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-6 shadow-xl shadow-slate-950/20">
-              <h2 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider">Thông tin công ty</h2>
-              <div className="grid grid-cols-2 gap-4 mt-5">
+            <div className="lg:col-span-5 bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 p-8 shadow-2xl shadow-black/50 animate-in slide-in-from-right-8 duration-700 fade-in delay-150">
+              <h2 className="text-xs font-extrabold text-sky-300 uppercase tracking-widest">Thông tin công ty</h2>
+              <div className="grid grid-cols-2 gap-4 mt-6">
                 {[
                   { label: 'Quy mô', value: COMPANY.size, icon: Users },
                   { label: 'Thành lập', value: COMPANY.founded, icon: Clock },
@@ -142,10 +144,12 @@ export const CompanyCareerSitePage: React.FC = () => {
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
-                    <div key={item.label} className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                      <Icon className="h-4 w-4 text-primary-500 mb-2" />
+                    <div key={item.label} className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors border border-white/10 flex flex-col items-start group">
+                      <div className="p-2.5 rounded-xl bg-white/10 text-sky-300 mb-3 group-hover:scale-110 group-hover:text-sky-200 transition-all">
+                        <Icon className="h-4 w-4" />
+                      </div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{item.label}</p>
-                      <p className="text-xs font-extrabold text-slate-800 mt-1">{item.value}</p>
+                      <p className="text-sm font-extrabold text-white mt-1">{item.value}</p>
                     </div>
                   );
                 })}
@@ -154,11 +158,13 @@ export const CompanyCareerSitePage: React.FC = () => {
           </div>
         </section>
 
-        <section id="company" className="max-w-6xl mx-auto px-6 py-14">
+        <section id="company" className="max-w-6xl mx-auto px-6 py-16">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {WHY_CHOOSE_US.map((text) => (
-              <div key={text} className="premium-card bg-white p-6 flex items-start gap-3">
-                <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+              <div key={text} className="premium-card bg-white p-8 flex flex-col items-start gap-4 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 ring-1 ring-slate-100 hover:ring-slate-200 cursor-default">
+                <div className="p-3 bg-emerald-50 rounded-xl">
+                  <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+                </div>
                 <p className="text-sm font-semibold text-slate-600 leading-relaxed">{text}</p>
               </div>
             ))}
@@ -179,19 +185,19 @@ export const CompanyCareerSitePage: React.FC = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Tìm vị trí, kỹ năng..."
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-semibold focus:outline-none focus:border-primary-500"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white shadow-sm text-sm font-semibold focus:outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {filteredJobs.map((job) => (
-              <article key={job.slug} className="premium-card bg-white p-6 space-y-5">
+              <article key={job.slug} className="premium-card bg-white p-7 space-y-6 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-300 ring-1 ring-slate-100 hover:ring-primary-100 group flex flex-col h-full">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-[10px] font-bold text-primary-600 bg-primary-50 border border-primary-100 px-2.5 py-1 rounded-full">
+                  <span className="text-[10px] font-bold text-primary-600 bg-primary-50 border border-primary-100 px-3 py-1 rounded-full">
                     {job.category}
                   </span>
-                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${
+                  <span className={`text-[10px] font-bold px-3 py-1 rounded-full border ${
                     job.requiresCv
                       ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
                       : 'bg-amber-50 text-amber-600 border-amber-100'
@@ -200,32 +206,34 @@ export const CompanyCareerSitePage: React.FC = () => {
                   </span>
                 </div>
 
-                <div>
-                  <h3 className="text-lg font-extrabold text-slate-800 leading-snug">{job.title}</h3>
-                  <p className="text-xs font-semibold text-slate-400 mt-1">Đăng ngày {job.postedAt}</p>
+                <div className="flex-1">
+                  <h3 className="text-xl font-extrabold text-slate-800 leading-snug group-hover:text-primary-600 transition-colors">{job.title}</h3>
+                  <p className="text-xs font-semibold text-slate-400 mt-2 flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Đăng ngày {job.postedAt}</p>
                 </div>
 
-                <div className="space-y-2 text-xs font-semibold text-slate-500">
-                  <p className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5 text-slate-400" />{job.location}</p>
-                  <p className="flex items-center gap-2"><Briefcase className="h-3.5 w-3.5 text-slate-400" />{job.type}</p>
-                  <p className="flex items-center gap-2"><FileText className="h-3.5 w-3.5 text-slate-400" />{job.salary}</p>
+                <div className="space-y-3 text-xs font-semibold text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                  <p className="flex items-center gap-2.5"><MapPin className="h-4 w-4 text-primary-500" />{job.location}</p>
+                  <p className="flex items-center gap-2.5"><Briefcase className="h-4 w-4 text-primary-500" />{job.type}</p>
+                  <p className="flex items-center gap-2.5"><FileText className="h-4 w-4 text-primary-500" />{job.salary}</p>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2 pt-2">
                   {job.tags.map((tag) => (
-                    <span key={tag} className="text-[10px] font-bold text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-lg">
+                    <span key={tag} className="text-[11px] font-bold text-slate-500 bg-white border border-slate-200 px-2.5 py-1 rounded-lg">
                       {tag}
                     </span>
                   ))}
                 </div>
 
-                <Link
-                  to={`/careers/jobs/${job.slug}`}
-                  className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold transition-colors"
-                >
-                  {job.requiresCv ? 'Xem và nộp CV' : 'Xem và gửi thông tin'}
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+                <div className="pt-2">
+                  <Link
+                    to={`/careers/jobs/${job.slug}`}
+                    className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all"
+                  >
+                    {job.requiresCv ? 'Xem và nộp CV' : 'Xem và gửi thông tin'}
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </article>
             ))}
           </div>

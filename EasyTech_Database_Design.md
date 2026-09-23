@@ -785,3 +785,15 @@ Có thể để sau:
 
 - `career_sites`, `job_activities`, `evaluation_forms`, `form_fields`, `application_answers`
 - `interviews`, `notifications`, `ai_configs`, `ai_suggestions`
+  
+## 9. Hu?ng d?n truy xu?t d? li?u Dashboard T?ng Quan (US-10)  
+  
+Cc ch? s? Dashboard du?c tnh ton d?a trn schema hi?n t?i nhu sau:  
+- **T?ng ?ng vin**: COUNT(id) t? b?ng pplications.  
+- **Dang x? ly**: COUNT(id) t? pplications c status = 'ACTIVE'.  
+- **D?t**: COUNT(id) t? pplications c status = 'HIRED'.  
+- **Khng d?t**: COUNT(id) t? pplications c status = 'REJECTED'.  
+- **Th?i gian tuy?n d?ng TB**: Trung bnh kho?ng th?i gian gi?a updated_at (khi status = 'HIRED') v pplied_at.  
+- **T? l? chuy?n d?i (?ng vin -> Ph?ng v?n)**: COUNT(?ng vin c record trong b?ng interviews) / T?ng ?ng vin.  
+- **Ngu?n hi?u qu?**: Nhm theo source trong b?ng pplications d?i v?i cc h? so HIRED v d?m s? lu?ng cao nh?t.  
+- **Top Jobs**: Join b?ng jobs v pplications, GROUP BY jobs.id v ORDER BY COUNT(applications.id) DESC. 

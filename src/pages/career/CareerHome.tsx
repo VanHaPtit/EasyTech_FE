@@ -138,11 +138,6 @@ export const CareerHome: React.FC = () => {
         </div>
 
         <div className="relative max-w-6xl mx-auto px-6 py-24 text-center">
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-bold mb-8">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse" />
-            Đang tuyển dụng {JOBS.length} vị trí
-          </span>
-
           <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight tracking-tight mb-6">
             Cùng nhau xây dựng<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-amber-400">
@@ -278,23 +273,6 @@ export const CareerHome: React.FC = () => {
             <p className="text-slate-400 font-semibold">Không tìm thấy vị trí phù hợp với từ khóa "{searchQuery}"</p>
           </div>
         )}
-      </section>
-
-      {/* CTA Banner */}
-      <section className="bg-gradient-to-r from-primary-500 to-amber-500 py-16">
-        <div className="max-w-3xl mx-auto text-center px-6">
-          <h2 className="text-2xl font-extrabold text-white mb-4">Không tìm thấy vị trí phù hợp?</h2>
-          <p className="text-sm font-semibold text-primary-100 mb-8">
-            Gửi hồ sơ ứng tuyển chung để chúng tôi giữ liên lạc khi có vị trí mới.
-          </p>
-          <a
-            href="mailto:hr@techa.vn"
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white text-primary-600 font-bold text-sm hover:bg-primary-50 transition-all shadow-lg cursor-pointer"
-          >
-            Gửi hồ sơ ứng tuyển chung
-            <ArrowRight className="h-4 w-4" />
-          </a>
-        </div>
       </section>
     </div>
   );

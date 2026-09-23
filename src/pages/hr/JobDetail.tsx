@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { EditJobModal } from '../../components/modals/EditJobModal';
 import { PublishJobModal } from '../../components/modals/PublishJobModal';
+import { JobKanbanBoard } from '../../components/JobKanbanBoard';
 
 const renderMarkdown = (text: string) => {
   const lines = text.split('\n');
@@ -56,6 +57,7 @@ export const JobDetail: React.FC = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [publishModalOpen, setPublishModalOpen] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [activeTab, setActiveTab] = useState<'info' | 'pipeline'>('info');
 
   const handleSaveJob = (updatedData: any) => {
     setJob((prev) => ({ ...prev, ...updatedData }));
@@ -121,7 +123,31 @@ export const JobDetail: React.FC = () => {
         </button>
       </div>
 
-      {/* Details layout: Left Column (2/3) + Right Column (1/3) */}
+      {/* Tabs */}
+      <div className="flex border-b border-slate-200 mt-2 mb-6">
+        <button
+          onClick={() => setActiveTab('info')}
+          className={`px-6 py-3 text-sm font-bold border-b-2 transition-colors ${
+            activeTab === 'info'
+              ? 'border-primary-500 text-primary-600'
+              : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+          }`}
+        >
+          Chi tiết tin tuyển dụng
+        </button>
+        <button
+          onClick={() => setActiveTab('pipeline')}
+          className={`px-6 py-3 text-sm font-bold border-b-2 transition-colors ${
+            activeTab === 'pipeline'
+              ? 'border-primary-500 text-primary-600'
+              : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+          }`}
+        >
+          Pipeline Ứng viên
+        </button>
+      </div>
+
+      {activeTab === 'info' ? (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         
         {/* Left Column: Quick Info Bar + Description (2/3) */}
@@ -242,7 +268,7 @@ export const JobDetail: React.FC = () => {
             </div>
 
             <button
-              onClick={() => navigate('/dashboard/applications/kanban')}
+              onClick={() => setActiveTab('pipeline')}
               className="w-full py-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-bold transition-all cursor-pointer select-none flex items-center justify-center gap-1.5"
             >
               <span>Xem danh sách</span>
@@ -251,6 +277,9 @@ export const JobDetail: React.FC = () => {
         </div>
 
       </div>
+      ) : (
+        <JobKanbanBoard />
+      )}
 
       {/* Edit Job Modal */}
       <EditJobModal 

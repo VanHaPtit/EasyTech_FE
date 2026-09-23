@@ -11,9 +11,9 @@
 ```mermaid
 graph TD
     A[Đăng nhập HR] --> B[Tải Dashboard]
-    B --> C[Fetch Stats: Ứng viên, Job]
-    B --> D[Fetch Biểu đồ]
-    B --> E[Fetch To-do list]
+    B --> C[Fetch Stats: Ứng viên, Trạng thái hồ sơ]
+    B --> D[Fetch Biểu đồ Xu hướng]
+    B --> E[Fetch Hiệu quả tuyển dụng & Top Jobs]
     C --> F[Hiển thị UI tổng quan]
     D --> F
     E --> F
@@ -25,23 +25,22 @@ graph TD
   - **VỚI ĐIỀU KIỆN** HR đăng nhập vào hệ thống.
   - **KHI** HR truy cập `/dashboard`.
   - **THÌ** hệ thống hiển thị 4 thẻ số liệu của công ty (theo bộ lọc thời gian mặc định: 30 ngày qua):
-    1. Tổng số Job đang mở (ACTIVE)
-    2. Tổng số Ứng viên mới nộp (trạng thái NEW)
-    3. Số lịch phỏng vấn sắp tới (trong 7 ngày tới)
-    4. Tỷ lệ tuyển dụng thành công (Hired Candidates / Total Candidates)
+    1. Tổng số ứng viên (kèm % thay đổi)
+    2. Đang xử lý (số lượng và % so với tổng)
+    3. Đạt (số lượng và % so với tổng)
+    4. Không đạt (số lượng và % so với tổng)
 
 - **Kịch bản 2: HR xem biểu đồ xu hướng ứng tuyển**
   - **VỚI ĐIỀU KIỆN** HR đang ở trang Dashboard.
   - **KHI** cuộn xuống phần biểu đồ.
   - **THÌ** hiển thị biểu đồ đường (Line Chart) thể hiện số lượng đơn ứng tuyển nhận được theo từng ngày trong 30 ngày qua.
 
-- **Kịch bản 3: HR xem danh sách việc cần làm (To-Do / Recent Activities)**
+- **Kịch bản 3: HR xem Hiệu quả tuyển dụng và Tin nổi bật**
   - **VỚI ĐIỀU KIỆN** HR đang ở trang Dashboard.
-  - **KHI** xem panel bên phải (hoặc bên dưới).
-  - **THÌ** hiển thị danh sách các mục cần chú ý:
-    - Ứng viên chờ duyệt (mới nhất).
-    - Lịch phỏng vấn trong hôm nay và ngày mai.
-    - Phản hồi từ chối phỏng vấn của ứng viên (nếu có).
+  - **KHI** xem panel bên phải và bên dưới.
+  - **THÌ** hiển thị:
+    - 4 Thẻ hiệu quả tuyển dụng: Tỷ lệ chuyển đổi, Thời gian tuyển dụng TB, Nguồn ứng viên hiệu quả, Tỷ lệ chấp nhận offer.
+    - Bảng Top 4 Tin tuyển dụng nổi bật: Vị trí, Phòng ban, Địa điểm, Số ứng viên, Trạng thái.
 
 - **Kịch bản 4: Lọc dữ liệu Dashboard theo thời gian**
   - **VỚI ĐIỀU KIỆN** HR đang ở trang Dashboard.

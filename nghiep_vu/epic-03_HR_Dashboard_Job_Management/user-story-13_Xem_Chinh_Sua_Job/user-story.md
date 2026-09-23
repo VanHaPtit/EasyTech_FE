@@ -25,6 +25,11 @@ graph TD
   - **KHI** HR click vào tiêu đề của một Job hoặc chọn "Chỉnh sửa" từ menu.
   - **THÌ** hệ thống chuyển đến màn hình `/dashboard/jobs/{job_id}` hiển thị đầy đủ thông tin hiện tại của Job; thao tác "Chỉnh sửa" mở modal chỉnh sửa trên cùng màn hình (có thể mở trực tiếp bằng query `?edit=true`).
 
+  - **THÌ** hệ thống chuyển đến màn hình `/dashboard/jobs/{job_id}/edit` hiển thị đầy đủ thông tin hiện tại của Job đó trên form.
+  - **KHI** HR click vào "Xem danh sách vòng" trong widget Vòng phỏng vấn.
+  - **THÌ** hệ thống hiển thị một popup chứa danh sách các vòng tuyển dụng. Danh sách này chỉ để xem (read-only), không được phép chỉnh sửa.
+
+
 - **Kịch bản 2: HR chỉnh sửa và lưu thành công**
   - **VỚI ĐIỀU KIỆN** HR đang ở màn hình chỉnh sửa Job.
   - **KHI** HR thay đổi một số thông tin (ví dụ: mô tả, ngày hết hạn) và nhấn "Cập nhật".
