@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, CalendarClock, CheckCircle2, Clock, MapPin, Video, XCircle } from 'lucide-react';
 
 type ResponseState = 'idle' | 'accepted' | 'reschedule';
 
 export const InterviewResponsePage: React.FC = () => {
+  const { companySlug = 'techa' } = useParams<{ companySlug: string }>();
   const [state, setState] = useState<ResponseState>('idle');
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
-      <Link to="/careers" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-primary-500 transition-colors mb-8">
+      <Link to={`/company/${companySlug}`} className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-primary-500 transition-colors mb-8">
         <ArrowLeft className="h-4 w-4" />
-        Quay lại Career Site
+        Về trang công ty
       </Link>
 
       <div className="premium-card bg-white p-8 space-y-8">

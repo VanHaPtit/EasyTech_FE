@@ -21,7 +21,7 @@ import { AdminUsers } from './pages/admin/AdminUsers';
 import { NotificationsPage } from './pages/hr/NotificationsPage';
 
 import { AdminLogin } from './pages/admin/AdminLogin';
-import { CareerLayout } from './layouts/CareerLayout';
+import { CompanySubLayout } from './layouts/CompanySubLayout';
 import { CareerHome } from './pages/career/CareerHome';
 import { CompanyCareerSitePage } from './pages/career/CompanyCareerSitePage';
 import { CareerJobDetail } from './pages/career/CareerJobDetail';
@@ -125,23 +125,23 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // ── Career Site (Candidate) ──
-  {
-    path: '/careers',
-    element: <CareerLayout />,
-    children: [
-      { path: '', element: <CareerHome /> },
-      { path: 'applications/track', element: <CandidateTrackPage /> },
-      { path: 'applications/status', element: <CandidateStatusPage /> },
-      { path: 'interviews/respond', element: <InterviewResponsePage /> },
-      { path: 'jobs/:slug', element: <CareerJobDetail /> },
-      { path: 'jobs/:slug/apply', element: <CareerApplyForm /> },
-    ],
-  },
-
+  // ── Company Career Site ──
   {
     path: '/company/:companySlug',
-    element: <CompanyCareerSitePage />,
+    children: [
+      { path: '', element: <CompanyCareerSitePage /> },
+      {
+        path: '',
+        element: <CompanySubLayout />,
+        children: [
+          { path: 'applications/track', element: <CandidateTrackPage /> },
+          { path: 'applications/status', element: <CandidateStatusPage /> },
+          { path: 'interviews/respond', element: <InterviewResponsePage /> },
+          { path: 'jobs/:slug', element: <CareerJobDetail /> },
+          { path: 'jobs/:slug/apply', element: <CareerApplyForm /> },
+        ],
+      },
+    ],
   },
 
   // ── Catch-all ──

@@ -17,7 +17,7 @@ import {
 type FormState = 'idle' | 'loading' | 'success';
 
 export const CareerApplyForm: React.FC = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { companySlug = 'techa', slug } = useParams<{ companySlug: string; slug: string }>();
   const jobTitle = slug ? slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Vị trí ứng tuyển';
 
   const [name, setName] = useState('');
@@ -95,14 +95,14 @@ export const CareerApplyForm: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
-            to="/careers/applications/track"
+            to={`/company/${companySlug}/applications/track`}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold text-sm transition-all shadow-lg shadow-primary-500/20"
           >
             Tra cứu hồ sơ
             <ChevronRight className="h-4 w-4" />
           </Link>
           <Link
-            to="/careers"
+            to={`/company/${companySlug}`}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-bold text-sm transition-all"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -117,12 +117,12 @@ export const CareerApplyForm: React.FC = () => {
     <div className="max-w-4xl mx-auto px-6 py-10">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-8">
-        <Link to="/careers" className="hover:text-primary-500 transition-colors flex items-center gap-1">
+        <Link to={`/company/${companySlug}`} className="hover:text-primary-500 transition-colors flex items-center gap-1">
           <ArrowLeft className="h-3.5 w-3.5" />
-          Cơ hội nghề nghiệp
+          Về trang công ty
         </Link>
         <ChevronRight className="h-3 w-3" />
-        <Link to={`/careers/jobs/${slug}`} className="hover:text-primary-500 transition-colors">{jobTitle}</Link>
+        <Link to={`/company/${companySlug}/jobs/${slug}`} className="hover:text-primary-500 transition-colors">{jobTitle}</Link>
         <ChevronRight className="h-3 w-3" />
         <span className="text-slate-600">Ứng tuyển</span>
       </div>

@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Search, Mail, Hash, CheckCircle2, Clock, FileText, ChevronRight } from 'lucide-react';
 
 export const CandidateTrackPage: React.FC = () => {
+  const { companySlug = 'techa' } = useParams<{ companySlug: string }>();
   const [email, setEmail] = useState('nguyenvana@email.com');
   const [code, setCode] = useState('APP-2026-0001');
   const [searched, setSearched] = useState(false);
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
-      <Link to="/careers" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-primary-500 transition-colors mb-8">
+      <Link to={`/company/${companySlug}`} className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-primary-500 transition-colors mb-8">
         <ArrowLeft className="h-4 w-4" />
-        Quay lại Career Site
+        Về trang công ty
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -114,7 +115,7 @@ export const CandidateTrackPage: React.FC = () => {
               </div>
 
               <Link
-                to="/careers/applications/status"
+                to={`/company/${companySlug}/applications/status`}
                 className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-xs font-extrabold text-white hover:bg-slate-800"
               >
                 Xem timeline chi tiết

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   CheckCircle2,
@@ -56,11 +56,13 @@ const TIMELINE = [
 ];
 
 export const CandidateStatusPage: React.FC = () => {
+  const { companySlug = 'techa' } = useParams<{ companySlug: string }>();
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
-      <Link to="/careers" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-primary-500 transition-colors mb-8">
+      <Link to={`/company/${companySlug}`} className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-primary-500 transition-colors mb-8">
         <ArrowLeft className="h-4 w-4" />
-        Quay lại Career Site
+        Về trang công ty
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
