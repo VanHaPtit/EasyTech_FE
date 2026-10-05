@@ -37,6 +37,7 @@ graph TD
   Sau khi nhận Job ID, UI tạo Job gọi contract form-fields của US-15 để lưu các field tùy chỉnh.
   Pipeline vẫn là luồng phụ thuộc riêng và không được giả định là đã tạo tự động.
 - Nếu chưa cấu hình advanced fields, system vẫn publish được với cấu hình tối giản.
+- Job có thuộc tính `requiresCv` kiểu `Boolean`/`BOOLEAN`, mặc định `true`. HR có thể bỏ chọn để cho phép ứng viên nộp đơn không kèm CV; Job này không được chấm điểm CV bằng AI.
 - Trạng thái Job chuẩn theo database/code hiện tại là `INACTIVE`, `ACTIVE`, `CLOSED`.
 - `INACTIVE` = chưa công khai/bản nháp hoặc tạm dừng; `ACTIVE` = đã publish; `CLOSED` = đã đóng tuyển dụng.
 - Luồng publish là `INACTIVE → ACTIVE`; close là `ACTIVE → CLOSED`; reopen là `CLOSED → ACTIVE`.

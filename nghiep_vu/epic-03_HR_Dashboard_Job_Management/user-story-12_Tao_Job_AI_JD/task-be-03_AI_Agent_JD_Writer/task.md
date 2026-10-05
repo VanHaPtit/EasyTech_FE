@@ -16,7 +16,8 @@ Xác định phạm vi backend cho task 'AI Agent JD Writer' trong US-12 Tao Job
 
 ## Xử lý
 - AI chỉ tạo recommendation; HR giữ quyền quyết định cuối cùng.
-- AI chỉ tạo recommendation; HR giữ quyền quyết định cuối cùng.
+- Kết quả JD là stateless suggestion; không tạo `suggestionId`, không tự lưu Job và không tự ghi đè nội dung HR.
+- Resolve provider theo thứ tự custom provider `ACTIVE` của company, system default, sau đó trả lỗi rõ ràng nếu không có provider.
 - Thực hiện nghiệp vụ chính theo domain hiện tại, không tự thêm feature ngoài phạm vi story.
 - Kiểm tra quyền theo workspace authorization, không trộn với authentication.
 

@@ -10,18 +10,18 @@ Xác định phạm vi frontend cho task 'UI tu dong dien form' trong US-12 Tao 
 - Không tự quyết định trạng thái nghiệp vụ nhạy cảm; frontend tuân theo response và quyền do backend trả về.
 
 ## Screen/Component
-- Component chính: AutoFill.
+- Component chính: Apply AI JD Suggestion.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user
-- Người dùng mở màn hình và thực hiện hành động chính của component.
+- HR chủ động chọn áp dụng gợi ý vào các trường JD sau khi xem preview.
 - Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
 
 ## Hành vi UI
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
-- Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
+- Không tự động điền hoặc ghi đè nội dung HR; thao tác áp dụng phải là hành động rõ ràng và có xác nhận khi nội dung hiện tại không rỗng.
 
 ## Validation
 - Validate trường bắt buộc ngay trên FE để cải thiện UX.
@@ -37,4 +37,4 @@ Xác định phạm vi frontend cho task 'UI tu dong dien form' trong US-12 Tao 
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, `POST /api/v1/jobs`, `PUT /api/v1/jobs/{jobId}`, `POST /api/v1/jobs/{jobId}/publish` tùy component.
+- `POST /api/v1/ai/job-description/suggest`, cùng các API Job CRUD để lưu nội dung sau khi HR đã xác nhận.

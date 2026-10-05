@@ -24,10 +24,11 @@ Xác định phạm vi backend cho task 'API JD Writer Proxy' trong US-12 Tao Jo
 - `/api/v1/ai/job-description/suggest`
 
 ## Request
-- Thông tin Job `INACTIVE` (chưa công khai/bản nháp) và prompt bổ sung của HR.
+- Dữ liệu draft cần thiết cho gợi ý JD và prompt bổ sung của HR.
+- API **stateless**: không yêu cầu Job đã được lưu, không nhận `jobId`, `suggestionId` hoặc `status`.
 
 ## Validation
-- Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
+- Validate trường bắt buộc, format, độ dài và enum trực tiếp liên quan đến task. `categoryId` là số JSON tương ứng PostgreSQL `BIGINT`/Java `Long`.
 - Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
@@ -36,23 +37,24 @@ Xác định phạm vi backend cho task 'API JD Writer Proxy' trong US-12 Tao Jo
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
-- Không đổi Job Status.
+- Không có state transition. API không tạo, cập nhật hoặc đổi status của Job.
 
 ## Side Effects
-- Gọi AI service; lưu log usage nếu có.
+- Gọi AI service; có thể lưu usage/audit metadata, nhưng không lưu suggestion thành entity nghiệp vụ và không ghi nội dung vào `jobs`.
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
 - 401: chưa đăng nhập hoặc token không hợp lệ.
 - 403: không đủ quyền hoặc workspace bị hạn chế.
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
-- 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+- 422: dữ liệu draft không đủ để tạo gợi ý.
+- 503: không resolve được provider hoặc provider upstream tạm thời không khả dụng.
 
 
 ## 3. API JSON Contract
 
 **Endpoint:** `POST /api/v1/ai/job-description/suggest`
-**Mô tả:** Sinh gợi ý JD bằng AI để HR review/chỉnh sửa trước khi lưu job.
+**Mô tả:** Sinh gợi ý JD stateless để HR review/chỉnh sửa trước khi tự quyết định áp dụng vào Job.
 
 ### Request Body
 ```json
@@ -74,8 +76,17 @@ Xác định phạm vi backend cho task 'API JD Writer Proxy' trong US-12 Tao Jo
     "suggestedDescription": "Mô tả công việc do AI đề xuất...",
     "suggestedRequirements": "Yêu cầu ứng viên do AI đề xuất...",
     "suggestedBenefits": "Phúc lợi đề xuất...",
-    "provider": "SYSTEM_DEFAULT",
+    "provider": "OPENAI",
+    "providerSource": "SYSTEM_DEFAULT",
     "model": "gpt-or-gemini"
   }
 }
 ```
+
+`data` không có `suggestionId`. Response chỉ là kết quả tạm thời của request; backend không tự ghi đè nội dung JD của HR. Provider được chọn theo thứ tự `CUSTOM_ACTIVE -> SYSTEM_DEFAULT -> ERROR`.
+
+## Trạng thái triển khai
+
+- Backend MVP đã có adapter Gemini REST, structured JSON response và provider resolver theo contract trên.
+- API nhận system key qua biến môi trường `GEMINI_API_KEY`; không lưu API key trong source code hoặc response.
+- Live E2E với provider thật và PostgreSQL/Docker vẫn là bước nghiệm thu sau khi cấu hình key mới; unit test không được xem là xác nhận provider đã hoạt động ngoài runtime.

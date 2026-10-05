@@ -14,8 +14,8 @@ graph TD
     B --> C{Dùng AI hỗ trợ?}
     C -- Không --> D[Tự nhập mô tả thủ công]
     C -- Có --> E[Gọi API AI Provider]
-    E --> F[AI sinh nội dung JD]
-    F --> G[Review và Edit]
+    E --> F[AI sinh nội dung JD stateless]
+    F --> G[Review và Edit / chủ động áp dụng]
     G --> H[Nhập cấu hình Pipeline, Email, v.v.]
     D --> H
     H --> I[Lưu INACTIVE hoặc PUBLISH]
@@ -31,14 +31,16 @@ graph TD
 - **Kịch bản 2: HR sử dụng AI để tạo JD**
   - **VỚI ĐIỀU KIỆN** HR đang ở màn hình tạo Job, phần Mô tả công việc (Rich Text Editor).
   - **KHI** HR nhập vài từ khóa vào ô "Gợi ý AI" (ví dụ: "ReactJS, 2 năm kinh nghiệm, tiếng Anh cơ bản") và nhấn "Tạo bằng AI".
-- **THÌ** hệ thống gọi API LLM (OpenAI/Gemini). Hiển thị loading spinner. Sau đó trả về một đoạn JD hoàn chỉnh (có cấu trúc: Trách nhiệm, Yêu cầu, Quyền lợi) và tự động điền vào Rich Text Editor.
+  - **THÌ** hệ thống gọi `POST /api/v1/ai/job-description/suggest` (OpenAI/Gemini). Hiển thị loading spinner, sau đó trả về một gợi ý JD có cấu trúc: Trách nhiệm, Yêu cầu, Quyền lợi.
+  - Kết quả là **stateless suggestion**: request không cần `jobId` hoặc `suggestionId`, không tạo bản ghi gợi ý và không tự cập nhật Job.
+  - UI chỉ hiển thị preview; HR phải chủ động chọn "Áp dụng gợi ý". Nếu editor đã có nội dung, UI phải giữ nguyên nội dung hiện tại và yêu cầu HR xác nhận trước khi thay thế từng phần hoặc toàn bộ.
 
 > **Phạm vi contract hiện tại:** luồng tạo Job thủ công và liên kết category đã được triển khai. AI JD Writer chỉ được nối khi provider, secret/config và API contract được chốt; không dùng mock response trong backend.
 
 - **Kịch bản 3: HR chỉnh sửa nội dung AI tạo ra**
-  - **VỚI ĐIỀU KIỆN** AI đã tạo xong nội dung JD trong editor.
-  - **KHI** HR chỉnh sửa thủ công (thêm, bớt chữ, đổi format).
-  - **THÌ** trình soạn thảo hoạt động bình thường, ghi nhận các thay đổi của HR.
+  - **VỚI ĐIỀU KIỆN** UI đã nhận gợi ý JD từ AI.
+  - **KHI** HR chủ động áp dụng một phần/toàn bộ gợi ý rồi chỉnh sửa thủ công (thêm, bớt chữ, đổi format).
+  - **THÌ** trình soạn thảo ghi nhận các thay đổi của HR; không có lần gọi AI nào được phép tự động ghi đè nội dung HR.
 
 - **Kịch bản 4: HR lưu nháp (Save Draft)**
   - **VỚI ĐIỀU KIỆN** HR đã điền một phần thông tin nhưng chưa muốn Publish.
@@ -60,6 +62,15 @@ graph TD
 - Hai field nullable để tương thích các Job đã tồn tại. Nếu cùng truyền, backend phải validate `endDate >= startDate`.
 - `POST /api/v1/jobs`, `GET /api/v1/jobs/{jobId}`, danh sách Job và pipeline update đều đồng bộ hai field; migration thêm `jobs.start_date DATE` và `jobs.end_date DATE` với check constraint tương ứng.
 - UI tạo/sửa Job dùng input ngày và hiển thị cửa sổ nhận hồ sơ. Hai field không tự đổi `INACTIVE`/`ACTIVE`/`CLOSED`; việc public vẫn do status và thao tác publish/close quyết định.
+
+### Contract AI JD Writer (MVP)
+
+- Endpoint: `POST /api/v1/ai/job-description/suggest`.
+- Request chỉ chứa dữ liệu draft cần thiết cho gợi ý (`title`, `categoryId`, `experienceLevel`, `workingType`, `prompt`). `categoryId` là số JSON tương ứng PostgreSQL `BIGINT`/Java `Long`.
+- Request không nhận `jobId`, `suggestionId` hoặc `status`; API không yêu cầu Job đã được lưu và không tạo/chuyển trạng thái Job.
+- Response `200` trả các trường gợi ý (`suggestedDescription`, `suggestedRequirements`, `suggestedBenefits`) cùng `provider` và `providerSource`; không trả `suggestionId` trong MVP.
+- Provider được resolve theo thứ tự: custom provider đang `ACTIVE` của company → system default → lỗi rõ ràng nếu không có provider khả dụng. API không nhận hoặc trả API key thô.
+- Gợi ý không được tự ghi đè nội dung HR. Việc áp dụng kết quả chỉ xảy ra sau thao tác rõ ràng của HR trên UI.
 
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ AI tự động dịch JD sang nhiều ngôn ngữ cùng lúc.
