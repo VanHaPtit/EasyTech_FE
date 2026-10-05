@@ -82,5 +82,5 @@ Xác định phạm vi backend cho task 'DB ho so doanh nghiep' trong US-03 HR O
 
 ## Quy tắc logo
 - Logo upload ở onboarding dùng cho Career Site public: `career_site_settings.logo_url`.
-- Logo nội bộ Dashboard có thể dùng `companies.logo_url` và được quản lý ở US-30 Company Settings.
+- Logo nội bộ Dashboard được thiết lập trong onboarding; sau khi onboarding hoàn tất, US-30 General Settings không cho phép thay đổi logo.
 - Nếu chưa upload logo public, Career Site dùng placeholder mặc định.

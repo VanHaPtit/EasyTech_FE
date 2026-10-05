@@ -89,7 +89,7 @@ Dưới đây là bảng bóc tách chi tiết các điểm mâu thuẫn, chưa 
 *   **Nghiệp vụ hiện tại (Epic 8):** AI hỗ trợ chấm điểm CV và gợi ý câu hỏi. Để tối ưu chi phí, hệ thống chốt cơ chế "On-demand" (HR chủ động nhấn nút mới gọi API ChatGPT/Gemini).
 *   **Rủi ro vận hành:** 
     *   Màn hình Candidate Drawer thiết kế nút **"Rerun AI"** (`task-fe-06_Rerun_Button`) cho phép HR chạy lại AI bất kỳ lúc nào.
-    *   Hệ thống hoàn toàn **không có bất kỳ cơ chế giới hạn tần suất (Rate Limiting) hay hạn ngạch Token (Quota) cho mỗi doanh nghiệp** trong Database (`ai_configs` hay `companies`).
+     *   Hệ thống hoàn toàn **không có bất kỳ cơ chế giới hạn tần suất (Rate Limiting) hay hạn ngạch Token (Quota) cho mỗi doanh nghiệp** trong Database (`ai_providers` hay `companies`).
     *   Một HR bất cẩn hoặc phá hoại có thể bấm "Rerun" hàng trăm lần trên các bộ CV nặng (tối đa 5MB), gọi API liên tục và đốt sạch ngân sách API của hệ thống EasyTech trong tích tắc (do giai đoạn MVP hệ thống Admin chi trả hoàn toàn phí API).
 
 ### 2. Sự nửa vời của cơ chế Tự động hóa Email (Email Automation Inconsistencies)

@@ -203,7 +203,7 @@ Mục tiêu: Tối ưu UX, AI recommendation, email template, feedback và demo-
 - EP-04: US-19, US-21
 - EP-06: US-28
 - EP-07: US-29, US-30, US-31, US-32, US-33
-- EP-08: US-34, US-35, US-36
+- EP-08: US-34, US-36 (US-35 đã ngừng sử dụng theo thống nhất nhóm ngày 2026-10-01)
 
 ---
 

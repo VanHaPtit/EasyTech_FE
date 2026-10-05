@@ -21,6 +21,10 @@ Xác định phạm vi frontend cho task 'UI cai dat chung' trong US-30 Thong Ti
 ## Hành vi UI
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Sau onboarding, chỉ HR Admin được chỉnh sửa địa chỉ chi tiết, tỉnh/thành phố, xã/phường, điện thoại và website. HR khác chỉ xem.
+- Tên công ty/MST, ngành nghề, quy mô, mô tả, slogan, loại hình, năm thành lập, logo và ảnh bìa là read-only trong trang General Settings.
+- Bộ chọn tỉnh/xã hỗ trợ tìm kiếm và không dùng native dropdown; khi đổi tỉnh phải bỏ lựa chọn xã cũ. Địa chỉ chi tiết chỉ giữ số nhà/đường/ngõ, không tự nối tên địa giới.
+- Nút Hủy khôi phục dữ liệu đã tải/lưu gần nhất; lưu thành công chỉ gửi allowlist và hiển thị xác nhận.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
 
 ## Validation
@@ -37,4 +41,4 @@ Xác định phạm vi frontend cho task 'UI cai dat chung' trong US-30 Thong Ti
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/company-profiles/me`, `PATCH /api/v1/company-profiles/me`, `POST /api/v1/company-profiles/me/logo`, `GET /api/v1/email-templates`, `POST /api/v1/email-templates`, `PATCH /api/v1/email-templates/{templateId}`, `DELETE /api/v1/email-templates/{templateId}`, `GET /api/v1/ai-providers`.
+- `GET /api/v1/company-profiles/me`, `PATCH /api/v1/company-profiles/me`.

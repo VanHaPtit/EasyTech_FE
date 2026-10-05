@@ -71,7 +71,7 @@ graph TD
 
 ### Logo trong Onboarding
 - Logo upload ở Bước 2 Onboarding → lưu vào `career_site_settings.logo_url` (public/Career Site logo).
-- Logo nội bộ Dashboard (sidebar) có thể set riêng trong US-30 Company Settings.
+- Logo nội bộ Dashboard được thiết lập trong onboarding; sau khi hoàn tất, trang US-30 General Settings chỉ cho sửa địa chỉ, địa giới, điện thoại và website.
 - **Source of truth:** Career Site logo ← `career_site_settings.logo_url`; Dashboard logo ← `companies.logo_url` (nội bộ).
 
 ## 4. NGOÀI PHẠM VI

@@ -18,26 +18,24 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
 ## Endpoint hiện hành
 - `PATCH /api/v1/company-profiles/me`
 - Alias đọc thông tin hiện tại: `GET /api/v1/companies/me` hoặc `GET /api/v1/company-profiles/me`.
-- Request được giới hạn theo company của user HR/HR_ADMIN hiện tại và có CSRF cho request thay đổi.
+- Request cập nhật sau onboarding chỉ được thực hiện bởi `HR_ADMIN` trên company của chính user và có CSRF.
+- Allowlist sau onboarding: `phone`, `address`, `provinceCode`, `wardCode`, `website`. Nếu request chứa field khác, trả `400` và không cập nhật dữ liệu. HR không có quyền Admin nhận `403`.
+- `POST /api/v1/company-profiles/me/logo` không thuộc luồng chỉnh sửa General Settings sau onboarding; thao tác đặt logo ban đầu thuộc US-03.
 
 ## API JSON Contract
 
 ### Request Body
 ```json
 {
-  "industry": "Công nghệ thông tin",
-  "companySize": "51-200",
   "phone": "0987654321",
-  "address": "123 Tech Street, Hà Nội",
-  "website": "https://techa.vn",
-  "description": "Công ty công nghệ chuyên phát triển phần mềm.",
-  "businessType": "Công ty cổ phần",
-  "contactEmail": "hr@techa.vn",
-  "benefits": "Bảo hiểm, đào tạo",
-  "primaryColor": "#2563eb",
-  "onboardingCompleted": true
+  "address": "Số 12, ngõ 3 Nguyễn Huệ",
+  "provinceCode": "79",
+  "wardCode": "26734",
+  "website": "https://techa.vn"
 }
 ```
+
+Địa chỉ chi tiết chỉ lưu tại `companies.address`; mã tỉnh/xã lưu riêng. Gửi cả hai mã địa giới hoặc để trống cả hai. Chuỗi địa chỉ legacy không được tự phân tích hay ghép thêm tên địa giới khi lưu.
 
 ### Response (200 OK)
 ```json
@@ -49,7 +47,9 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
     "name": "TechA Solutions",
     "taxCode": "0123456789",
     "phone": "0987654321",
-    "address": "123 Tech Street, Hà Nội",
+    "address": "Số 12, ngõ 3 Nguyễn Huệ",
+    "provinceCode": "79",
+    "wardCode": "26734",
     "website": "https://techa.vn",
     "updatedAt": "2026-08-31T10:00:00"
   }
@@ -60,7 +60,9 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
 ```json
 {
   "status": 0,
-  "message": "Thông tin doanh nghiệp không hợp lệ hoặc không có quyền cập nhật.",
+  "message": "Chỉ cho phép cập nhật địa chỉ, tỉnh/thành phố, xã/phường, điện thoại và website.",
   "data": null
 }
 ```
+
+Request từ HR không có quyền Admin trả `403 Forbidden` theo `BaseResponse` hiện hành.

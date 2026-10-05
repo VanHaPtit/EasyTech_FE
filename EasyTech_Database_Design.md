@@ -45,14 +45,14 @@ Nguyên tắc quan trọng:
 | Candidate | `applications` | Lưu đơn ứng tuyển của candidate vào job. |
 | Candidate | `application_answers` | Lưu câu trả lời của ứng viên cho form động. |
 | Candidate | `application_progress` | Lưu trạng thái ứng viên qua từng vòng. |
-| AI | `cv_insights` | Lưu kết quả AI phân tích CV. |
+| AI | `cv_analyses` | Lưu từng kết quả AI phân tích CV theo lần chạy. |
 | AI | `ai_suggestions` | Lưu kết quả AI gợi ý ứng viên cho job. |
 | Email | `email_templates` | Lưu mẫu email. |
 | Email | `email_logs` | Lưu lịch sử gửi email. |
 | Interview | `interviews` | Lưu lịch phỏng vấn. |
 | System | `audit_logs` | Lưu log thao tác quan trọng. |
 | System | `notifications` | Lưu thông báo nội bộ. |
-| Settings | `ai_configs` | Lưu cấu hình AI Provider/API Key. |
+| Settings | `ai_providers` | Lưu cấu hình AI Provider/API Key theo system scope hoặc company. |
 
 ---
 
@@ -95,7 +95,9 @@ Lưu thông tin doanh nghiệp/tenant.
 | `phone` | VARCHAR(50) | nullable | Số điện thoại. |
 | `email` | VARCHAR(255) | nullable | Email liên hệ. |
 | `website` | VARCHAR(255) | nullable | Website công ty. |
-| `address` | TEXT | nullable | Địa chỉ. |
+| `address` | TEXT | nullable | Địa chỉ chi tiết do HR nhập (số nhà, đường, ngõ); không ghép tỉnh/thành phố hoặc xã/phường. |
+| `province_code` | VARCHAR(20) | nullable | Mã tỉnh/thành phố từ `full_json_generated_data_vn_units.json`. |
+| `ward_code` | VARCHAR(20) | nullable | Mã xã/phường từ `full_json_generated_data_vn_units.json`, thuộc `province_code`. |
 | `onboarding_completed` | BOOLEAN | default false | Đánh dấu hoàn thành Onboarding 3 bước. |
 | `status` | VARCHAR(50) | NOT NULL | `PENDING`, `ACTIVE`, `REJECTED`, `BLOCKED`. |
 | `approved_by` | BIGINT | FK -> users.id, nullable | Admin duyệt. |
@@ -223,6 +225,7 @@ Lưu tin tuyển dụng.
 | `experience_level` | VARCHAR(50) | nullable | `INTERN`, `JUNIOR`, `MID`, `SENIOR`, `LEAD`. |
 | `experience_years_min` | INT | nullable | Số năm kinh nghiệm tối thiểu. |
 | `round_count` | INT | default 0 | Số vòng phỏng vấn đã cấu hình; Job mới chưa có round nên bắt đầu từ `0`. |
+| `requires_cv` | BOOLEAN | NOT NULL, default `TRUE` | Job có bắt buộc ứng viên nộp CV hay không. `FALSE` cho phép apply không kèm CV và không đủ điều kiện chấm điểm CV bằng AI. |
 | `status` | VARCHAR(50) | NOT NULL, default `INACTIVE` | `INACTIVE`, `ACTIVE`, `CLOSED`. |
 | `published_at` | TIMESTAMP | nullable | Ngày publish. |
 | `closed_at` | TIMESTAMP | nullable | Ngày đóng. |
@@ -231,6 +234,8 @@ Lưu tin tuyển dụng.
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
 Unique: `(company_id, slug)`
+
+Migration implementation: `V25__add_job_cv_requirement.sql` adds `requires_cv` with a backfill/default of `TRUE`, so existing Jobs continue to require CV unless HR explicitly changes the setting.
 
 Index: `idx_jobs_company_id`, `idx_jobs_status`, `idx_jobs_category_id`
 
@@ -429,7 +434,7 @@ Unique: `(application_id, round_id)`
 
 ---
 
-### 3.15 `cv_insights`
+### 3.15 `cv_analyses`
 
 Lưu kết quả AI phân tích CV.
 
@@ -437,24 +442,28 @@ Lưu kết quả AI phân tích CV.
 | --- | --- | --- | --- |
 | `id` | BIGINT | PK | ID phân tích. |
 | `application_id` | BIGINT | FK, NOT NULL | Hồ sơ được phân tích. |
-| `raw_text` | LONGTEXT/TEXT | nullable | Text trích xuất từ CV. |
+| `raw_text` | TEXT | nullable | Text trích xuất từ CV (PostgreSQL). |
 | `summary` | TEXT | nullable | Tóm tắt CV. |
 | `matching_score` | DECIMAL(5,2) | nullable | Điểm khớp 0–100. |
 | `matched_skills` | JSON/TEXT | nullable | Kỹ năng khớp JD. |
 | `missing_skills` | JSON/TEXT | nullable | Kỹ năng còn thiếu. |
 | `strengths` | JSON/TEXT | nullable | Điểm mạnh. |
 | `weaknesses` | JSON/TEXT | nullable | Điểm yếu. |
-| `interview_questions` | JSON/TEXT | nullable | Câu hỏi phỏng vấn gợi ý. |
 | `provider` | VARCHAR(100) | nullable | AI provider dùng để phân tích. |
 | `prompt_tokens` | INT | default 0 | Số token đầu vào (để tính phí). |
 | `completion_tokens` | INT | default 0 | Số token đầu ra. |
 | `estimated_cost` | DECIMAL(10,4) | default 0.0000 | Chi phí ước tính (USD). |
-| `status` | VARCHAR(50) | NOT NULL | `PENDING`, `COMPLETED`, `FAILED`. |
+| `provider_source` | VARCHAR(30) | nullable | `CUSTOM` hoặc `SYSTEM_DEFAULT`; null nếu thất bại trước khi resolve provider. |
+| `status` | VARCHAR(50) | NOT NULL | `COMPLETED`, `FAILED`; `PENDING`/`PROCESSING` chỉ là trạng thái nội bộ nếu implementation cần. |
 | `error_message` | TEXT | nullable | Lỗi nếu phân tích thất bại. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
-Index: `idx_cv_insights_application_id`, `idx_cv_insights_score`
+Index: `idx_cv_analyses_application_id`, `idx_cv_analyses_score`
+
+`cv_analyses` chỉ lưu kết quả chấm điểm CV. Không lưu câu hỏi phỏng vấn do AI gợi ý; US-35 đã ngừng sử dụng theo thống nhất nhóm ngày 2026-10-01.
+
+Mỗi lần HR yêu cầu chấm điểm (kể cả `rerun`) có thể tạo một bản ghi mới để giữ lịch sử. API MVP xử lý đồng bộ và chỉ trả `200 OK` khi bản ghi đã `COMPLETED`; nếu parse/provider lỗi thì lưu `FAILED` và trả lỗi có thể hành động được. Với lỗi provider tạm thời, backend thử tối đa 2 lần cho mỗi model; sau đó chuyển từ model chính sang `GEMINI_FALLBACK_MODEL` và áp dụng cùng chính sách retry. Khi cả hai model thất bại, trả `503`, không tạo điểm giả và không xóa bản ghi `COMPLETED` trước đó.
 
 ---
 
@@ -595,16 +604,16 @@ Lưu thông báo nội bộ cho HR.
 
 ---
 
-### 3.22 `ai_configs`
+### 3.22 `ai_providers`
 
 Lưu cấu hình AI provider theo doanh nghiệp.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
-| `id` | BIGINT | PK | ID config. |
-| `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
+| `id` | BIGINT | PK | ID provider config; Java type là `Long`. |
+| `company_id` | BIGINT | FK, nullable | Doanh nghiệp của custom provider; `NULL` chỉ dành cho system default. |
 | `provider_name` | VARCHAR(100) | NOT NULL | OpenAI, Google, Anthropic... |
-| `provider_code` | VARCHAR(100) | NOT NULL | `OPENAI`, `GOOGLE_GEMINI`, `ANTHROPIC`. |
+| `provider_code` | VARCHAR(100) | NOT NULL | `OPENAI`, `GEMINI`, `ANTHROPIC`. |
 | `api_key_encrypted` | TEXT | nullable | API key đã mã hóa AES-256. |
 | `model_name` | VARCHAR(100) | nullable | Model sử dụng, ví dụ `gpt-4o`, `gemini-2.0-flash`. |
 | `max_daily_requests` | INT | default 100 | Giới hạn số lần gọi API AI mỗi ngày cho DN. |
@@ -614,7 +623,9 @@ Lưu cấu hình AI provider theo doanh nghiệp.
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
-Unique: `(company_id, provider_code)`
+Unique: `(company_id, provider_code)` cho custom provider; thêm unique provider code ở system scope (`company_id IS NULL`).
+
+Provider resolution thống nhất cho toàn bộ feature AI: custom provider của company có `status = ACTIVE` và key hợp lệ → system default → lỗi rõ ràng nếu không có provider khả dụng. Sau khi resolve, model chính lấy từ provider; model dự phòng lấy từ `GEMINI_FALLBACK_MODEL`. Company Admin không được sửa system default qua API cấu hình custom.
 
 ---
 
@@ -626,7 +637,7 @@ companies 1---1 company_profiles
 companies 1---1 career_sites
 companies 1---n jobs
 companies 1---n email_templates
-companies 1---n ai_configs
+companies 1---n ai_providers (custom; system default có company_id = NULL)
 companies 1---n notifications
 
 job_categories 1---n jobs
@@ -645,7 +656,7 @@ jobs 1---n ai_suggestions
 candidates 1---n applications
 
 applications 1---n application_progress
-applications 1---n cv_insights
+applications 1---n cv_analyses
 applications 1---n email_logs
 applications 1---n application_answers
 applications 1---n interviews
@@ -761,11 +772,11 @@ CONFIRMED → DONE                         (Hoàn tất phỏng vấn)
 13. `applications`
 14. `application_answers`
 15. `application_progress`
-16. `cv_insights`
+16. `cv_analyses`
 17. `ai_suggestions`
 18. `email_logs`
 19. `interviews`
-20. `ai_configs`
+20. `ai_providers`
 21. `notifications`
 22. `audit_logs`
 
@@ -778,10 +789,10 @@ Bắt buộc:
 - `users`, `companies`, `company_profiles`
 - `job_categories`, `jobs`, `hiring_rounds`
 - `candidates`, `applications`, `application_progress`
-- `cv_insights`, `email_templates`, `email_logs`
+- `cv_analyses`, `ai_providers`, `email_templates`, `email_logs`
 - `audit_logs`
 
 Có thể để sau:
 
 - `career_sites`, `job_activities`, `evaluation_forms`, `form_fields`, `application_answers`
-- `interviews`, `notifications`, `ai_configs`, `ai_suggestions`
+- `interviews`, `notifications`, `ai_suggestions`
