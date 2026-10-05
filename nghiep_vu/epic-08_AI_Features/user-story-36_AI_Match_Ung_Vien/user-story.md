@@ -20,7 +20,7 @@ graph TD
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: AI đề xuất ứng viên khi Job được Publish**
-  - **VỚI ĐIỀU KIỆN** hệ thống có kho lưu trữ hồ sơ ứng viên cũ trong bảng `candidates` và `applications`, và mỗi hồ sơ đã có `cv_insights` từ AI (matching_score, strengths, skills).
+  - **VỚI ĐIỀU KIỆN** hệ thống có kho lưu trữ hồ sơ ứng viên cũ trong bảng `candidates` và `applications`, và mỗi hồ sơ đã có `cv_analyses` từ AI (matching_score, strengths, skills).
   - **KHI** HR publish một tin tuyển dụng mới (Jobs có trạng thái chuyển từ `DRAFT` → `ACTIVE`).
   - **THÌ** hệ thống kích hoạt Background Worker chạy ngầm (không block UI):
     - Worker gọi Python AI Service để thực hiện Vector Similarity Search giữa JD mới và các CV trong kho.

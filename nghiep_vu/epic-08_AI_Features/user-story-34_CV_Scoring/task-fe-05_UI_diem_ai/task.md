@@ -15,12 +15,14 @@ Xác định phạm vi frontend cho task 'UI diem ai' trong US-34 CV Scoring, l�
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user
-- Người dùng mở màn hình và thực hiện hành động chính của component.
+- HR xem kết quả mới nhất sau khi request chấm điểm đồng bộ trả về `200 OK`.
+- Chỉ hiển thị nút/khu vực chấm điểm khi `application.requiresCv === true` và `application.hasCv === true`. Nếu Job không yêu cầu CV hoặc Application không có CV, hiển thị trạng thái giải thích thay cho action chấm điểm.
 - Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
 
 ## Hành vi UI
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Hiển thị `matchingScore`, matched/missing skills, strengths, weaknesses, summary và provider/providerSource.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
 
 ## Validation
@@ -37,4 +39,4 @@ Xác định phạm vi frontend cho task 'UI diem ai' trong US-34 CV Scoring, l�
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `POST /api/v1/applications/{applicationId}/cv-analysis`, `POST /api/v1/ai/interview-questions/suggest`.
+- `POST /api/v1/applications/{applicationId}/cv-analysis`.

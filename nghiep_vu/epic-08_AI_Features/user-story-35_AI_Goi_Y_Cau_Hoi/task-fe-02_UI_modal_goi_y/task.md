@@ -1,5 +1,7 @@
 # task-fe-02_UI_modal_goi_y
 
+> **US-35 NGỪNG SỬ DỤNG (2026-10-01):** Không triển khai UI gợi ý câu hỏi. Nội dung task được giữ để lưu lịch sử quyết định; không tạo modal, component hoặc luồng giao diện theo mô tả bên dưới.
+
 ## Mục đích
 Xác định phạm vi frontend cho task 'UI modal goi y' trong US-35 AI Goi Y Cau Hoi, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 

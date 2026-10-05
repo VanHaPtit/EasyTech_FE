@@ -16,7 +16,9 @@ Xác định phạm vi backend cho task 'AI cham diem cv' trong US-34 CV Scoring
 
 ## Xử lý
 - AI chỉ tạo recommendation; HR giữ quyền quyết định cuối cùng.
-- AI chỉ tạo recommendation; HR giữ quyền quyết định cuối cùng.
+- Task chỉ chạy khi HR chủ động gọi API chấm điểm; không tự chạy khi Application được tạo.
+- Xử lý đồng bộ và chỉ hoàn tất sau khi lưu kết quả vào `cv_analyses`; không dùng queue/worker hoặc `202` trong MVP.
+- Resolve provider theo thứ tự custom provider `ACTIVE` của company, system default, sau đó trả lỗi nếu không có provider khả dụng.
 - Thực hiện nghiệp vụ chính theo domain hiện tại, không tự thêm feature ngoài phạm vi story.
 - Kiểm tra quyền theo workspace authorization, không trộn với authentication.
 
@@ -30,10 +32,13 @@ Xác định phạm vi backend cho task 'AI cham diem cv' trong US-34 CV Scoring
 - Audit/logging service khi có thay đổi dữ liệu hoặc side effect quan trọng.
 
 ## Side Effects
-- Gửi email, ghi audit log, lưu file, lưu AI result hoặc dispatch notification nếu nghiệp vụ yêu cầu.
+- Lưu AI result vào `cv_analyses`; không tự đổi Application Status hoặc Round Result.
+- Có thể ghi audit/usage metadata nhưng không log secret/token/API key.
 - Không gửi lặp khi retry nếu action đã thành công trước đó.
 
 ## Xử lý lỗi
 - Log lỗi đủ context nhưng không log secret/token/API key.
-- Retry có kiểm soát cho lỗi tạm thời như SMTP/AI provider.
+- Với AI provider, retry có giới hạn cho lỗi tạm thời (`408`, `429`, `5xx`, lỗi kết nối), mặc định tối đa 2 lần thử cho mỗi model và có backoff/jitter giới hạn.
+- Sau khi model chính hết lượt mà chưa thành công, chuyển sang `GEMINI_FALLBACK_MODEL` và áp dụng cùng chính sách retry. Không retry lỗi API key/quyền hoặc request/schema không hợp lệ.
+- Nếu model chính và model dự phòng đều thất bại, trả `503` với thông báo nêu rõ cả hai model và số lượt thử; lưu `FAILED`, không tạo điểm giả và không xóa kết quả `COMPLETED` trước đó.
 - Trả lỗi nghiệp vụ có thể hiểu được cho API layer.

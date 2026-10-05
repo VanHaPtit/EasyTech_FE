@@ -1,5 +1,7 @@
 # 📋 User Story 35: Gợi Ý Câu Hỏi Phỏng Vấn (AI Interview Questions Suggestion)
 
+> **TRẠNG THÁI: NGỪNG SỬ DỤNG (2026-10-01).** Nhóm đã thống nhất không triển khai tính năng này. Các tiêu chí bên dưới chỉ được giữ làm lịch sử, không còn là yêu cầu thực hiện.
+
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng / Người phỏng vấn,
 - **Tôi muốn** AI dựa vào những điểm mạnh, điểm yếu từ CV của ứng viên để tự động gợi ý danh sách câu hỏi phỏng vấn,

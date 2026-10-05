@@ -1,5 +1,7 @@
 # task-be-01_API_goi_y_ai
 
+> **US-35 NGỪNG SỬ DỤNG (2026-10-01):** Không triển khai API gợi ý câu hỏi. Nội dung task được giữ để lưu lịch sử quyết định; không tạo endpoint, service hoặc thay đổi schema theo contract bên dưới.
+
 ## Mục đích
 Xác định phạm vi backend cho task 'API goi y ai' trong US-35 AI Goi Y Cau Hoi, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 

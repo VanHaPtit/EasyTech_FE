@@ -10,12 +10,13 @@ Xác định phạm vi frontend cho task 'UI tu dong kich hoat' trong US-34 CV S
 - Không tự quyết định trạng thái nghiệp vụ nhạy cảm; frontend tuân theo response và quyền do backend trả về.
 
 ## Screen/Component
-- Component chính: Auto Trigger.
+- Component chính: On-demand CV Scoring Trigger.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user
-- Người dùng mở màn hình và thực hiện hành động chính của component.
+- HR mở Candidate Drawer và chủ động nhấn "Chấm điểm AI".
+- Không gọi API tự động khi Application mới được tạo; tên task cũ "tự động kích hoạt" không còn là hành vi MVP.
 - Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
 
 ## Hành vi UI
@@ -37,4 +38,4 @@ Xác định phạm vi frontend cho task 'UI tu dong kich hoat' trong US-34 CV S
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `POST /api/v1/applications/{applicationId}/cv-analysis`, `POST /api/v1/ai/interview-questions/suggest`.
+- `POST /api/v1/applications/{applicationId}/cv-analysis` và chờ `200 OK` chứa kết quả cuối cùng; không polling `202`.

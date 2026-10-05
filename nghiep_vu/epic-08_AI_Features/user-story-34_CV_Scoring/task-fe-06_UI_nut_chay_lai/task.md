@@ -15,12 +15,14 @@ Xác định phạm vi frontend cho task 'UI nut chay lai' trong US-34 CV Scorin
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user
-- Người dùng mở màn hình và thực hiện hành động chính của component.
+- HR nhấn "Chạy lại AI Scoring" khi muốn có một bản phân tích mới.
 - Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
 
 ## Hành vi UI
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Gửi `{ "rerun": true }` đến endpoint chấm điểm và chờ `200 OK` đồng bộ; không đưa vào queue hoặc polling.
+- Giữ kết quả cũ nếu lần chạy lại thất bại; chỉ thay kết quả đang hiển thị sau khi bản ghi mới lưu thành công.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
 
 ## Validation
@@ -37,4 +39,4 @@ Xác định phạm vi frontend cho task 'UI nut chay lai' trong US-34 CV Scorin
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `POST /api/v1/applications/{applicationId}/cv-analysis`, `POST /api/v1/ai/interview-questions/suggest`.
+- `POST /api/v1/applications/{applicationId}/cv-analysis`.
