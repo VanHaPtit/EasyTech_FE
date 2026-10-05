@@ -37,4 +37,6 @@ Xác định phạm vi frontend cho task 'UI cai dat ai' trong US-31 AI Provider
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/company-profiles/me`, `PATCH /api/v1/company-profiles/me`, `POST /api/v1/company-profiles/me/logo`, `GET /api/v1/email-templates`, `POST /api/v1/email-templates`, `PATCH /api/v1/email-templates/{templateId}`, `DELETE /api/v1/email-templates/{templateId}`, `GET /api/v1/ai-providers`.
+- `GET /api/v1/company-profiles/me`, `PATCH /api/v1/company-profiles/me`, `POST /api/v1/company-profiles/me/logo`, `GET /api/v1/email-templates`, `POST /api/v1/email-templates`, `PATCH /api/v1/email-templates/{templateId}`, `DELETE /api/v1/email-templates/{templateId}`, `GET /api/v1/ai-providers`, `PATCH /api/v1/ai-providers/{providerId}/key`.
+
+UI phải phân biệt custom provider và system default, hiển thị provider hiệu lực sau khi resolve, masked key và lỗi khi không có provider; không hiển thị hoặc lưu API key thô ở client.

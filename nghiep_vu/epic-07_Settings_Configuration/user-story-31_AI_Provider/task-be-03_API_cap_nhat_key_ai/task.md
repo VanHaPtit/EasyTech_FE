@@ -22,6 +22,7 @@ Xác định phạm vi backend cho task 'API cap nhat key ai' trong US-31 AI Pro
 
 ## Endpoint
 - `/api/v1/ai-providers/{providerId}/key`
+- `providerId` là số JSON tương ứng PostgreSQL `BIGINT`/Java `Long`.
 
 ## Request
 - API key mới hoặc flag disable provider.
@@ -36,10 +37,10 @@ Xác định phạm vi backend cho task 'API cap nhat key ai' trong US-31 AI Pro
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
-- Không có state transition trực tiếp.
+- Bật/tắt custom provider chỉ thay đổi provider custom của company. Khi custom bị tắt hoặc key không hợp lệ, các feature AI resolve system default; nếu system default cũng không khả dụng thì trả lỗi rõ ràng.
 
 ## Side Effects
-- Mã hóa/lưu secret và ghi audit log.
+- Validate provider, mã hóa/lưu secret và ghi audit log. Không trả secret thô và không cho Company Admin sửa system default qua endpoint này.
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
@@ -84,12 +85,12 @@ Xác định phạm vi backend cho task 'API cap nhat key ai' trong US-31 AI Pro
 ## Thiết kế Database – Bảng ai_providers
 
 ## Bảng/entity liên quan
-- Bảng chính: `company_profiles`, `email_templates`, `ai_providers`, `user_roles`, `permissions`.
+- Bảng chính: `ai_providers`, `company_profiles`, `user_roles`, `permissions`.
 - Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
 - Các bảng thuộc tenant phải có company_id và index theo company_id.
 
 ## Column và kiểu dữ liệu
-- Dùng UUID cho khóa chính/khóa ngoại.
+- Dùng `BIGINT` cho khóa chính/khóa ngoại và Java `Long`; JSON/TypeScript dùng number. Không dùng UUID.
 - Dùng VARCHAR cho mã, email, slug, enum dạng text.
 - Dùng TEXT cho nội dung dài như mô tả, lý do từ chối, email body hoặc AI explanation.
 - Dùng TIMESTAMP cho thời điểm tạo/cập nhật/gửi email/đánh giá.
@@ -97,8 +98,7 @@ Xác định phạm vi backend cho task 'API cap nhat key ai' trong US-31 AI Pro
 
 ## Khóa và ràng buộc
 - Primary Key: id.
-- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, 
-ound_id, user_id.
+- Foreign Key: trỏ đúng entity cha, đặc biệt `company_id`, `job_id`, `application_id`, `round_id`, `user_id` nếu bảng liên quan.
 - Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
 - Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
 
@@ -109,3 +109,4 @@ ound_id, user_id.
 ## Relationship
 - Dữ liệu phải giữ đúng multi-tenant boundary theo company_id.
 - Xóa mềm không được làm mất audit/history cần phục vụ báo cáo hoặc truy vết.
+- `company_id = NULL` chỉ dành cho system-scope default provider; bản ghi custom phải có `company_id`. Cần unique theo `(company_id, provider_code)` và unique provider code ở system scope.

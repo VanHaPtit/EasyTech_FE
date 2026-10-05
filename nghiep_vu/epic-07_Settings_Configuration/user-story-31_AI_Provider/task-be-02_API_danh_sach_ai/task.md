@@ -32,7 +32,7 @@ Xác định phạm vi backend cho task 'API danh sach ai' trong US-31 AI Provid
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 
 ## Response
-- Thành công: BaseResponse(status = 1, message, data); Danh sách provider khả dụng và provider đang active.
+- Thành công: BaseResponse(status = 1, message, data); danh sách provider khả dụng và provider hiệu lực sau khi resolve.
 - Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
 
 ## State Transition
@@ -64,6 +64,7 @@ Không có request body.
   "message": "Lấy danh sách AI Provider thành công",
   "data": {
     "activeProviderId": 1,
+    "activeProviderSource": "CUSTOM",
     "providers": [
       {
         "id": 1,
@@ -87,3 +88,5 @@ Không có request body.
   }
 }
 ```
+
+`activeProviderId` là provider hiệu lực sau khi áp dụng thứ tự `CUSTOM_ACTIVE -> SYSTEM_DEFAULT -> ERROR`; nếu không resolve được provider thì API trả lỗi cấu hình thay vì trả provider giả. ID là `BIGINT`/Java `Long` và được serialize thành number.
