@@ -24,13 +24,13 @@ Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm r�
 - `/api/v1/public/jobs/{jobId}/applications`
 
 ## Request
-- Candidate info, CV file, consent và câu trả lời form ứng tuyển.
+- Candidate info, CV file tùy theo `Job.requiresCv`, consent và câu trả lời form ứng tuyển.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
 - Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
-- Với `cvFile`, backend kiểm tra dung lượng không vượt quá 5 MB và chữ ký nội dung `%PDF-` trong vùng đầu file. Tên file và MIME type của multipart part do trình duyệt gửi chỉ là thông tin tham khảo; chúng có thể rỗng, không có phần mở rộng hoặc là `application/octet-stream` trên mobile browser mà không được làm cho một PDF hợp lệ bị từ chối.
+- Với `Job.requiresCv = true`, `cvFile` là bắt buộc. Với `Job.requiresCv = false`, `cvFile` có thể vắng mặt; nếu client vẫn gửi file thì backend vẫn kiểm tra dung lượng không vượt quá 5 MB và chữ ký nội dung `%PDF-` trong vùng đầu file. Tên file và MIME type của multipart part do trình duyệt gửi chỉ là thông tin tham khảo; chúng có thể rỗng, không có phần mở rộng hoặc là `application/octet-stream` trên mobile browser mà không được làm cho một PDF hợp lệ bị từ chối.
 
 ## Response
 - Thành công: BaseResponse(status = 1, message, data); Application confirmation và tracking token/magic link.
@@ -40,7 +40,7 @@ Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm r�
 - Application Status = ACTIVE.
 
 ## Side Effects
-- Lưu candidate/application/CV, gửi confirmation email cho ứng viên và thông báo cho HR.
+- Lưu candidate/application và CV nếu có, gửi confirmation email cho ứng viên và thông báo cho HR.
 
 ## Các trường hợp lỗi
 - 400: request không hợp lệ hoặc enum/status sai.
@@ -59,7 +59,7 @@ Xác định phạm vi backend cho task 'API nop cv' trong US-26 Nop CV, làm r�
 - `email`: "candidate@gmail.com"
 - `phone`: "0901234567"
 - `coverLetter`: "Tôi quan tâm đến vị trí này."
-- `cvFile`: [File PDF]
+- `cvFile`: [File PDF, bắt buộc khi Job.requiresCv = true; tùy chọn khi false]
 - `answers`: "[{\"questionId\":1,\"answer\":\"React 4 năm\"}]"; `questionId` là `form_fields.id` kiểu `BIGINT`/Java `Long`
 - `consentAccepted`: true
 

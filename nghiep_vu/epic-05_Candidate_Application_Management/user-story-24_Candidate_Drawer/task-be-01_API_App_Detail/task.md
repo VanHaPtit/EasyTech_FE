@@ -71,7 +71,7 @@ Không có request body.
       "fullName": "Tran B",
       "email": "tranb@example.com",
       "phone": "0901234567",
-      "cvUrl": "https://storage.easytech.vn/cv/tran-b.pdf"
+      "cvUrl": null
     },
     "job": {
       "id": 101,
@@ -93,3 +93,13 @@ Không có request body.
   }
 }
 ```
+
+### API phục vụ xem CV PDF riêng tư
+
+Để Candidate Drawer mở CV mà không làm lộ storage key, CV không được trả về dưới dạng URL public trong JSON detail. Backend cung cấp endpoint binary riêng:
+
+- **Endpoint:** `GET /api/v1/applications/{applicationId}/cv`.
+- **Quyền:** chỉ `HR`/`HR_ADMIN` đã đăng nhập; `applicationId` phải thuộc `company_id` trong JWT. Admin hệ thống và company khác không được đọc CV.
+- **Thành công:** `200 OK`, `Content-Type: application/pdf`, `Content-Disposition: inline; filename="cv-{applicationId}.pdf"`; response body là bytes PDF, không bọc `BaseResponse`.
+- **Bảo mật:** storage key nội bộ (`private://...`) chỉ được resolve ở backend; endpoint không mở qua `/uploads/**` và response đặt `Cache-Control: no-store`.
+- **Lỗi:** dùng error contract tập trung hiện tại: `401` chưa đăng nhập, `403` sai role, `404` không thuộc company hiện tại hoặc chưa có CV, `422` file không còn đọc được.

@@ -17,7 +17,7 @@ graph TD
   A[Candidate mở Career Site] --> B[Browse jobs]
   B --> C[Open job detail]
   C --> D[Ứng tuyển không cần tài khoản]
-  D --> E[Submit form + consent + CV]
+  D --> E[Submit form + consent + CV nếu Job yêu cầu]
   E --> F[Application created]
   F --> G[Confirmation + magic link email]
   G --> H[Candidate tracks application]
@@ -37,7 +37,8 @@ graph TD
 
 ## 5. Business Rules
 - Candidate ứng tuyển không cần register/login.
-- Form mặc định gồm: họ tên, email, số điện thoại, CV; custom fields là tùy chọn.
+- Form mặc định gồm: họ tên, email, số điện thoại và CV nếu Job có `requiresCv = true`; custom fields là tùy chọn.
+- `requiresCv` là thuộc tính Job (JSON `Boolean`, DB `BOOLEAN NOT NULL DEFAULT TRUE`). Job không yêu cầu CV vẫn nhận Application không có CV và không hiển thị/cho phép chấm điểm CV bằng AI.
 - Duplicate application phải được chặn rõ ràng và cung cấp tùy chọn xem trạng thái hoặc gửi lại Magic Link.
 - Candidate phản hồi qua secure email link. Để bảo mật chống forward link, BẮT BUỘC Candidate phải nhập lại Email ứng tuyển để verify trước khi cho phép thao tác.
 
@@ -51,7 +52,7 @@ graph TD
 ### 7.1. API Ứng viên nộp hồ sơ (Apply Job)
 - **Endpoint:** `POST /api/v1/public/jobs/{jobId}/applications`
 - **Content-Type:** `multipart/form-data`
-- **Payload (`multipart/form-data`):** `fullName`, `email`, `phone`, `coverLetter`, `cvFile`, `answers` (JSON array với `questionId` kiểu number) và `consentAccepted`.
+- **Payload (`multipart/form-data`):** `fullName`, `email`, `phone`, `coverLetter`, `cvFile` (bắt buộc tùy `requiresCv`), `answers` (JSON array với `questionId` kiểu number) và `consentAccepted`.
 - **Response (201 Created):**
 ```json
 {

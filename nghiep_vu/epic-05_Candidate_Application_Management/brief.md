@@ -3,7 +3,7 @@
 ## 1. Tóm tắt
 - **Nghiệp vụ:** HR quản lý hồ sơ ứng viên qua Kanban, list view và candidate drawer.
 - **Điều kiện tiên quyết:** Job đã `ACTIVE`, có ứng viên nộp CV và có default pipeline.
-- **Luồng chính:** Candidate ứng tuyển → HR thấy card mới → xem hồ sơ → chuyển qua các stage → gửi email / thư mời phỏng vấn khi cần.
+- **Luồng chính:** HR chọn Job `ACTIVE` → xem danh sách Application theo `jobId` → mở Candidate Drawer → xem CV PDF riêng tư nếu có → chuyển qua các stage hoặc chủ động chấm điểm AI khi Job yêu cầu CV.
 
 ## 2. Giá trị nghiệp vụ và chỉ số
 - **Giá trị nghiệp vụ:** Tăng tốc độ xem xét hồ sơ và làm cho quy trình review rõ ràng cho HR / interviewer.
@@ -30,6 +30,7 @@ graph TD
 ## 5. Business Rules
 - Candidate list phải thể hiện trạng thái rõ ràng và hiển thị time-to-stage logic nếu phù hợp.
 - HR không cần mặc định AI score để review; AI chỉ hỗ trợ recommendation.
+- Luồng review CV dùng `GET /api/v1/applications/{applicationId}/cv` với kiểm tra role và `company_id`; không hiển thị public storage URL.
 - Khi move candidate tới một vòng mới, UI phải hiển thị rõ action và email side effect nếu có.
 - Application status (Hồ sơ) chỉ bao gồm: `ACTIVE`, `REJECTED`, `HIRED`. Tuyệt đối không được dùng tên pipeline stage (như Applied, Screening, Interview) làm Application Status để tránh mâu thuẫn dữ liệu.
 

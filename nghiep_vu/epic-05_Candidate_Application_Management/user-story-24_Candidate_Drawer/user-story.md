@@ -31,7 +31,7 @@ graph TD
   - **VỚI ĐIỀU KIỆN** Drawer đang mở.
   - **KHI** HR chuyển đổi qua lại giữa các Tab (Hồ sơ, Đánh giá, Lịch phỏng vấn, Lịch sử Email).
   - **THÌ** hệ thống tải và hiển thị dữ liệu tương ứng của ứng viên đó trong từng tab:
-    - Tab **Hồ sơ**: Nút xem PDF CV (in-app preview hoặc tab mới) và câu trả lời các câu hỏi phụ.
+    - Tab **Hồ sơ**: Nút xem PDF CV (in-app preview hoặc tab mới) và câu trả lời các câu hỏi phụ. CV được tải qua endpoint nội bộ có kiểm tra `HR`/`HR_ADMIN` và `company_id`; không hiển thị public URL hoặc storage key.
     - Tab **Đánh giá**: Form đánh giá và lịch sử.
     - Tab **Lịch phỏng vấn**: Thông tin lịch hẹn.
     - Tab **Email**: Các email đã gửi.

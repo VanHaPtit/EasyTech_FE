@@ -11,24 +11,33 @@
 ```mermaid
 graph TD
     A[Ứng viên bấm Apply] --> B[Mở form điền thông tin]
-    B --> C["Upload CV (PDF)"]
-    C --> D[Submit Form]
-    D --> E["Lưu DB: Tạo Application"]
-    E --> F[Tạo Magic Link cho ứng viên]
-    F --> G[Gửi Email xác nhận kèm Magic Link]
-    E --> H[Gửi thông báo cho HR]
+    B --> C{"Job có yêu cầu CV?"}
+    C -- Có --> D["Upload CV (PDF)"]
+    C -- Không --> E[Submit Form không kèm CV]
+    D --> F[Submit Form]
+    E --> G["Lưu DB: Tạo Application"]
+    F --> G
+    G --> H[Tạo Magic Link cho ứng viên]
+    H --> I[Gửi Email xác nhận kèm Magic Link]
+    G --> J[Gửi thông báo cho HR]
 ```
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
 - **Kịch bản 1: Ứng viên điền form ứng tuyển hợp lệ**
-  - **VỚI ĐIỀU KIỆN** ứng viên đang xem trang chi tiết một Job.
+  - **VỚI ĐIỀU KIỆN** ứng viên đang xem trang chi tiết một Job có `requiresCv = true`.
   - **KHI** ứng viên nhấn "Ứng tuyển ngay", điền Họ tên, Email, Số điện thoại hợp lệ và tải lên CV (PDF, <5MB), đồng thời chấp nhận privacy consent.
   - **THÌ** khi nhấn "Nộp Đơn":
     - Hệ thống upload CV lên storage và lưu thông tin ứng tuyển.
     - Ứng viên được chuyển sang trang "Nộp đơn thành công!".
     - Email xác nhận chứa Magic Link được gửi đến ứng viên.
     - Hệ thống gửi thông báo (qua Email hoặc In-app notification) cho HR phụ trách Job báo có ứng viên mới.
+
+- **Kịch bản bổ sung: Job không yêu cầu CV**
+  - **VỚI ĐIỀU KIỆN** Job có `requiresCv = false`.
+  - **KHI** ứng viên điền Họ tên, Email, Số điện thoại hợp lệ, chấp nhận privacy consent và không gửi `cvFile`.
+  - **THÌ** hệ thống vẫn tạo Application `ACTIVE`, lưu `applications.cv_url = NULL` và gửi confirmation/magic link như luồng bình thường.
+  - Nếu ứng viên vẫn gửi CV tùy chọn, backend được phép validate và lưu CV; Job có `requiresCv = false` vẫn không đủ điều kiện chấm điểm CV bằng AI.
 
 - **Kịch bản 2: Form mặc định ngắn**
   - **VỚI ĐIỀU KIỆN** Job không có custom fields bắt buộc.
@@ -64,6 +73,10 @@ graph TD
 - **Chặn duplicate:** Nếu Application của email này + job này đang ở trạng thái `ACTIVE` → chặn, hiển thị "Bạn đã ứng tuyển vị trí này vào [ngày]..." + CTA xem trạng thái.
 - **Cho phép apply lại:** Nếu Application trước đó của email này cho job này đã bị `REJECTED` → Candidate ĐƯỢC PHÉP nộp đơn mới (Application cũ giữ nguyên làm lịch sử, Application mới được tạo với status = ACTIVE).
 - **Không dùng time window:** Duplicate check dựa trên `Application.status`, không dựa theo số ngày. Candidate bị reject có thể apply lại bất kỳ lúc nào khi Job còn `ACTIVE`.
+
+### CV requirement rule
+- `requiresCv` là thuộc tính của Job, kiểu `BOOLEAN`/Java `Boolean`, JSON camelCase. Nếu request tạo Job bỏ qua field này, backend mặc định `true` để tương thích dữ liệu và client cũ.
+- Chỉ Application của Job có `requiresCv = true` và có `cv_url` mới được gọi API chấm điểm CV bằng AI; frontend không hiển thị nút này cho Job không yêu cầu CV và backend vẫn chặn request trực tiếp.
 
 ## 4. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ Login bằng LinkedIn / Google để tự điền form.

@@ -37,4 +37,11 @@ Xác định phạm vi frontend cho task 'CV Link' trong US-24 Candidate Drawer,
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/jobs/{jobId}/applications`, `GET /api/v1/applications/{applicationId}`.
+- `GET /api/v1/applications?jobId={jobId}&page={page}&limit={limit}` để lấy danh sách theo Job đang `ACTIVE`.
+- `GET /api/v1/applications/{applicationId}/cv` để tải CV PDF riêng tư bằng phiên HR hiện tại.
+
+## Contract UI xem CV
+- Trong Candidate Drawer, chỉ hiển thị nút **Xem CV PDF** khi list response có `hasCv = true`; không render `cvUrl` hoặc storage key từ dữ liệu API.
+- Frontend gọi endpoint CV với `responseType = blob`, tạo Object URL tạm để nhúng preview trong modal/iframe; có thể mở tab mới từ cùng Object URL.
+- Khi đóng Drawer/modal, đổi ứng viên hoặc retry, phải revoke Object URL cũ để tránh giữ dữ liệu CV trong bộ nhớ trình duyệt.
+- Phải có trạng thái loading, lỗi có nút thử lại, trường hợp chưa có CV và nút đóng rõ ràng.

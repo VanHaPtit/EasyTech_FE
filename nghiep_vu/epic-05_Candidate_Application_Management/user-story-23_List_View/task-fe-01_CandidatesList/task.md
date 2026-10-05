@@ -37,4 +37,12 @@ Xác định phạm vi frontend cho task 'CandidatesList' trong US-23 List View,
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/jobs/{jobId}/applications`, `GET /api/v1/applications/{applicationId}`.
+- `GET /api/v1/jobs?status=ACTIVE&page={page}&limit={limit}` để HR chọn Job đang tuyển.
+- `GET /api/v1/applications?jobId={jobId}&page={page}&limit={limit}&status={status}&keyword={keyword}` để lấy ứng viên thuộc Job đã chọn.
+- `GET /api/v1/applications/{applicationId}/cv` được gọi từ Candidate Drawer khi HR xem CV PDF.
+- Bộ pagination dùng `page`/`limit`; các ID là `BIGINT`/Java `Long`/TypeScript `number`.
+
+## Luồng E2E liên quan US-34
+- Từ Job Detail của một Job `ACTIVE`, HR chọn **Xem danh sách ứng viên**; frontend điều hướng tới `/dashboard/applications/list?jobId={jobId}`.
+- Dropdown Job chỉ hiển thị các Job `ACTIVE`; bảng hiển thị các Application thuộc `jobId` và vẫn giữ company ownership do backend kiểm tra.
+- HR mở Candidate Drawer, xem CV PDF nếu `hasCv = true`, sau đó dùng nút chấm điểm AI của US-34 nếu `requiresCv = true`.
