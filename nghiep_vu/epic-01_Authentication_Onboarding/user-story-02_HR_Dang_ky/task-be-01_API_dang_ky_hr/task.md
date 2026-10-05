@@ -23,13 +23,22 @@ Xác định phạm vi backend cho task 'API dang ky hr' trong US-02 HR Dang ky,
 ## Endpoint
 - `/api/v1/auth/register`
 
+### API dữ liệu địa giới cho form đăng ký
+- `GET /api/v1/locations/provinces`
+- `GET /api/v1/locations/provinces/{provinceCode}/wards`
+- Hai endpoint tra cứu chỉ đọc và public để người dùng chưa đăng nhập có thể chọn địa giới trước khi gửi đăng ký; không yêu cầu access token hoặc refresh token.
+- Chỉ mở public cho các request `GET` nêu trên; các method/endpoint khác vẫn theo quy tắc authentication hiện hành.
+
 ## Request
-- Thông tin HR (Họ tên, email, password) và Thông tin công ty (Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ, Subdomain).
+- Thông tin HR (Họ tên, email, password) và Thông tin công ty (Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ chi tiết, `provinceCode`, `wardCode`, Subdomain).
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
 - Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
+- `provinceCode` và `wardCode` là bắt buộc ở API đăng ký; backend kiểm tra mã tỉnh hợp lệ và mã xã/phường thuộc tỉnh đã chọn.
+- Lưu địa chỉ chi tiết vào `companies.address`, mã tỉnh vào `companies.province_code`, mã xã/phường vào `companies.ward_code`; không ghép tên địa giới vào `address`. Các cột đã tồn tại nên không cần migration.
+- Hai API tra cứu địa giới phía trên phải trả được dữ liệu cho client chưa đăng nhập; lỗi xác thực không phải trạng thái hợp lệ của luồng tải danh mục đăng ký.
 
 ## Response
 - Thành công: BaseResponse(status = 1, message, data); Registration response cho biết hồ sơ đã được ghi nhận và đang chờ duyệt.
@@ -60,7 +69,9 @@ Xác định phạm vi backend cho task 'API dang ky hr' trong US-02 HR Dang ky,
   "companyName": "TechA Solutions",
   "taxCode": "0123456789",
   "phone": "0987654321",
-  "address": "123 Tech Street, HN",
+  "address": "Số 10, ngõ 167 Nguyễn Văn Trỗi",
+  "provinceCode": "01",
+  "wardCode": "001",
   "subdomain": "techa",
   "website": "https://techa.com",
   "industry": "IT - Software",

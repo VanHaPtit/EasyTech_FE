@@ -34,11 +34,18 @@ graph TD
   - **VỚI ĐIỀU KIỆN** người dùng chưa có tài khoản trên hệ thống.
   - **KHI** người dùng điền đầy đủ form:
     - **Bước 1 (Tài khoản HR):** Họ tên, Email đăng nhập, Mật khẩu (≥ 8 ký tự, có chữ hoa + số).
-    - **Bước 2 (Doanh nghiệp):** Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ, Subdomain mong muốn, Ngành nghề (Industry), Quy mô (Company Size), Mô tả công ty, và Upload Logo (tùy chọn).
+    - **Bước 2 (Doanh nghiệp):** Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ chi tiết, Tỉnh/Thành phố, Xã/Phường, Subdomain mong muốn, Ngành nghề (Industry), Quy mô (Company Size), Mô tả công ty, và Upload Logo (tùy chọn).
   - **VÀ** nhấn "Đăng ký".
   - **THÌ** hệ thống tạo bản ghi trong bảng `companies` với `status = PENDING` và `users` với `role = HR`, `status = PENDING` (liên kết qua `company_id`).
   - Hệ thống gửi email xác nhận đến HR và gửi yêu cầu phê duyệt đến Admin.
   - HR được chuyển đến trang Chờ duyệt.
+  - Địa chỉ chi tiết chỉ gồm số nhà/đường/ngõ; mã tỉnh và mã xã/phường được lưu riêng vào `companies.province_code` và `companies.ward_code`.
+
+- **Kịch bản 1a: Chọn địa giới đăng ký hợp lệ**
+  - **VỚI ĐIỀU KIỆN** HR đang nhập thông tin doanh nghiệp ở bước 2.
+  - **KHI** HR chọn Tỉnh/Thành phố rồi chọn Xã/Phường thuộc tỉnh đó.
+  - **THÌ** form lưu hai mã lựa chọn riêng; đổi Tỉnh/Thành phố sẽ xóa Xã/Phường đã chọn trước đó.
+  - Backend chỉ chấp nhận mã tỉnh và mã xã/phường hợp lệ, đồng thời xác minh xã/phường thuộc tỉnh đã gửi.
 
 - **Kịch bản 2: Trang chờ duyệt**
   - **VỚI ĐIỀU KIỆN** đăng ký đã được tạo thành công.
