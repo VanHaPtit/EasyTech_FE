@@ -30,13 +30,15 @@ Xác định phạm vi backend cho task 'API dang ky hr' trong US-02 HR Dang ky,
 - Chỉ mở public cho các request `GET` nêu trên; các method/endpoint khác vẫn theo quy tắc authentication hiện hành.
 
 ## Request
-- Thông tin HR (Họ tên, email, password) và Thông tin công ty (Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ chi tiết, `provinceCode`, `wardCode`, Subdomain).
+- Thông tin HR (Họ tên, email, password) và Thông tin công ty (Tên công ty, Mã số thuế, Năm thành lập, Số điện thoại, Địa chỉ chi tiết, `provinceCode`, `wardCode`, Subdomain).
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
 - Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
 - `provinceCode` và `wardCode` là bắt buộc ở API đăng ký; backend kiểm tra mã tỉnh hợp lệ và mã xã/phường thuộc tỉnh đã chọn.
+- `taxCode` và `foundedYear` là bắt buộc ở API đăng ký, được xác thực phía backend và cố định sau khi hồ sơ được tạo.
+- API gửi lại hồ sơ bị từ chối không được thay đổi `taxCode` hoặc `foundedYear` đã có, kể cả khi lý do từ chối yêu cầu sửa. Với bản ghi lịch sử có một trong hai trường còn null, backend có thể nhận giá trị để hoàn thiện dữ liệu một lần; sau đó giá trị cũng bất biến.
 - Lưu địa chỉ chi tiết vào `companies.address`, mã tỉnh vào `companies.province_code`, mã xã/phường vào `companies.ward_code`; không ghép tên địa giới vào `address`. Các cột đã tồn tại nên không cần migration.
 - Hai API tra cứu địa giới phía trên phải trả được dữ liệu cho client chưa đăng nhập; lỗi xác thực không phải trạng thái hợp lệ của luồng tải danh mục đăng ký.
 
@@ -68,6 +70,7 @@ Xác định phạm vi backend cho task 'API dang ky hr' trong US-02 HR Dang ky,
   "fullName": "Nguyen Van A",
   "companyName": "TechA Solutions",
   "taxCode": "0123456789",
+  "foundedYear": "2015",
   "phone": "0987654321",
   "address": "Số 10, ngõ 167 Nguyễn Văn Trỗi",
   "provinceCode": "01",

@@ -25,7 +25,7 @@
 ## 3. Quy trình nghiệp vụ
 ```mermaid
 graph TD
-  A[HR đăng ký: Nhập Tên Cty + Mã số thuế] --> B[Company = PENDING, User = PENDING]
+  A[HR đăng ký: Nhập thông tin HR và doanh nghiệp, gồm MST + năm thành lập] --> B[Company = PENDING, User = PENDING]
   B --> C[Chờ duyệt Page]
   C --> D[Admin xem xét & Kiểm chứng Mã số thuế]
   D --> E{Duyệt?}
@@ -35,7 +35,7 @@ graph TD
   H --> I[Dashboard]
   E -- No --> J[Company = REJECTED, User = PENDING]
   J --> K[HR xem lý do]
-  K --> L[Edit + Resubmit]
+  K --> L[Chỉnh thông tin được phép + Resubmit]
   L --> C
 ```
 
@@ -59,10 +59,12 @@ graph TD
   - User = INACTIVE/BLOCKED → access denied, login rejected
 
 ### Registration & Approval Flow
-- Khi đăng ký, HR BẮT BUỘC phải cung cấp Tên công ty, Email domain và Mã số thuế chính xác để Admin có cơ sở kiểm chứng.
+- Khi đăng ký, HR BẮT BUỘC cung cấp đầy đủ thông tin doanh nghiệp, gồm Mã số thuế và Năm thành lập để Admin có cơ sở kiểm chứng.
+- Mã số thuế và Năm thành lập là thông tin cố định: sau khi tạo hồ sơ đăng ký, HR không được thay đổi, kể cả khi hồ sơ bị từ chối; lý do từ chối không làm phát sinh quyền sửa hai trường này.
+- Khi gửi lại hồ sơ bị từ chối, HR chỉ sửa các thông tin được phép. Riêng bản ghi lịch sử chưa có MST hoặc Năm thành lập thì được bổ sung giá trị còn thiếu một lần để tương thích dữ liệu cũ; sau khi lưu, giá trị đó cũng cố định.
 - HR không được truy cập workspace nếu `company.status = PENDING`, `company.status = REJECTED` hoặc `user.status = INACTIVE/BLOCKED`.
 - Người dùng chưa được duyệt sẽ vào Chờ duyệt Page / Rejected Page thay vì Dashboard.
-- Company REJECTED không phải ngõ cụt: HR có quyền đăng nhập, xem lý do, chỉnh sửa thông tin/Mã số thuế và gửi lại.
+- Company REJECTED không phải ngõ cụt: HR có quyền đăng nhập, xem lý do, chỉnh sửa thông tin được phép (không gồm MST và Năm thành lập đã có) và gửi lại.
 - Khi HR gửi lại hồ sơ: Company Status = PENDING, User Status = PENDING và luồng duyệt được lặp lại.
 
 ### Onboarding

@@ -19,8 +19,11 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
 - `PATCH /api/v1/company-profiles/me`
 - Alias đọc thông tin hiện tại: `GET /api/v1/companies/me` hoặc `GET /api/v1/company-profiles/me`.
 - Request cập nhật sau onboarding chỉ được thực hiện bởi `HR_ADMIN` trên company của chính user và có CSRF.
-- Allowlist sau onboarding: `phone`, `address`, `provinceCode`, `wardCode`, `website`. Nếu request chứa field khác, trả `400` và không cập nhật dữ liệu. HR không có quyền Admin nhận `403`.
-- `POST /api/v1/company-profiles/me/logo` không thuộc luồng chỉnh sửa General Settings sau onboarding; thao tác đặt logo ban đầu thuộc US-03.
+- Allowlist sau onboarding: `phone`, `address`, `provinceCode`, `wardCode`, `website`, `industry`, `businessType`, `companySize`, `slogan`, `description`, `logoUrl`, `bannerUrls`. Nếu request chứa field khác, trả `400` và không cập nhật dữ liệu. HR không có quyền Admin nhận `403`.
+- Upload ảnh dùng `GET /api/v1/uploads/image-rules`, `POST /api/v1/uploads/company-logo` và `POST /api/v1/uploads/company-covers`; chỉ `HR_ADMIN` hoặc `ADMIN` được upload. Upload trả URL; PATCH mới lưu URL vào profile.
+- `industry` lưu lĩnh vực hoạt động; `businessType` lưu ngành nghề chính/loại hình theo field hiện có. Không thêm `primaryIndustry` hoặc bảng mới.
+- Logo đồng bộ vào `company_profiles.logo_url` và `career_sites.logo_url`. Ảnh bìa lưu ở `banner_urls`; ảnh đầu danh sách đồng bộ vào `career_sites.hero_image_url`.
+- `slogan` lưu ở `company_profiles.slogan`; không cập nhật `career_sites.tagline`.
 
 ## API JSON Contract
 
@@ -31,9 +34,21 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
   "address": "Số 12, ngõ 3 Nguyễn Huệ",
   "provinceCode": "79",
   "wardCode": "26734",
-  "website": "https://techa.vn"
+  "website": "https://techa.vn",
+  "industry": "Tài chính công nghệ",
+  "businessType": "Product",
+  "companySize": "51-200",
+  "slogan": "Đổi mới mỗi ngày",
+  "description": "Giới thiệu về công ty.",
+  "logoUrl": "https://res.cloudinary.com/example/company-logo.webp",
+  "bannerUrls": [
+    "https://res.cloudinary.com/example/cover-1.webp",
+    "https://res.cloudinary.com/example/cover-2.webp"
+  ]
 }
 ```
+
+Mọi field là tùy chọn; field bỏ qua được giữ nguyên. Gửi `bannerUrls: []` để xóa ảnh bìa. URL ảnh bìa phải là HTTPS và danh sách không vượt giới hạn từ image rules.
 
 Địa chỉ chi tiết chỉ lưu tại `companies.address`; mã tỉnh/xã lưu riêng. Gửi cả hai mã địa giới hoặc để trống cả hai. Chuỗi địa chỉ legacy không được tự phân tích hay ghép thêm tên địa giới khi lưu.
 
@@ -51,6 +66,22 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
     "provinceCode": "79",
     "wardCode": "26734",
     "website": "https://techa.vn",
+    "profile": {
+      "industry": "Tài chính công nghệ",
+      "businessType": "Product",
+      "companySize": "51-200",
+      "slogan": "Đổi mới mỗi ngày",
+      "description": "Giới thiệu về công ty.",
+      "logoUrl": "https://res.cloudinary.com/example/company-logo.webp",
+      "bannerUrls": [
+        "https://res.cloudinary.com/example/cover-1.webp",
+        "https://res.cloudinary.com/example/cover-2.webp"
+      ]
+    },
+    "careerSite": {
+      "logoUrl": "https://res.cloudinary.com/example/company-logo.webp",
+      "heroImageUrl": "https://res.cloudinary.com/example/cover-1.webp"
+    },
     "updatedAt": "2026-08-31T10:00:00"
   }
 }
@@ -60,7 +91,7 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
 ```json
 {
   "status": 0,
-  "message": "Chỉ cho phép cập nhật địa chỉ, tỉnh/thành phố, xã/phường, điện thoại và website.",
+  "message": "Chỉ cho phép cập nhật liên hệ, địa chỉ, ngành nghề, ngành nghề chính, quy mô, slogan, giới thiệu và logo/ảnh bìa.",
   "data": null
 }
 ```

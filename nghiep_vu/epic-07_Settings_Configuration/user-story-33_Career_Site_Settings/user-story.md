@@ -19,6 +19,12 @@ graph TD
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
+### Phân định dữ liệu với US-30
+- `company_profiles.industry`, `business_type`, `company_size`, `slogan`, `description`, `logo_url` và `banner_urls` là dữ liệu hồ sơ doanh nghiệp dùng chung; General Settings (US-30) cho phép HR Admin chỉnh sửa các field này sau onboarding.
+- Career Site đọc các thông tin profile dùng chung thay vì duy trì bản sao riêng. Logo được đồng bộ sang `career_sites.logo_url`; ảnh bìa đầu tiên được đồng bộ sang `career_sites.hero_image_url` khi US-30 lưu danh sách ảnh.
+- `company_profiles.slogan` và `career_sites.tagline` là hai field riêng trong schema hiện tại. US-30 chỉ sửa slogan doanh nghiệp; tagline là nội dung riêng của Career Site.
+- `career_sites.hero_image_url` có thể override ảnh bìa profile khi hiển thị. Khi lưu danh sách ảnh bìa ở US-30, ảnh đầu tiên được đồng bộ vào hero và thay giá trị hero trước đó.
+
 - **Kịch bản 1: HR cấu hình thông tin cơ bản Career Site**
   - **VỚI ĐIỀU KIỆN** HR đang đăng nhập và truy cập `/dashboard/career-site`.
   - **KHI** HR điền/cập nhật các thông tin: Tên công ty hiển thị, Slogan/Tagline, Mô tả công ty (rich text), Địa chỉ, Website, Quy mô nhân sự.

@@ -45,6 +45,7 @@ graph TD
 - Duyệt: Company = ACTIVE, all related Users = ACTIVE
 - Từ chối: Company = REJECTED, related Users = PENDING (restricted)
 - Reject phải đi kèm lý do cụ thể; không được để HR rơi vào dead-end.
+- `taxCode` và `profile.foundedYear` là dữ liệu cố định từ lúc đăng ký, không được HR/Admin sửa sau khi đã lưu; chỉ bản ghi lịch sử còn thiếu mới được hoàn thiện giá trị đó một lần.
 - Rejected company phải cho phép Edit + Resubmit; không chỉ là trạng thái cuối.
 - User không có `REJECTED`; user chỉ có `PENDING`, `ACTIVE`, `INACTIVE`, `BLOCKED`.
 - Admin không được tự động đổi trạng thái nếu dữ liệu không hợp lệ; phải reject với lý do cụ thể.

@@ -34,12 +34,13 @@ graph TD
   - **VỚI ĐIỀU KIỆN** người dùng chưa có tài khoản trên hệ thống.
   - **KHI** người dùng điền đầy đủ form:
     - **Bước 1 (Tài khoản HR):** Họ tên, Email đăng nhập, Mật khẩu (≥ 8 ký tự, có chữ hoa + số).
-    - **Bước 2 (Doanh nghiệp):** Tên công ty, Mã số thuế, Số điện thoại, Địa chỉ chi tiết, Tỉnh/Thành phố, Xã/Phường, Subdomain mong muốn, Ngành nghề (Industry), Quy mô (Company Size), Mô tả công ty, và Upload Logo (tùy chọn).
+    - **Bước 2 (Doanh nghiệp):** Tên công ty, Mã số thuế, Năm thành lập, Số điện thoại, Địa chỉ chi tiết, Tỉnh/Thành phố, Xã/Phường, Subdomain mong muốn, Ngành nghề (Industry), Quy mô (Company Size), Mô tả công ty, và Upload Logo (tùy chọn).
   - **VÀ** nhấn "Đăng ký".
   - **THÌ** hệ thống tạo bản ghi trong bảng `companies` với `status = PENDING` và `users` với `role = HR`, `status = PENDING` (liên kết qua `company_id`).
   - Hệ thống gửi email xác nhận đến HR và gửi yêu cầu phê duyệt đến Admin.
   - HR được chuyển đến trang Chờ duyệt.
   - Địa chỉ chi tiết chỉ gồm số nhà/đường/ngõ; mã tỉnh và mã xã/phường được lưu riêng vào `companies.province_code` và `companies.ward_code`.
+  - Mã số thuế và Năm thành lập là bắt buộc khi đăng ký và cố định ngay sau khi hồ sơ được tạo; HR không thể đổi hai trường này trong onboarding hoặc khi gửi lại hồ sơ bị từ chối.
 
 - **Kịch bản 1a: Chọn địa giới đăng ký hợp lệ**
   - **VỚI ĐIỀU KIỆN** HR đang nhập thông tin doanh nghiệp ở bước 2.
@@ -70,7 +71,8 @@ graph TD
   - **VỚI ĐIỀU KIỆN** Company đang ở trạng thái `REJECTED`. HR đang ở trang `/registration/rejected`.
   - **KHI** HR nhấn CTA "Chỉnh sửa & Gửi lại hồ sơ".
   - **THÌ** hệ thống mở form chỉnh sửa, **status KHÔNG thay đổi trong khi HR đang edit** (vẫn là `REJECTED`).
-  - HR chỉnh sửa các trường (không được đổi Email đăng nhập, Mã số thuế chỉ đổi nếu thuộc lý do từ chối).
+  - HR có thể chỉnh sửa các thông tin được phép nhưng không được đổi Email đăng nhập, Mã số thuế hoặc Năm thành lập đã được lưu; lý do từ chối không mở ngoại lệ cho hai trường cố định.
+  - Với hồ sơ lịch sử chưa có MST hoặc Năm thành lập, HR được bổ sung giá trị còn thiếu một lần khi gửi lại; sau đó giá trị được cố định.
   - **KHI** HR nhấn nút "Xác nhận gửi lại" (confirmation action cuối), hệ thống hiển thị modal xác nhận: _"Bạn sắp gửi lại hồ sơ đăng ký. Hồ sơ sẽ vào hàng chờ xem xét của Admin."_
   - **Sau khi HR confirm:** Hệ thống gọi API → `Company.status = PENDING`, `User.status = PENDING`, hồ sơ xuất hiện lại trong danh sách Admin.
   - HR được redirect về trang Chờ duyệt (`/pending`).
@@ -97,6 +99,10 @@ graph TD
 
 ### Auth Method
 - Google OAuth chỉ là phương thức auth bổ sung trong tương lai. Trọng tâm MVP là email/password.
+
+### Thông tin doanh nghiệp cố định
+- `taxCode` và `foundedYear` là bắt buộc trong đăng ký mới và không được sửa sau khi tạo hồ sơ, bất kể trạng thái duyệt hay nội dung lý do từ chối.
+- API gửi lại hồ sơ phải giữ nguyên giá trị đã có. Chỉ dữ liệu lịch sử đang null mới được phép bổ sung giá trị còn thiếu một lần; sau khi có giá trị, mọi lần gửi lại tiếp theo phải giữ nguyên.
 
 ## 4. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ đăng ký cho ứng viên (Candidate) – ứng viên không cần tài khoản.
