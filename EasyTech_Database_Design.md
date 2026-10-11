@@ -91,11 +91,13 @@ Lưu thông tin doanh nghiệp/tenant.
 | `name` | VARCHAR(255) | NOT NULL | Tên doanh nghiệp. |
 | `slug` | VARCHAR(255) | UNIQUE, NOT NULL | Slug dùng cho Career Site. |
 | `subdomain` | VARCHAR(255) | UNIQUE, nullable | Subdomain, ví dụ `techa`. |
-| `tax_code` | VARCHAR(100) | nullable | Mã số thuế nếu cần xác minh. |
+| `tax_code` | VARCHAR(100) | nullable | Mã số thuế bắt buộc khi đăng ký mới và bất biến sau khi tạo hồ sơ; nullable chỉ để tương thích bản ghi lịch sử còn thiếu. |
 | `phone` | VARCHAR(50) | nullable | Số điện thoại. |
 | `email` | VARCHAR(255) | nullable | Email liên hệ. |
 | `website` | VARCHAR(255) | nullable | Website công ty. |
-| `address` | TEXT | nullable | Địa chỉ. |
+| `address` | TEXT | nullable | Địa chỉ chi tiết do HR nhập (số nhà, đường, ngõ); không ghép tỉnh/thành phố hoặc xã/phường. |
+| `province_code` | VARCHAR(20) | nullable | Mã tỉnh/thành phố từ `full_json_generated_data_vn_units.json`. |
+| `ward_code` | VARCHAR(20) | nullable | Mã xã/phường từ `full_json_generated_data_vn_units.json`, thuộc `province_code`. |
 | `onboarding_completed` | BOOLEAN | default false | Đánh dấu hoàn thành Onboarding 3 bước. |
 | `status` | VARCHAR(50) | NOT NULL | `PENDING`, `ACTIVE`, `REJECTED`, `BLOCKED`. |
 | `approved_by` | BIGINT | FK -> users.id, nullable | Admin duyệt. |
@@ -117,9 +119,17 @@ Lưu branding và nội dung hiển thị cho Career Site.
 | `id` | BIGINT | PK | ID profile. |
 | `company_id` | BIGINT | FK, UNIQUE, NOT NULL | Doanh nghiệp. |
 | `logo_url` | TEXT | nullable | Logo. |
-| `banner_url` | TEXT | nullable | Banner Career Site. |
+| `banner_urls` | TEXT | nullable | Mảng JSON URL ảnh bìa; ảnh đầu tiên là ảnh chính. Thay `banner_url` từ migration V31. |
+| `industry` | VARCHAR(255) | nullable | Ngành nghề/lĩnh vực hoạt động; đồng bộ độ dài bằng V32. |
+| `business_type` | VARCHAR(255) | nullable | Ngành nghề chính/loại hình theo field hiện có; không có `primaryIndustry` riêng. Đồng bộ độ dài bằng V32. |
+| `company_size` | VARCHAR(255) | nullable | Quy mô công ty; đồng bộ độ dài bằng V32. |
+| `founded_year` | VARCHAR(4) | nullable | Năm thành lập bắt buộc khi đăng ký mới và bất biến sau khi tạo hồ sơ; nullable chỉ để tương thích bản ghi lịch sử còn thiếu. |
+| `contact_email` | VARCHAR(255) | nullable | Email liên hệ hồ sơ. |
+| `onboarding_completed` | BOOLEAN | NOT NULL, default false | Đã hoàn tất onboarding. |
+| `profile_completed` | BOOLEAN | NOT NULL, default false | Cột legacy thêm trong V2, không được entity hiện tại quản lý. |
 | `primary_color` | VARCHAR(20) | nullable | Màu thương hiệu (hex). |
 | `description` | TEXT | nullable | Mô tả công ty. |
+| `slogan` | VARCHAR(255) | nullable | Slogan hồ sơ doanh nghiệp; bổ sung bằng V32. |
 | `benefits` | TEXT | nullable | Quyền lợi chung. |
 | `social_links` | JSON/TEXT | nullable | Facebook, LinkedIn, Zalo. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
@@ -148,9 +158,11 @@ Lưu cấu hình giao diện Career Site riêng cho từng doanh nghiệp.
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
+`company_profiles.slogan` khác với `career_sites.tagline`. Logo và ảnh bìa được đồng bộ theo US-30.
+
 *Lưu ý Fallback:* `site_title` và `logo_url` của `career_sites` có thể kế thừa lần lượt từ
 `companies.name` và `company_profiles.logo_url`. Banner và mô tả nằm ở
-`company_profiles.banner_url`/`description`; Career Site dùng `hero_image_url` nếu có,
+`company_profiles.banner_urls`/`description`; Career Site dùng `hero_image_url` nếu có,
 nếu không thì fallback về banner của profile. `is_published` được bổ sung bởi migration
 `V13__add_career_site_public_visibility.sql` và mặc định `TRUE` để không làm ẩn các Career Site hiện có.
 

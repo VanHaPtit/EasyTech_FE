@@ -38,6 +38,19 @@ Xác định phạm vi backend cho task 'API chi tiet cong ty' trong US-06 Admin
 ## State Transition
 - Không có state transition trực tiếp.
 
+## API cập nhật trực tiếp từ Company Detail
+
+**Endpoint:** `PATCH /api/v1/admin/companies/{companyId}`
+
+- Chỉ role `ADMIN` đang `ACTIVE` được gọi API.
+- Request có thể chứa các field nullable của company, `companyProfile` và Career Site; field không truyền được giữ nguyên.
+- Cho phép cập nhật: `name`, `subdomain`, `phone`, `email`, `website`, `address`, `industry`, `companySize`, `businessType`, `contactEmail`, `description`, `benefits`, `socialLinks`, `bannerUrls`, `primaryColor`, `siteTitle`, `tagline`, `heroImageUrl`, `accentColor`, `fontFamily`, `showCompanyDescription`, `showBenefits`, `footerText`.
+- `taxCode` chỉ được nhận để hoàn thiện bản ghi lịch sử còn thiếu giá trị (`null`) một lần; nếu đã có MST thì request gửi MST khác phải bị từ chối với `400`. `foundedYear` không thuộc request Admin và không được sửa bởi bất kỳ role nào sau khi hồ sơ được tạo.
+- Không cho cập nhật qua API này: `id`, `slug`, `status`, `approvedBy`, `approvedAt`, `rejectedReason`, `registrant`, `isPublished` và các token/password.
+- Backend kiểm tra unique `subdomain` và, khi hoàn thiện MST legacy còn thiếu, kiểm tra unique `taxCode`; giữ tenant theo `companyId` và ghi action `UPDATE_COMPANY` vào Audit Log.
+
+Response thành công trả lại `CompanyDetailResponseDTO` mới nhất trong `BaseResponse`.
+
 ## Side Effects
 - Ghi audit log nếu task tạo/cập nhật/xóa dữ liệu nghiệp vụ.
 

@@ -50,6 +50,13 @@ graph TD
   - **KHI** Admin mở chi tiết.
   - **THÌ** hệ thống có thể cảnh báo nếu Mã số thuế hoặc Tên công ty tương đồng với company đang `ACTIVE`.
 
+- **Kịch bản 6: Admin cập nhật trực tiếp Company Detail**
+  - **VỚI ĐIỀU KIỆN** Admin đang mở drawer chi tiết một company.
+  - **KHI** Admin chỉnh sửa và lưu các trường hồ sơ doanh nghiệp hoặc nội dung hiển thị Career Site.
+  - **THÌ** hệ thống gọi `PATCH /api/v1/admin/companies/{companyId}`, kiểm tra subdomain và mã số thuế legacy còn thiếu, cập nhật trong đúng company và ghi Audit Log.
+  - Mã số thuế đã được lưu và năm thành lập không được Admin sửa; hai trường này cố định từ lúc đăng ký, không phụ thuộc trạng thái duyệt hoặc lý do từ chối.
+  - Trạng thái company, slug, thông tin người đăng ký, người duyệt và thời điểm duyệt vẫn chỉ đọc; Admin không được dùng API này để tự phê duyệt hoặc thay đổi quyền truy cập.
+
 ## 3. BUSINESS RULES
 
 ### Company & User Status Transitions
@@ -63,10 +70,16 @@ graph TD
 - Company REJECTED phải cho phép chỉnh sửa + gửi lại; không phải trạng thái ngõ cụt.
 - Email từ chối phải bao gồm: cụ thể điểm không đạt, hướng dẫn sửa, CTA gửi lại hồ sơ.
 
+### Registration Fields That Are Fixed
+- `taxCode` và `profile.foundedYear` là thông tin bắt buộc của đăng ký mới và bất biến sau khi Company được tạo, với mọi role và mọi trạng thái.
+- Lý do từ chối không mở ngoại lệ để thay đổi hai trường này. HR có thể giữ nguyên chúng khi gửi lại hồ sơ.
+- Với bản ghi lịch sử có `taxCode` hoặc `foundedYear` còn `null`, chỉ cho phép hoàn thiện trường thiếu một lần qua luồng được phép; sau khi đã có giá trị, mọi API sửa Company phải từ chối giá trị khác.
+- `PATCH /api/v1/admin/companies/{companyId}` không cho sửa `foundedYear`; `taxCode` có thể chỉ được điền một lần nếu bản ghi lịch sử chưa có giá trị.
+
 ### Audit & Governance
 - `REQUEST_CHANGES` là cải tiến trong tương lai, không bắt buộc trong MVP.
 - Tất cả hành động duyệt/từ chối phải được ghi vào Audit Logs.
 
 ## 4. NGOÀI PHẠM VI
 - **KHÔNG** tích hợp API quốc gia để tự động xác thực Mã số thuế.
-- **KHÔNG** cho phép Admin chỉnh sửa thông tin công ty trước khi duyệt, trừ khi có quyết định sản phẩm riêng.
+- Admin được phép cập nhật trực tiếp hồ sơ company từ Company Detail theo quyết định sản phẩm đã chốt, ngoại trừ MST/năm thành lập đã cố định. Việc cập nhật không thay đổi status và không kích hoạt lại tài khoản HR.

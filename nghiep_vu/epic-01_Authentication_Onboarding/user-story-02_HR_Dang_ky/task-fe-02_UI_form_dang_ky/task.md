@@ -17,18 +17,23 @@ Xác định phạm vi frontend cho task 'UI form dang ky' trong US-02 HR Dang k
 ## Hành động của user
 - Người dùng mở màn hình và hoàn thành form đăng ký gồm 2 bước:
   - Bước 1: Nhập thông tin tài khoản HR (Họ tên, Email, Mật khẩu).
-  - Bước 2: Nhập thông tin doanh nghiệp (Tên công ty, MST, Số điện thoại, Địa chỉ, Subdomain).
+  - Bước 2: Nhập thông tin doanh nghiệp (Tên công ty, MST, Năm thành lập, Số điện thoại, Địa chỉ chi tiết, Tỉnh/Thành phố, Xã/Phường, Subdomain).
 
 ## Hành vi UI
 - Hiển thị Form theo luồng 2 bước (Stepper/Wizard).
 - Vô hiệu hóa nút "Tiếp tục" hoặc "Đăng ký" nếu form validation chưa vượt qua, hiển thị inline error màu đỏ.
 - Vô hiệu hóa nút submit trong lúc request đang chạy để tránh gửi lặp.
 - Tự động gợi ý Subdomain từ Tên công ty khi người dùng nhập xong tên công ty.
+- Dùng bộ chọn có tìm kiếm theo dữ liệu địa giới của hệ thống cho Tỉnh/Thành phố và Xã/Phường; chỉ cho chọn Xã/Phường sau khi chọn tỉnh.
+- Tải danh mục địa giới qua API tra cứu public, không yêu cầu người dùng đăng nhập hoặc có refresh token.
+- Khi đổi tỉnh, xóa lựa chọn Xã/Phường cũ. Địa chỉ chi tiết chỉ nhận số nhà/đường/ngõ, không ghép tên tỉnh hoặc xã/phường.
+- Hiển thị trạng thái đang tải, lỗi tải kèm thao tác thử lại, và lỗi bắt buộc ngay dưới từng bộ chọn; giữ các lựa chọn còn hợp lệ khi request đăng ký thất bại.
 
 ## Validation
 - Validate trường bắt buộc ngay trên FE để cải thiện UX.
 - Không coi FE validation là source-of-truth; BE vẫn phải validate lại.
 - Hiển thị lỗi gần trường nhập liệu và không xóa dữ liệu user đã nhập khi validation không đạt.
+- MST và Năm thành lập được nhập bắt buộc khi đăng ký. Trong màn hình gửi lại hồ sơ bị từ chối, hai trường đã có giá trị được hiển thị chỉ đọc; lý do từ chối không cho phép mở khóa để sửa. Nếu hồ sơ lịch sử thiếu một giá trị thì cho phép bổ sung giá trị đó một lần, sau đó hiển thị chỉ đọc.
 
 ## Phản hồi thành công
 - Hiển thị toast hoặc trạng thái xác nhận sau khi hành động thành công.

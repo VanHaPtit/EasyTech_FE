@@ -1,4 +1,4 @@
-# task-fe-02_UI_tai_len_logo
+# task-fe-02_UI_tai_len_logo_va_anh_bia
 
 ## Mục đích
 Xác định phạm vi frontend cho task 'UI tai len logo' trong US-30 Thong Tin DN, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
@@ -10,7 +10,7 @@ Xác định phạm vi frontend cho task 'UI tai len logo' trong US-30 Thong Tin
 - Không tự quyết định trạng thái nghiệp vụ nhạy cảm; frontend tuân theo response và quyền do backend trả về.
 
 ## Screen/Component
-- Component chính: Logo Upload.
+- Component chính: Logo Upload và Cover Images.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
@@ -19,8 +19,10 @@ Xác định phạm vi frontend cho task 'UI tai len logo' trong US-30 Thong Tin
 - Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
 
 ## Hành vi UI
-- Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
+- Hiển thị dữ liệu logo/ảnh bìa hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Chỉ HR Admin được upload/thay logo, thêm/xóa ảnh bìa; HR khác chỉ xem.
+- Ảnh bìa hiển thị theo thứ tự; ảnh đầu tiên là ảnh chính. Xóa hết gửi `bannerUrls: []` khi lưu hồ sơ.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
 
 ## Validation
@@ -37,4 +39,4 @@ Xác định phạm vi frontend cho task 'UI tai len logo' trong US-30 Thong Tin
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/company-profiles/me`, `PATCH /api/v1/company-profiles/me`, `POST /api/v1/company-profiles/me/logo`, `GET /api/v1/email-templates`, `POST /api/v1/email-templates`, `PATCH /api/v1/email-templates/{templateId}`, `DELETE /api/v1/email-templates/{templateId}`, `GET /api/v1/ai-providers`.
+- `GET /api/v1/company-profiles/me`, `PATCH /api/v1/company-profiles/me`, `GET /api/v1/uploads/image-rules`, `POST /api/v1/uploads/company-logo`, `POST /api/v1/uploads/company-covers`.

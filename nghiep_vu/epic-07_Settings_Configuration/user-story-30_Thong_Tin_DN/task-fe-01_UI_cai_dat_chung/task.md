@@ -21,6 +21,11 @@ Xác định phạm vi frontend cho task 'UI cai dat chung' trong US-30 Thong Ti
 ## Hành vi UI
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
+- Sau onboarding, chỉ HR Admin được chỉnh sửa địa chỉ chi tiết, tỉnh/thành phố, xã/phường, điện thoại, website, ngành nghề/lĩnh vực (`industry`), ngành nghề chính (`businessType`), quy mô, slogan, giới thiệu, logo và ảnh bìa. HR khác chỉ xem.
+- Tên công ty/MST, năm thành lập, quyền lợi, màu thương hiệu và email liên hệ vẫn read-only/ngoài allowlist của General Settings.
+- Bộ chọn tỉnh/xã hỗ trợ tìm kiếm và không dùng native dropdown; khi đổi tỉnh phải bỏ lựa chọn xã cũ. Địa chỉ chi tiết chỉ giữ số nhà/đường/ngõ, không tự nối tên địa giới.
+- Upload logo/ảnh bìa qua endpoint upload riêng; lưu URL qua `PATCH /api/v1/company-profiles/me`. Có thể xóa từng ảnh bìa; xóa hết gửi `bannerUrls: []`.
+- Nút Hủy khôi phục toàn bộ profile, ảnh và liên hệ đã tải/lưu gần nhất. Màn hình xác nhận hiển thị các trường đang sửa; lỗi API phải giữ nguyên dữ liệu user nhập.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
 
 ## Validation
@@ -37,4 +42,4 @@ Xác định phạm vi frontend cho task 'UI cai dat chung' trong US-30 Thong Ti
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/company-profiles/me`, `PATCH /api/v1/company-profiles/me`, `POST /api/v1/company-profiles/me/logo`, `GET /api/v1/email-templates`, `POST /api/v1/email-templates`, `PATCH /api/v1/email-templates/{templateId}`, `DELETE /api/v1/email-templates/{templateId}`, `GET /api/v1/ai-providers`.
+- `GET /api/v1/company-profiles/me`, `PATCH /api/v1/company-profiles/me`, `GET /api/v1/uploads/image-rules`, `POST /api/v1/uploads/company-logo`, `POST /api/v1/uploads/company-covers`.

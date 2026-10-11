@@ -14,6 +14,8 @@ Xác định phạm vi frontend cho task 'UI ngan keo chi tiet cong ty' trong US
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 - Tab tài khoản đại diện HR hiển thị dữ liệu `registrant` do API trả về (họ tên, email, role, status); không hardcode tài khoản và không hiển thị password/token.
+- MST đã có giá trị phải hiển thị chỉ đọc trong Company Detail; chỉ bản ghi lịch sử thiếu MST mới cho phép Admin bổ sung một lần. Năm thành lập hiển thị chỉ đọc/không có control sửa trong Admin drawer.
+- Không mở khóa MST hoặc năm thành lập theo trạng thái PENDING/REJECTED hay theo nội dung lý do từ chối; các thay đổi hợp lệ khác vẫn dùng luồng cập nhật Company Detail.
 
 ## Hành động của user
 - Người dùng mở màn hình và thực hiện hành động chính của component.
@@ -38,4 +40,4 @@ Xác định phạm vi frontend cho task 'UI ngan keo chi tiet cong ty' trong US
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
 
 ## API dependency cụ thể
-- `GET /api/v1/admin/companies`, `GET /api/v1/admin/companies/{companyId}`, `PATCH /api/v1/admin/companies/{companyId}/status`.
+- `GET /api/v1/admin/companies`, `GET /api/v1/admin/companies/{companyId}`, `PATCH /api/v1/admin/companies/{companyId}` để cập nhật các trường hồ sơ được phép, `PATCH /api/v1/admin/companies/{companyId}/status` để duyệt/từ chối.
