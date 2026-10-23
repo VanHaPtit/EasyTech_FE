@@ -56,9 +56,13 @@ graph TD
   - **THÌ** cần có checkbox đồng ý xử lý dữ liệu cá nhân cho mục đích tuyển dụng và link Privacy Policy rõ ràng.
 
 ## 3. BUSINESS RULES
+- Chuẩn hóa kỹ thuật 22/10/2026: endpoint apply giữ nguyên multipart và tên field. Backend bind scalar fields vào `PublicApplicationRequestDTO`, nhận `cvFile` riêng; validate tên/email/consent bằng Bean Validation ở controller và service. Phone/Cover Letter tiếp tục theo cấu hình Job, không biến field ẩn thành bắt buộc. Không đổi schema, transaction hay quy tắc duplicate.
+- Metadata `applicationForm.cvRule` trong public Job detail gồm `maxBytes` và `allowedMimeTypes` (PDF). Backend và frontend dùng cùng `app.cv.max-bytes`, mặc định 5242880 bytes (5 MiB). API bổ sung tương thích; không tăng giới hạn mặc định. Backend kiểm tra dung lượng và chữ ký PDF thực, không tin MIME/đuôi file do browser gửi; MIME generic trên mobile không tự động bị từ chối. Lỗi quá dung lượng và nội dung không phải PDF có thông báo riêng.
 - Candidate không cần Account để apply.
 - AI / CV parser có thể được dùng để điền sẵn dữ liệu trong tương lai, nhưng không phải yêu cầu bắt buộc trong MVP.
 - Duplicate application phải dẫn tới trạng thái "đã apply" và recovery flow thay vì dead-end.
+- Mỗi Application lưu applicant_full_name/applicant_phone theo dữ liệu nộp; nếu Candidate cùng email đã tồn tại thì form public không được ghi đè tên/điện thoại Candidate hoặc hồ sơ cũ. HR đọc snapshot; hồ sơ legacy chưa có snapshot dùng Candidate làm fallback, không backfill tên giả.
+- Email xác nhận dùng template APPLICATION_RECEIVED đang active trong company, không hardcode thương hiệu. Lưu snapshot email và Application cùng transaction, gửi nền sau commit; thiếu mẫu/người nhận ghi FAILED rõ ràng, không báo SMTP thành công giả.
 
 ### Duplicate Application Rule
 - **Chặn duplicate:** Nếu Application của email này + job này đang ở trạng thái `ACTIVE` → chặn, hiển thị "Bạn đã ứng tuyển vị trí này vào [ngày]..." + CTA xem trạng thái.

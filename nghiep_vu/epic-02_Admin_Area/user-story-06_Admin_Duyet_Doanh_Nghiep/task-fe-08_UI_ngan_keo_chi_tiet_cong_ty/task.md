@@ -16,6 +16,7 @@ Xác định phạm vi frontend cho task 'UI ngan keo chi tiet cong ty' trong US
 - Tab tài khoản đại diện HR hiển thị dữ liệu `registrant` do API trả về (họ tên, email, role, status); không hardcode tài khoản và không hiển thị password/token.
 - MST đã có giá trị phải hiển thị chỉ đọc trong Company Detail; chỉ bản ghi lịch sử thiếu MST mới cho phép Admin bổ sung một lần. Năm thành lập hiển thị chỉ đọc/không có control sửa trong Admin drawer.
 - Không mở khóa MST hoặc năm thành lập theo trạng thái PENDING/REJECTED hay theo nội dung lý do từ chối; các thay đổi hợp lệ khác vẫn dùng luồng cập nhật Company Detail.
+- `profile.contactEmail` hiển thị chỉ đọc cả ở chế độ chỉnh sửa; không gửi trong payload lưu. Email doanh nghiệp `company.email` vẫn có ô sửa riêng. Khi API từ chối thay đổi email liên hệ từ client cũ, giữ draft và hiển thị lỗi, không báo lưu thành công.
 
 ## Hành động của user
 - Người dùng mở màn hình và thực hiện hành động chính của component.
@@ -38,6 +39,7 @@ Xác định phạm vi frontend cho task 'UI ngan keo chi tiet cong ty' trong US
 ## Xử lý lỗi
 - Hiển thị lỗi có thể hành động được: điều gì sai và user cần sửa gì.
 - Hiển thị lỗi từ API theo đúng ngữ cảnh và giữ dữ liệu user đang thao tác nếu có thể.
+- Trang danh sách mở drawer phải phân biệt lỗi tải API với danh sách rỗng: lỗi hiển thị message và nút Thử lại, không hiện "Không tìm thấy doanh nghiệp" khi request thất bại.
 
 ## API dependency cụ thể
 - `GET /api/v1/admin/companies`, `GET /api/v1/admin/companies/{companyId}`, `PATCH /api/v1/admin/companies/{companyId}` để cập nhật các trường hồ sơ được phép, `PATCH /api/v1/admin/companies/{companyId}/status` để duyệt/từ chối.

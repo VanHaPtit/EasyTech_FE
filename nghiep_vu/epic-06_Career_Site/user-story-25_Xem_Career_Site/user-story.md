@@ -1,5 +1,11 @@
 # 📋 User Story 25: Xem Career Site & Job Công Khai
 
+### Nhất quán thông tin Job (22/10/2026)
+
+- Card Job và Job Detail chỉ ghi lương “Thỏa thuận” khi `salaryNegotiable = true`; lương thiếu không tự biến thành thỏa thuận. Chưa có lương: “Chưa cập nhật”.
+- Job Detail dùng cùng nhãn cấp độ/số năm kinh nghiệm với màn hình HR và bước xem trước US-12. Thiếu số năm không đồng nghĩa không yêu cầu kinh nghiệm; thiếu cả hai trường: “Chưa cập nhật”.
+- Không thay đổi điều kiện công khai, thời hạn nhận hồ sơ hay permission/API.
+
 ## 1. MÔ TẢ USER STORY
 - **Là** Ứng viên (Candidate) / Khách truy cập ẩn danh (Guest),
 - **Tôi muốn** truy cập vào trang Career Site của một công ty và xem danh sách các tin tuyển dụng đang mở,

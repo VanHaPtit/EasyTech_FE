@@ -1,5 +1,14 @@
 # 📋 User Story 24: Candidate Drawer (Xem Chi Tiết Hồ Sơ Ứng Viên)
 
+### Trạng thái file CV (22/10/2026)
+
+- Khi chi tiết hồ sơ đã tải, xác định có CV theo `cvUrl` của chi tiết; không ưu tiên cờ tóm tắt cũ hơn.
+- Không có CV: hiển thị “Chưa có CV”, không hiển thị tên file giả, nhãn PDF hoặc nút xem CV.
+- Có CV: hiển thị “CV ứng viên”, định dạng PDF và nút “Xem CV PDF”. API chưa cung cấp tên file gốc nên frontend không tự tạo tên file từ tên ứng viên.
+- Giữ nguyên endpoint preview riêng tư, tenant authorization và điều kiện AI scoring: Job yêu cầu CV và hồ sơ thực sự có CV. Không mở quyền xem CV cho Admin.
+- Theo xác nhận 22/10/2026, preview trong ứng dụng dùng PDF.js chạy cục bộ thay vì phụ thuộc plugin PDF của browser. Worker/font/cmap/decoder được phục vụ cùng origin; CV không gửi sang dịch vụ ngoài.
+- Viewer tải riêng khi mở, hỗ trợ trước/sau và thu phóng, có loading/error/retry và tải PDF. Đóng viewer phải hủy render, giải phóng document/object URL, trả focus về action trước đó. Giữ khóa quyền xem CV ở backend.
+
 ## 1. MÔ TẢ USER STORY
 - **Là** Nhà tuyển dụng (HR),
 - **Tôi muốn** xem chi tiết toàn bộ hồ sơ của ứng viên (CV, Form trả lời, Email History, AI Score) trong một giao diện Drawer mở từ bên phải màn hình,
@@ -51,6 +60,15 @@ graph TD
   - **THÌ** Drawer trượt đóng lại, màn hình Kanban/List phía dưới không thay đổi vị trí cuộn ban đầu.
 
 ## 3. BUSINESS RULES
+
+### Contract quyết định hồ sơ (20/10/2026)
+- Drawer dùng quyền `canEvaluate`/`canHire` và `currentRoundResult` từ API, không tự suy ra điều kiện Tuyển từ số thứ tự vòng.
+- Đạt vòng và Tuyển đều có xác nhận; Hủy không gọi API, pending chặn gửi lặp. Refresh danh sách/detail/board sau thành công.
+- Job CLOSED vẫn được xử lý hồ sơ cũ. Quy tắc này không cho phép sửa pipeline hoặc nhận đơn mới.
+- Với Job không có vòng phỏng vấn, HR được bấm Tuyển trực tiếp; Application vẫn ACTIVE cho đến khi xác nhận.
+- Từ chối sau final PASSED giữ nguyên lịch sử PASSED của vòng đã chốt, nhưng Application chuyển REJECTED và lưu lý do/thời điểm. Không tự ghi đè đánh giá đã có.
+- Lịch sử cũ không có evaluation record không được suy diễn là PASSED chỉ từ `current_round_id`.
+- API detail trả `currentRoundResult` (PENDING/PASSED/FAILED/SKIPPED hoặc null khi không có vòng), `canEvaluate`, `canHire` và `roundHistory[].result`. Trong DB, trạng thái chưa đánh giá chưa cần tạo record PENDING.
 
 ### Reject Trigger Rule
 - Application Status = REJECTED được set theo 2 con đường:

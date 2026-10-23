@@ -1,6 +1,14 @@
 # Task BE API: API Applications
 
 ## Mục đích
+
+### Contract bổ sung ngày 21/10/2026
+
+- API đang triển khai: `GET /api/v1/applications/board` trả `data={total,truncated,columns}`; `GET /api/v1/applications/round-board?jobId=...` trả danh sách cột vòng. Danh sách chung dùng `/api/v1/applications`; không tạo endpoint trùng `/jobs/{jobId}/applications` từ tài liệu cũ.
+- Phân trang độc lập từng cột: `GET /api/v1/applications/board/column?stage=NEW&jobId=1&page=1&limit=20`, hoặc `?jobId=1&roundId=2&page=1&limit=20`. Chỉ nhận đúng một trong stage/roundId; roundId yêu cầu jobId và ownership của vòng trong Job. ID là BIGINT/Long; stage dùng NEW/IN_PROGRESS/PASSED/REJECTED (PASSED hiển thị hồ sơ HIRED, không phải Round Result).
+- Response theo BaseResponse, data gồm `current_page,last_page,total,data`. `page>=1`, `limit` 1..100. Thứ tự `appliedAt DESC,id DESC` ổn định khi timestamp bằng nhau. Keyword áp dụng trước count và pagination.
+- UI tải 20 hồ sơ/cột/lần, có Tải thêm/Thử lại/loading/empty. Đổi Job/từ khóa reset query của cột. Invalidate toàn bộ applications sau quyết định; không còn giới hạn khả năng truy cập ở 200 card đầu.
+- Hồ sơ chưa gán vòng hoặc trỏ vòng không còn hiệu lực được hiển thị ở cột đầu để HR kiểm tra; API hiển thị không tự sửa con trỏ. Quyết định vẫn kiểm tra pipeline độc lập.
 Xác định phạm vi backend cho task 'API Applications' trong US-22 Kanban Board, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
 
 ## Mô tả chức năng chi tiết
@@ -21,10 +29,10 @@ Xác định phạm vi backend cho task 'API Applications' trong US-22 Kanban Bo
 - `GET`
 
 ## Endpoint
-- `/api/v1/jobs/{jobId}/applications`
+- `/api/v1/applications`
 
 ## Request
-- Query params: stageId, status, keyword, page, size.
+- Query params: jobId, status, keyword, page, limit. Phân trang theo cột dùng endpoint bổ sung `/applications/board/column` đã mô tả phía trên.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
@@ -50,7 +58,7 @@ Xác định phạm vi backend cho task 'API Applications' trong US-22 Kanban Bo
 
 
 ## 3. API JSON Contract
-**Endpoint:** `GET /api/v1/jobs/{jobId}/applications?status=ACTIVE&stageId=201&page=1&limit=20`
+**Endpoint:** `GET /api/v1/applications?jobId=1&status=ACTIVE&page=1&limit=20`
 
 ### Request Body
 Không có request body.
@@ -66,14 +74,14 @@ Không có request body.
     "total": 1,
     "data": [
       {
-        "id": 301,
+        "applicationId": 301,
         "candidateId": 501,
         "fullName": "Tran B",
         "email": "tranb@example.com",
         "phone": "0901234567",
         "currentRoundId": 201,
         "currentRoundName": "CV Screening",
-        "status": "ACTIVE",
+        "applicationStatus": "ACTIVE",
         "appliedAt": "2026-08-31T10:00:00"
       }
     ]

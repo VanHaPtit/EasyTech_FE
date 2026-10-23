@@ -19,6 +19,7 @@ Xác định phạm vi frontend cho task 'UI xem truoc markdown' trong US-12 Tao
 - Không tự thực hiện hành động có rủi ro nếu người dùng chưa xác nhận.
 
 ## Hành vi UI
+- Xem trước Wizard, Job Detail HR và JD công khai dùng chung bộ render Markdown an toàn (`SimpleMarkdown`): tiêu đề `###`, danh sách `-`, chữ đậm. Nội dung HTML thô chỉ hiển thị dạng văn bản, không thực thi. Không tự ghi đè/chỉnh sửa nội dung HR khi xem trước; nội dung rỗng dùng empty state hiện có.
 - Hiển thị dữ liệu hiện tại, trạng thái rỗng, lỗi và trạng thái loading.
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.

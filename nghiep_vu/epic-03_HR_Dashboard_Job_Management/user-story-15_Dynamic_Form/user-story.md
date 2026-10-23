@@ -21,7 +21,7 @@ graph TD
 
 - **Kịch bản 1: HR thêm câu hỏi tùy chỉnh khi tạo Job**
   - **VỚI ĐIỀU KIỆN** HR đang ở màn hình tạo Job mới (`/dashboard/jobs/create`).
-  - **KHI** HR nhấn "Thêm câu hỏi" trong section "Form ứng tuyển" và điền thông tin câu hỏi (label, loại input: text/textarea/select/file, bắt buộc hay không).
+  - **KHI** HR nhấn "Thêm câu hỏi" trong section "Form ứng tuyển" và điền thông tin câu hỏi (label, loại input: text/textarea/url/select, bắt buộc hay không). Không có upload file tùy chỉnh; CV là trường riêng của US-26.
   - **THÌ** hệ thống lưu cấu hình câu hỏi vào bảng `form_fields` liên kết với `job_id` tương ứng.
   - Thứ tự câu hỏi được lưu theo trường `order_index` và có thể kéo-thả để sắp xếp lại (Drag & Drop).
 
@@ -56,8 +56,9 @@ graph TD
   - `PUT /api/v1/jobs/{jobId}/form-fields/{fieldId}`
   - `PUT /api/v1/jobs/{jobId}/form-fields/reorder`
   - `DELETE /api/v1/jobs/{jobId}/form-fields/{fieldId}`
-- Loại field trong phiên bản này là `TEXT`, `TEXTAREA`, `URL`, `FILE`, `SELECT`. `fieldName` có thể bỏ trống ở request tạo và sẽ được backend sinh từ `label`; tên đang hiệu lực phải duy nhất trong Job.
+- Loại field cấu hình mới là `TEXT`, `TEXTAREA`, `URL`, `SELECT`; FILE chỉ còn enum legacy, request cấu hình FILE trả 400. `fieldName` có thể bỏ trống ở request tạo và sẽ được backend sinh từ `label`; tên đang hiệu lực phải duy nhất trong Job.
 - `SELECT` bắt buộc có danh sách options không trống và không trùng. Các loại khác không được có options. `displayOrder` được backend kiểm tra lại, không tin thứ tự do frontend gửi riêng lẻ.
 - HR/HR_ADMIN phải có tài khoản `ACTIVE`, thuộc company đang `ACTIVE`, và chỉ được thao tác trên Job cùng `company_id`. Job `INACTIVE` và `ACTIVE` được sửa form; Job `CLOSED` trả lỗi `409`. Thay đổi ghi audit log.
 - Xóa field là soft delete bằng `is_deleted = true`, vì vậy các câu trả lời cũ không bị xóa; field đã xóa không hiển thị cho ứng viên mới.
 - Chi tiết Job public được mở rộng với `applicationForm.fields`. Các field mặc định Họ tên, Email, Số điện thoại và CV, cùng API submit `POST /api/v1/public/jobs/{jobId}/applications`, thuộc flow US-26.
+- Đồng bộ 21/10/2026: cấu hình tạo Job/aggregate và các API field riêng dùng cùng service create/update/replace/validation, cùng khóa Job trước mutation để không đua với Close/aggregate. Câu hỏi đã có câu trả lời không được đổi input/options (409), vẫn cho xóa mềm và giữ lịch sử. Không đổi endpoint hoặc bỏ clearFields/roundCount trong lượt tương thích này.

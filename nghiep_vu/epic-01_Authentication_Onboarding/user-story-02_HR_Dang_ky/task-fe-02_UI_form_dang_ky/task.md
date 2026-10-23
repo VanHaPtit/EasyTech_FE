@@ -10,27 +10,34 @@ Xác định phạm vi frontend cho task 'UI form dang ky' trong US-02 HR Dang k
 - Không tự quyết định trạng thái nghiệp vụ nhạy cảm; frontend tuân theo response và quyền do backend trả về.
 
 ## Screen/Component
+
+- Chuẩn hóa 22/10/2026: ba bước dùng chung schema tài khoản, công ty và địa chỉ/liên hệ; dữ liệu form dùng React Hook Form. Quay lại giữ bản nhập, lỗi backend vẫn được hiển thị; backend là nơi xác minh mã địa giới/uniqueness cuối cùng. Không thêm trường bắt buộc cho hồ sơ tùy chọn.
 - Component chính: Đăng ký Form.
 - Hiển thị trong đúng route/layout của epic hiện tại.
 - Dữ liệu phải tôn trọng multi-tenant và role hiện tại.
 
 ## Hành động của user
-- Người dùng mở màn hình và hoàn thành form đăng ký gồm 2 bước:
-  - Bước 1: Nhập thông tin tài khoản HR (Họ tên, Email, Mật khẩu).
-  - Bước 2: Nhập thông tin doanh nghiệp (Tên công ty, MST, Năm thành lập, Số điện thoại, Địa chỉ chi tiết, Tỉnh/Thành phố, Xã/Phường, Subdomain).
+- Người dùng mở màn hình và hoàn thành form đăng ký gồm 3 bước; riêng thông tin doanh nghiệp được tách thành 2 bước nhập theo thứ tự của màn hình cập nhật:
+  - Bước 1 — Người đại diện: Giữ các trường tài khoản HR hiện có (Họ tên, Chức vụ, Phòng ban, Email và Mật khẩu).
+  - Bước 2 — Thông tin công ty: Tên công ty, MST và Năm thành lập là bắt buộc; lĩnh vực hoạt động, ngành nghề chính, quy mô, slogan và giới thiệu là tùy chọn.
+  - Bước 3 — Địa chỉ & liên hệ: Địa chỉ chi tiết, Tỉnh/Thành phố, Xã/Phường, điện thoại doanh nghiệp và website là tùy chọn. Tỉnh và xã có thể cùng để trống nhưng phải chọn đủ cặp nếu sử dụng.
 
 ## Hành vi UI
-- Hiển thị Form theo luồng 2 bước (Stepper/Wizard).
-- Vô hiệu hóa nút "Tiếp tục" hoặc "Đăng ký" nếu form validation chưa vượt qua, hiển thị inline error màu đỏ.
+- Hiển thị Stepper/Wizard: Người đại diện → Thông tin công ty → Địa chỉ & liên hệ. Bước cuối là bước nhập, không thêm màn hình xác nhận riêng.
+- Validate dữ liệu của từng bước trước khi chuyển tiếp, chặn chuyển bước nếu không hợp lệ và hiển thị lỗi phù hợp.
+- Chỉ nút "Hoàn tất Đăng ký" ở bước 3 mới gọi API đăng ký. Quay lại các bước trước giữ nguyên dữ liệu đã nhập; API thất bại cũng không xóa dữ liệu.
+- Khi chuyển bước, đưa vùng form về đầu và focus tiêu đề của bước để hỗ trợ bàn phím và màn hình nhỏ.
 - Vô hiệu hóa nút submit trong lúc request đang chạy để tránh gửi lặp.
-- Tự động gợi ý Subdomain từ Tên công ty khi người dùng nhập xong tên công ty.
+- Không tự sinh/gửi subdomain khi đăng ký; URL Career Site dùng slug do backend cấp. Resubmit cho alias legacy tùy chọn, không gắn dấu bắt buộc hoặc tự xóa alias khi bỏ field.
+- Không hiển thị dấu `*` ở trường hồ sơ tùy chọn; HR có thể để trống và bổ sung sau khi công ty được duyệt.
+- Không hiển thị trường logo/ảnh bìa trong form đăng ký. HR cấu hình hoặc tải ảnh lên tại Cài đặt sau khi đăng nhập với quyền phù hợp.
 - Dùng bộ chọn có tìm kiếm theo dữ liệu địa giới của hệ thống cho Tỉnh/Thành phố và Xã/Phường; chỉ cho chọn Xã/Phường sau khi chọn tỉnh.
 - Tải danh mục địa giới qua API tra cứu public, không yêu cầu người dùng đăng nhập hoặc có refresh token.
 - Khi đổi tỉnh, xóa lựa chọn Xã/Phường cũ. Địa chỉ chi tiết chỉ nhận số nhà/đường/ngõ, không ghép tên tỉnh hoặc xã/phường.
-- Hiển thị trạng thái đang tải, lỗi tải kèm thao tác thử lại, và lỗi bắt buộc ngay dưới từng bộ chọn; giữ các lựa chọn còn hợp lệ khi request đăng ký thất bại.
+- Hiển thị trạng thái đang tải, lỗi tải kèm thao tác thử lại, và lỗi hợp lệ ngay dưới từng bộ chọn; tỉnh/xã có thể cùng để trống nhưng phải chọn đủ cặp nếu sử dụng. Giữ các lựa chọn còn hợp lệ khi request đăng ký thất bại.
 
 ## Validation
-- Validate trường bắt buộc ngay trên FE để cải thiện UX.
+- Validate trường bắt buộc ngay trên FE để cải thiện UX; trường tùy chọn chỉ được validate định dạng khi người dùng đã nhập.
 - Không coi FE validation là source-of-truth; BE vẫn phải validate lại.
 - Hiển thị lỗi gần trường nhập liệu và không xóa dữ liệu user đã nhập khi validation không đạt.
 - MST và Năm thành lập được nhập bắt buộc khi đăng ký. Trong màn hình gửi lại hồ sơ bị từ chối, hai trường đã có giá trị được hiển thị chỉ đọc; lý do từ chối không cho phép mở khóa để sửa. Nếu hồ sơ lịch sử thiếu một giá trị thì cho phép bổ sung giá trị đó một lần, sau đó hiển thị chỉ đọc.

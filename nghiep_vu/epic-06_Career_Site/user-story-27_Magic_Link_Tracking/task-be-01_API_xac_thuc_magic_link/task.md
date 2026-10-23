@@ -46,7 +46,7 @@ Xác định phạm vi backend cho task 'API xac thuc magic link' trong US-27 Ma
 }
 ```
 
-`email` phải khớp với email của hồ sơ. API không cấp JWT, session hoặc quyền truy cập Admin/HR. Token hết hạn sau 30 ngày; dữ liệu hồ sơ không được trả về khi token không tồn tại, hết hạn hoặc email không khớp.
+`email` phải khớp với email của hồ sơ. API không cấp JWT/quyền Admin/HR. Sau xác minh, cấp candidate_tracking_session HttpOnly/SameSite=Lax, path=/api/v1/candidates, TTL mặc định 900 giây và Cache-Control:no-store. Cookie chỉ tra cứu hồ sơ đã xác minh; mỗi lần đọc kiểm tra lại token/email/hạn. Token link hết hạn sau 30 ngày; token DB lưu SHA-256, server hash raw token trước lookup. Response thêm companySlug để frontend điều hướng về status đúng công ty và xóa query token/email khỏi URL.
 
 ### Response lỗi
 ```json

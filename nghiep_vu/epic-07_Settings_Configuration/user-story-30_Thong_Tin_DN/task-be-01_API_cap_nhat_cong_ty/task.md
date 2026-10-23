@@ -22,7 +22,7 @@ Xác định phạm vi backend cho task 'API cap nhat cong ty' trong US-30 Thong
 - Allowlist sau onboarding: `phone`, `address`, `provinceCode`, `wardCode`, `website`, `industry`, `businessType`, `companySize`, `slogan`, `description`, `logoUrl`, `bannerUrls`. Nếu request chứa field khác, trả `400` và không cập nhật dữ liệu. HR không có quyền Admin nhận `403`.
 - Upload ảnh dùng `GET /api/v1/uploads/image-rules`, `POST /api/v1/uploads/company-logo` và `POST /api/v1/uploads/company-covers`; chỉ `HR_ADMIN` hoặc `ADMIN` được upload. Upload trả URL; PATCH mới lưu URL vào profile.
 - `industry` lưu lĩnh vực hoạt động; `businessType` lưu ngành nghề chính/loại hình theo field hiện có. Không thêm `primaryIndustry` hoặc bảng mới.
-- Logo đồng bộ vào `company_profiles.logo_url` và `career_sites.logo_url`. Ảnh bìa lưu ở `banner_urls`; ảnh đầu danh sách đồng bộ vào `career_sites.hero_image_url`.
+- Logo lưu vào `company_profiles.logo_url`, ảnh bìa lưu `company_profiles.banner_urls`; không ghi/xóa override `career_sites.logo_url`/`hero_image_url`. Public dùng profile làm fallback khi override không có. Quyết định 21/10/2026 thay cơ chế sao chép cũ.
 - `slogan` lưu ở `company_profiles.slogan`; không cập nhật `career_sites.tagline`.
 
 ## API JSON Contract

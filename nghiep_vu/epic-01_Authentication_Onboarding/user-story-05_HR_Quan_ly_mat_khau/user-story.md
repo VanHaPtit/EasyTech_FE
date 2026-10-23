@@ -67,6 +67,7 @@ graph TD
 - **Độ phức tạp mật khẩu:** Tối thiểu 8 ký tự, phải chứa ít nhất 1 chữ hoa, 1 chữ số.
 - **Bảo mật Session:** Sau khi đổi hoặc reset mật khẩu thành công, toàn bộ refresh tokens / sessions cũ trong DB phải bị vô hiệu hóa để ngăn kẻ gian tiếp tục sử dụng tài khoản.
 - **Bảo mật luồng OTP:** Mã OTP chỉ có hiệu lực trong khoảng thời gian ngắn (ví dụ 10 phút) và tự động hủy sau khi sử dụng thành công hoặc quá số lần nhập sai.
+- Email OTP dùng catalog hệ thống chung, thương hiệu `APP_BRAND_NAME` (mặc định `EasyHire`); nội dung thời hạn lấy từ TTL OTP thực tế 600 giây. Vẫn gửi đồng bộ bằng SMTP nền tảng, không ghi OTP vào outbox. SMTP lỗi trả `503`, xóa OTP/cooldown để thử lại; không báo gửi thành công giả. Mailpit chỉ kiểm tra delivery local, không chứng minh Gmail Internet.
 
 ## 4. NGOÀI PHẠM VI
 - Không hỗ trợ gửi OTP qua SMS trong MVP (chỉ qua Email).

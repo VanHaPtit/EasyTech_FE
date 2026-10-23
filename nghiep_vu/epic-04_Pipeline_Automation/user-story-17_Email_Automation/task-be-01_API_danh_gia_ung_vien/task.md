@@ -1,179 +1,63 @@
 # task-be-01_API_danh_gia_ung_vien
 
-## Mục đích
-Xác định phạm vi backend cho task 'API danh gia ung vien' trong US-17 Email Automation, làm rõ task dùng để làm gì và liên kết với luồng nghiệp vụ tương ứng.
+## Contract hiện hành — 20/10/2026
 
-## Mô tả chức năng chi tiết
-- Tiếp nhận và xử lý request đúng với nghiệp vụ của user story, bao gồm validate dữ liệu đầu vào, quyền truy cập và trạng thái tài nguyên liên quan.
-- Thực hiện truy vấn, cập nhật dữ liệu hoặc side effect cần thiết theo business rule; không xử lý ngoài phạm vi task.
-- Trả response theo JSON/BaseResponse contract đã mô tả để frontend xử lý thành công, lỗi validation, lỗi phân quyền và lỗi hệ thống.
-- Đảm bảo backend là source-of-truth cho dữ liệu, trạng thái và phân quyền.
+Actor: HR/HR_ADMIN của company, user và company đều ACTIVE. Backend kiểm tra tenant từ phiên đăng nhập, không nhận companyId từ client. ID database BIGINT/backend Long/JSON number.
 
-## User Story liên quan
-- US-17 - Email Automation.
+Job ACTIVE hoặc CLOSED chưa xóa được xử lý hồ sơ đã nhận. CLOSED không cho sửa cấu hình vòng hay nhận đơn mới; INACTIVE/deleted không được đánh giá/tuyển. Application phải ACTIVE.
 
-## Điều kiện tiên quyết
-- User đã authentication nếu endpoint thuộc workspace/admin.
-- User đã đăng nhập và có quyền thao tác trong company hiện tại. Backend kiểm tra role và ownership theo `company_id`.
-- Dữ liệu phải thuộc đúng company_id hiện tại nếu là endpoint nội bộ.
+## API
 
-## HTTP Method
-- `POST`
+| Thao tác | Endpoint | Request |
+| --- | --- | --- |
+| Đạt vòng hiện tại | POST /api/v1/applications/{id}/advance | {"expectedRoundId": 202} |
+| Từ chối hồ sơ | POST /api/v1/applications/{id}/reject | {"expectedRoundId": 202, "reason": "Kỹ năng chưa phù hợp"} |
+| Tuyển ứng viên | POST /api/v1/applications/{id}/hire | {"expectedRoundId": 202} |
 
-## Endpoint
-- `/api/v1/applications/{applicationId}/rounds/{roundId}/evaluate`
+expectedRoundId là property bắt buộc nhưng cho phép null để tương thích hồ sơ chưa được gán vòng và Job không có vòng. Trường phải khớp giá trị đã lưu; không thay null bằng ID vòng đầu ở frontend. reason phải trim, không rỗng, tối đa 1000 ký tự.
 
-## Request
-- Điểm, nhận xét và `result = PASSED|FAILED`.
+Response HTTP 200: BaseResponse {status:1,message,data:ApplicationListResponseDTO}. Chi tiết qua GET /applications/{id} trả currentRoundResult, canEvaluate, canHire, roundHistory[].result và rejectedReason/rejectedAt. Không nhận applicationStatus nhạy cảm do client tự chọn.
 
-## Validation
-- Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
-- Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
-- Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
+Endpoint PUT /applications/{id}/round được giữ để trả lỗi hướng dẫn tương thích; không còn được dùng để chuyển vòng tùy ý, bỏ qua đánh giá, tự HIRED hay hồi sinh hồ sơ đã kết thúc.
 
-## Response
-- Thành công: BaseResponse(status = 1, message, data); Round status sau đánh giá.
-- Thất bại: BaseResponse(status = 0, message, data = null) với message nêu rõ lỗi và cách xử lý.
+## Chuyển trạng thái
 
-## State Transition
-- Round Result = PASSED/FAILED; Application Status chỉ đổi sang REJECTED khi nghiệp vụ reject rõ ràng, không tự HIRED khi final PASSED.
+- PASSED ở vòng chưa cuối: ghi application_progress.status=PASSED, chuyển đến vòng kế tiếp, application vẫn ACTIVE.
+- PASSED ở vòng cuối: ghi PASSED, giữ vòng cuối và ACTIVE; canHire=true.
+- Hire: chỉ khi đang ở vòng cuối đã có PASSED; chuyển HIRED trong hành động riêng. Với Job roundCount=0 và không có round, HR được Hire trực tiếp, không tự HIRED.
+- Reject trước khi có kết quả: ghi FAILED, chuyển REJECTED, lưu lý do và thời điểm.
+- Reject sau final PASSED: Application chuyển REJECTED, giữ nguyên kết quả PASSED lịch sử, lưu lý do/thời điểm từ chối.
+- Không ghi đè kết quả vòng đã chốt; cùng một final PASS hoặc Hire gửi lặp trả 409, không gửi lại email.
+- Khóa hàng theo application + company, kết hợp version; ghi kết quả vòng và thay đổi application trong cùng transaction.
 
-## Side Effects
-- Ghi evaluation history và kích hoạt email automation nếu cấu hình.
+## Database
 
-## Các trường hợp lỗi
-- 400: request không hợp lệ hoặc enum/status sai.
-- 401: chưa đăng nhập hoặc token không hợp lệ.
-- 403: không đủ quyền hoặc workspace bị hạn chế.
-- 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
-- 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
+Bảng application_progress, không dùng round_statuses/job_rounds và không dùng UUID:
+id BIGINT PK; application_id BIGINT FK applications.id; round_id BIGINT FK hiring_rounds.id;
+status VARCHAR(50) PENDING/PASSED/FAILED/SKIPPED; evaluated_by BIGINT nullable FK users.id;
+evaluated_at TIMESTAMP NOT NULL; note TEXT; created_at/updated_at TIMESTAMP NOT NULL.
+Unique(application_id, round_id). API/service phải kiểm tra round thuộc đúng Job/company.
+Không suy diễn hoặc backfill evaluation từ current_round_id của dữ liệu cũ.
 
+Migration V45 bổ sung applications.version, rejected_reason, rejected_at. V46 tạo application_progress.
+Không sửa lại migration đã áp dụng. score/evaluation_details và form đánh giá chi tiết vẫn thuộc US-19.
 
-## 3. API JSON Contract
+## Template và email
 
-**Endpoint:** `POST /api/v1/applications/{applicationId}/rounds/{roundId}/evaluate`
-**Mô tả:** Lưu kết quả đánh giá một vòng và kích hoạt email automation nếu cấu hình yêu cầu.
+- PASS/FAIL template bắt buộc trong request cấu hình round; phải active, chưa xóa, đúng company và đúng loại.
+- Khi `sendEmail=true`, lấy template của vòng vừa đánh giá, không lấy template của vòng đích. Round cũ thiếu template trả 400 và yêu cầu HR cấu hình lại, không tự chọn template thay thế. Khi `sendEmail=false`, không resolve template/SMTP, vẫn ghi kết quả nghiệp vụ và email log SKIPPED; quy tắc bắt buộc PASS/FAIL template khi cấu hình vòng không thay đổi.
+- Hire dùng template OFFER khả dụng của company; nếu không có template thì không báo gửi thành công, email log FAILED. Không hủy trạng thái Hire đã commit vì lỗi gửi email.
+- Event chứa snapshot dữ liệu email, không mang entity lazy sang luồng nền. Listener lưu queue email_logs trong cùng transaction; worker gửi sau commit. Rollback không giữ queue/email.
+- Payload advance/hire thêm `sendEmail` Boolean tùy chọn; reject thêm trường tương tự bên cạnh expectedRoundId/reason. Bỏ qua mặc định true; false lưu SKIPPED, không gửi SMTP.
+- Backend tự tính `isFinalRound` từ vòng cuối trong thứ tự; client chỉ đọc cờ. CRUD/reorder/aggregate dùng chung validator. Pipeline legacy có thứ tự/cờ không hợp lệ bị chặn quyết định bằng 409, không sửa ngầm khi đọc. PASS cuối vẫn giữ ACTIVE; Hire là hành động riêng.
+- Trạng thái email PENDING/SUCCESS/FAILED/SKIPPED; worker tối đa 1 lần đầu + 3 retry, backoff 30/60/90 giây. Ghi attempt_count/next_attempt_at/sent_at/retried_at đúng thực tế; restart giữ queue.
+- SMTP chỉ bảo đảm at-least-once. Manual retry chỉ FAILED, khóa theo log + company. SMTP thất bại trả 503 nhưng vẫn commit attempt_count/retried_at/error_message; không rollback bằng chứng lần gửi.
 
-### Request Body
-```json
-{
-  "result": "PASSED",
-  "score": 85,
-  "note": "Ứng viên đạt yêu cầu vòng kỹ thuật.",
-  "sendEmail": true
-}
-```
+## Lỗi và UI
 
-### Response (200 OK)
-```json
-{
-  "status": 1,
-  "message": "Lưu đánh giá vòng tuyển dụng thành công",
-  "data": {
-    "applicationId": 301,
-    "roundId": 202,
-    "roundResult": "PASSED",
-    "applicationStatus": "ACTIVE",
-    "nextRoundId": 203,
-    "emailQueued": true,
-    "evaluatedAt": "2026-08-31T10:00:00"
-  }
-}
-```
+400: thiếu property, reason sai, template thiếu/sai. 401: chưa đăng nhập.
+403: sai role/user/company không ACTIVE. 404: hồ sơ ngoài tenant hoặc không tồn tại.
+409: expectedRoundId stale, đánh giá lặp, Application đã kết thúc, Job không cho xử lý, hoặc Hire khi chưa đạt vòng cuối.
 
----
-
-## Thiết kế Database – Bảng round_statuses
-
-## Bảng/entity liên quan
-- Bảng chính: `job_rounds`, `round_statuses`, `email_templates`, `email_logs`, `interview_schedules`.
-- Mỗi bảng phải có id làm Primary Key, created_at, updated_at và is_deleted nếu cần xóa mềm.
-- Các bảng thuộc tenant phải có company_id và index theo company_id.
-
-## Column và kiểu dữ liệu
-- Dùng UUID cho khóa chính/khóa ngoại.
-- Dùng VARCHAR cho mã, email, slug, enum dạng text.
-- Dùng TEXT cho nội dung dài như mô tả, lý do từ chối, email body hoặc AI explanation.
-- Dùng TIMESTAMP cho thời điểm tạo/cập nhật/gửi email/đánh giá.
-- - Enum/status liên quan: Round Result = `IN_PROGRESS`/`PASSED`/`FAILED`; Application Status = `ACTIVE`/`REJECTED`/`HIRED` nếu task trực tiếp cập nhật hồ sơ.
-
-## Khóa và ràng buộc
-- Primary Key: id.
-- Foreign Key: trỏ đúng entity cha, đặc biệt company_id, job_id, pplication_id, 
-ound_id, user_id.
-- Constraint bắt buộc cho field nghiệp vụ chính; không cho dữ liệu mồ côi giữa company, job, application và round.
-- Unique index cho các mã định danh như email, tax code, slug hoặc template key theo phạm vi tenant nếu nghiệp vụ yêu cầu.
-
-## Migration
-- Tạo migration idempotent theo thứ tự triển khai.
-- Có giá trị mặc định rõ ràng cho status và boolean flag.
-
-## Relationship
-- Dữ liệu phải giữ đúng multi-tenant boundary theo company_id.
-- Xóa mềm không được làm mất audit/history cần phục vụ báo cáo hoặc truy vết.
-
----
-
-## Internal Service – Xử lý Template Email
-
-## Đầu vào
-- Entity hoặc DTO đã được validate từ API/service gọi vào.
-- Context tenant gồm company_id, user_id, role và trạng thái truy cập nếu có.
-- Cấu hình hệ thống cần thiết như SMTP, AI provider, template hoặc storage.
-
-## Xử lý
-- Xử lý gửi/lưu email theo template và trạng thái gửi thực tế.
-- Xử lý gửi/lưu email theo template và trạng thái gửi thực tế.
-- Thực hiện nghiệp vụ chính theo domain hiện tại, không tự thêm feature ngoài phạm vi story.
-- Kiểm tra quyền theo workspace authorization, không trộn với authentication.
-
-## Kết quả đầu ra
-- Kết quả xử lý dạng object/service result để API layer đóng gói BaseResponse.
-- Thông tin lỗi rõ nguyên nhân và hành động user/admin cần làm tiếp.
-
-## Phụ thuộc
-- Repository/database liên quan.
-- Email/AI/storage/provider config nếu task cần tích hợp ngoài.
-- Audit/logging service khi có thay đổi dữ liệu hoặc side effect quan trọng.
-
-## Side Effects
-- Gửi email, ghi audit log, lưu file, lưu AI result hoặc dispatch notification nếu nghiệp vụ yêu cầu.
-- Không gửi lặp khi retry nếu action đã thành công trước đó.
-
-## Xử lý lỗi
-- Log lỗi đủ context nhưng không log secret/token/API key.
-- Retry có kiểm soát cho lỗi tạm thời như SMTP/AI provider.
-- Trả lỗi nghiệp vụ có thể hiểu được cho API layer.
-
----
-
-## Internal Service – Gửi Email qua SMTP
-
-## Đầu vào
-- Entity hoặc DTO đã được validate từ API/service gọi vào.
-- Context tenant gồm company_id, user_id, role và trạng thái truy cập nếu có.
-- Cấu hình hệ thống cần thiết như SMTP, AI provider, template hoặc storage.
-
-## Xử lý
-- Xử lý gửi/lưu email theo template và trạng thái gửi thực tế.
-- Xử lý gửi/lưu email theo template và trạng thái gửi thực tế.
-- Thực hiện nghiệp vụ chính theo domain hiện tại, không tự thêm feature ngoài phạm vi story.
-- Kiểm tra quyền theo workspace authorization, không trộn với authentication.
-
-## Kết quả đầu ra
-- Kết quả xử lý dạng object/service result để API layer đóng gói BaseResponse.
-- Thông tin lỗi rõ nguyên nhân và hành động user/admin cần làm tiếp.
-
-## Phụ thuộc
-- Repository/database liên quan.
-- Email/AI/storage/provider config nếu task cần tích hợp ngoài.
-- Audit/logging service khi có thay đổi dữ liệu hoặc side effect quan trọng.
-
-## Side Effects
-- Gửi email, ghi audit log, lưu file, lưu AI result hoặc dispatch notification nếu nghiệp vụ yêu cầu.
-- Không gửi lặp khi retry nếu action đã thành công trước đó.
-
-## Xử lý lỗi
-- Log lỗi đủ context nhưng không log secret/token/API key.
-- Retry có kiểm soát cho lỗi tạm thời như SMTP/AI provider.
-- Trả lỗi nghiệp vụ có thể hiểu được cho API layer.
+Drawer/Board chỉ phát một request sau xác nhận; Hủy không ghi dữ liệu. Vô hiệu hóa action trong lúc pending.
+Lỗi giữ ngữ cảnh và cho tải lại; thành công invalidate list, detail, board, round-board và dashboard.

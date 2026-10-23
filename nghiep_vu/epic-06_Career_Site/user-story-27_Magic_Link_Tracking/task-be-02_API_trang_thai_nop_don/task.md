@@ -16,7 +16,7 @@ Xác định phạm vi backend cho task 'API trang thai nop don' trong US-27 Mag
 ## Endpoint đề xuất
 - GET /api/v1/candidates/application-status
 
-Query bắt buộc: `token` và `email`. Ví dụ: `/api/v1/candidates/application-status?token=magic_link_token&email=candidate%40example.com`.
+GET chỉ đọc cookie HttpOnly candidate_tracking_session do API verify cấp; không truyền token/email trên query. Thiếu/hết phiên trả 403, frontend yêu cầu mở lại link và xác minh. POST cùng endpoint nhận `{token,email}` để xác minh và cấp cookie. Nếu GET có tham số token hoặc email, kể cả rỗng và kể cả có cookie hợp lệ, trả 400 với thông báo yêu cầu dùng POST; ngừng tương thích GET query cũ (chốt ngày 22/10/2026). Response tra cứu thành công dùng no-store.
 
 ## API JSON Contract
 
@@ -39,7 +39,7 @@ Query bắt buộc: `token` và `email`. Ví dụ: `/api/v1/candidates/applicati
 }
 ```
 
-`interviews` chỉ chứa thông tin lịch phỏng vấn cần hiển thị cho ứng viên, không bao gồm ghi chú nội bộ hoặc dữ liệu CV. Request không dùng Header Authorization; backend xác thực bằng cặp `token + email`.
+`interviews` chỉ chứa thông tin lịch phỏng vấn cần hiển thị cho ứng viên, không bao gồm ghi chú nội bộ hoặc dữ liệu CV. Request không dùng JWT HR; cookie tra cứu ánh xạ thông tin token/email đã xác minh trong Redis TTL và backend kiểm tra lại tính hợp lệ mỗi lần. Response thêm companySlug. Link bị xoay/hết hạn không được dùng tiếp dù cookie còn TTL.
 
 ### Response lỗi
 ```json

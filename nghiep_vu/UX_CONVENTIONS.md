@@ -19,7 +19,7 @@ Tài liệu này định nghĩa các nguyên tắc UX và business convention d�
 > Không dùng trạng thái `REJECTED` cho User. Khi Admin reject đăng ký doanh nghiệp, trạng thái chuẩn là Company = REJECTED, User = PENDING. INACTIVE và BLOCKED là trạng thái hạn chế truy cập tài khoản riêng, không phải kết quả mặc định của kết quả từ chối đăng ký.
 
 ### Job Status
-- DRAFT: job nháp, chưa publish.
+- INACTIVE: job nháp, chưa publish. Giữ giá trị DB/API hiện hành, không thêm DRAFT.
 - ACTIVE: job đã publish và đang nhận hồ sơ.
 - CLOSED: job đã dừng nhận hồ sơ.
 
@@ -97,6 +97,10 @@ API thất bại:
 ```
 
 ### Pagination chuẩn
+
+- API mới dùng query `page` (từ 1), `limit` (1–100), `searchText` và response `BasePagination` bên dưới. API hiện có nhận `size` thay `limit`, `keyword` thay `searchText` (Admin category giữ alias `search`). Nếu gửi cả hai alias phải cùng giá trị sau trim; khác nhau trả `400`, không âm thầm ưu tiên một bên.
+- Không đổi wrapper API cũ: Email Templates giữ Spring Page (`content`, `totalElements`, `totalPages`, `number`, `size`) dù nhận thêm tên query chuẩn; các endpoint đã dùng BasePagination giữ nguyên. Không đổi chỉ số page public sang zero-based; chỉ metadata Spring Page `number` là zero-based như trước. Mặc định vẫn theo từng endpoint (Email Templates50, public Jobs20, danh sách chung10), không áp đặt lại làm vỡ client.
+- Tham số `category` public Jobs vẫn là slug danh mục; không tự đổi sang `categoryId` trong lần chuẩn hóa pagination. JSON `categoryId` của Job vẫn là BIGINT/Long theo contract hiện hành.
 Danh sách phân trang trả về trong `data` theo format:
 
 ```json
@@ -115,6 +119,17 @@ Danh sách phân trang trả về trong `data` theo format:
 > Lưu ý: `current_page` và `last_page` đang theo format pagination backend hiện tại. Nếu backend đổi sang `currentPage`/`lastPage`, phải cập nhật quy ước này và toàn bộ task liên quan cùng lúc.
 
 ## 8. Loading, empty state và success feedback
+
+- Cache phía trình duyệt không phải quyền truy cập: khi logout/session expired/đổi tài khoản thì hủy query và xóa cache workspace. Danh sách template vòng dùng key kèm `companyId`; không hiển thị template tenant trước khi đăng nhập tenant mới. Backend vẫn kiểm tra ownership độc lập.
+- Route tải theo nhu cầu phải có loading state và lỗi có nút tải lại; không bỏ authentication gate khi tách bundle. Không coi giảm bundle là chứng minh Core Web Vitals/performance trên thiết bị thật.
+
+### Đồng hồ và ngày nghiệp vụ (22/10/2026)
+
+- Rule nhận hồ sơ/publish theo `startDate`/`endDate` dùng ngày tại `Asia/Ho_Chi_Minh`, bao gồm cả ngày bắt đầu/kết thúc. Qua nửa đêm Việt Nam thì hết hạn; chỉ ẩn/chặn nộp đơn, không tự đổi trạng thái Job. Backend dùng `Clock` inject để test biên thời gian nhất quán giữa danh sách, chi tiết và submit.
+- Không đổi schema/timestamp cũ: các cột `LocalDateTime` không offset tiếp tục theo timezone runtime server (`Clock.systemDefaultZone`), giữ tương thích dữ liệu cũ/JPA lifecycle. Không tự gắn UTC/Z, không chuyển đổi dữ liệu lịch sử; không tuyên bố các timestamp này có offset ISO-8601. Một migration timezone toàn hệ thống cần contract riêng.
+- Formatter giao diện dùng chung: date-only `YYYY-MM-DD` giữ ngày lịch, không đổi theo timezone thiết bị; datetime cũ tiếp tục cách diễn giải timezone hiện hành, không tự gắn offset. Giá trị thiếu hoặc ngày không hợp lệ dùng fallback của từng màn hình, không ném lỗi làm crash trang. Ví dụ `2026-02-30` là không hợp lệ, không tự chuyển thành tháng3.
+- Thông báo lỗi API chỉ nhận `message` dạng chuỗi không rỗng; nếu response trả object/array hoặc message trống thì dùng fallback theo ngữ cảnh. Không đưa object lỗi vào toast hoặc hiển thị chi tiết exception nội bộ.
+- TTL Redis giữ prefix và số giây đã triển khai trong `AuthRedisKeys`; nội dung OTP đọc cùng TTL. Outbox dùng cùng clock cho ready/sent/retried/backoff, retry vẫn có giới hạn.
 - Mọi action gọi API phải có loading state.
 - Danh sách rỗng phải có empty state và CTA phù hợp.
 - Hành động thành công hiển thị toast hoặc trang xác nhận theo mức độ quan trọng.

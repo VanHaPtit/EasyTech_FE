@@ -41,7 +41,7 @@ Xác định phạm vi backend cho task 'API tai len logo' trong US-03 HR Onboar
 
 ## State Transition
 - Không đổi `Company.status`.
-- Không tự set `onboardingCompleted = true`; việc hoàn tất/skip onboarding thuộc API cập nhật profile.
+- Không tự set `onboardingCompleted = true`; việc hoàn tất do API cập nhật profile xác định sau validate lĩnh vực/SMTP. Không có Skip.
 
 ## Side Effects
 - Lưu file vào storage.

@@ -10,9 +10,9 @@
 
 ```mermaid
 graph TD
-    A[Mở form Đăng ký] --> B[Bước 1: Điền thông tin HR]
-    B --> C[Bước 2: Điền thông tin Doanh nghiệp]
-    C --> D[Submit Form]
+    A[Mở form Đăng ký] --> B[Bước 1: Thông tin người đại diện]
+    B --> C[Bước 2: Thông tin công ty]
+    C --> D[Bước 3: Địa chỉ & liên hệ]
     D --> E{Hệ thống Validate}
     
     E -- Thiếu/Sai --> F[Báo lỗi Validation tại field]
@@ -21,7 +21,7 @@ graph TD
     G --> H{Kiểm tra trùng lặp DB}
     H -- Trùng Email HR --> I[Lỗi: Email đã được sử dụng]
     H -- Trùng Mã số thuế --> J[Lỗi: Mã số thuế đã tồn tại]
-    H -- Trùng Subdomain --> K[Lỗi: Subdomain đã có người dùng]
+    H -- Client legacy gửi alias trùng --> K[Lỗi: Subdomain đã có người dùng]
     
     H -- Hợp lệ --> L[Tạo DB: Company=PENDING, User=HR_ADMIN/PENDING]
     L --> M[Gửi Email xác nhận & Thông báo Admin]
@@ -30,20 +30,26 @@ graph TD
 
 ## 2. TIÊU CHÍ NGHIỆM THU (Acceptance Criteria)
 
-- **Kịch bản 1: Đăng ký thành công với thông tin hợp lệ (Form 2 bước)**
+- **Kịch bản 1: Đăng ký thành công với thông tin hợp lệ (Form 3 bước)**
   - **VỚI ĐIỀU KIỆN** người dùng chưa có tài khoản trên hệ thống.
-  - **KHI** người dùng điền đầy đủ form:
-    - **Bước 1 (Tài khoản HR):** Họ tên, Email đăng nhập, Mật khẩu (≥ 8 ký tự, có chữ hoa + số).
-    - **Bước 2 (Doanh nghiệp):** Tên công ty, Mã số thuế, Năm thành lập, Số điện thoại, Địa chỉ chi tiết, Tỉnh/Thành phố, Xã/Phường, Subdomain mong muốn, Ngành nghề (Industry), Quy mô (Company Size), Mô tả công ty, và Upload Logo (tùy chọn).
-  - **VÀ** nhấn "Đăng ký".
-  - **THÌ** hệ thống tạo bản ghi trong bảng `companies` với `status = PENDING` và `users` với `role = HR`, `status = PENDING` (liên kết qua `company_id`).
+  - **KHI** người dùng nhập các trường bắt buộc:
+    - **Bước 1 (Thông tin người đại diện):** Họ tên, chức vụ, Email đăng nhập và Mật khẩu (≥ 8 ký tự, có chữ hoa + số); phòng ban là tùy chọn.
+    - **Bước 2 (Thông tin công ty):** Tên công ty, Mã số thuế và Năm thành lập là bắt buộc; lĩnh vực hoạt động, ngành nghề chính (`businessType`), quy mô, slogan và giới thiệu là tùy chọn.
+    - `companySize` khi cung cấp chỉ nhận `1-10`, `11-50`, `51-200`, `201-500`, `501-1000`, `1001+`; không cho đăng ký mới với khoảng legacy. Bỏ trống không cản đăng ký.
+    - **Bước 3 (Địa chỉ & liên hệ):** Địa chỉ chi tiết, Tỉnh/Thành phố, Xã/Phường, điện thoại doanh nghiệp và website đều tùy chọn. Tỉnh và xã có thể cùng để trống; nếu cung cấp thì phải chọn đủ cặp hợp lệ.
+  - Phần đăng ký thông tin doanh nghiệp được chia thành hai bước nhập theo cùng thứ tự với màn hình cập nhật: Thông tin công ty → Địa chỉ & liên hệ. Bước thông tin người đại diện vẫn nằm ở đầu luồng. Trường tùy chọn không hiển thị dấu `*`.
+  - Các nút "Tiếp tục" chỉ chuyển bước và validate dữ liệu của bước hiện tại; chưa gửi API đăng ký. Quay lại bước trước giữ nguyên dữ liệu đã nhập.
+  - Logo và ảnh bìa không hiển thị trong form đăng ký; HR cấu hình hoặc tải ảnh lên trong Cài đặt sau khi công ty được duyệt.
+  - Backend tự tạo `companies.slug` unique từ tên công ty cho URL public. Frontend không tự tạo/gửi subdomain; `subdomain` chỉ còn là alias nullable tương thích client/dữ liệu cũ.
+  - **VÀ** nhấn "Hoàn tất Đăng ký" ở bước 3. Đây là bước nhập địa chỉ/liên hệ, không thêm màn hình rà soát riêng.
+  - **THÌ** hệ thống tạo bản ghi trong bảng `companies` với `status = PENDING` và `users` với `role = HR_ADMIN`, `status = PENDING` (liên kết qua `company_id`).
   - Hệ thống gửi email xác nhận đến HR và gửi yêu cầu phê duyệt đến Admin.
   - HR được chuyển đến trang Chờ duyệt.
-  - Địa chỉ chi tiết chỉ gồm số nhà/đường/ngõ; mã tỉnh và mã xã/phường được lưu riêng vào `companies.province_code` và `companies.ward_code`.
+  - Địa chỉ chi tiết chỉ gồm số nhà/đường/ngõ; mã tỉnh và mã xã/phường được lưu riêng vào `companies.province_code` và `companies.ward_code`. Cả hai có thể cùng để trống; nếu cung cấp thì phải chọn đủ cặp hợp lệ.
   - Mã số thuế và Năm thành lập là bắt buộc khi đăng ký và cố định ngay sau khi hồ sơ được tạo; HR không thể đổi hai trường này trong onboarding hoặc khi gửi lại hồ sơ bị từ chối.
 
 - **Kịch bản 1a: Chọn địa giới đăng ký hợp lệ**
-  - **VỚI ĐIỀU KIỆN** HR đang nhập thông tin doanh nghiệp ở bước 2.
+  - **VỚI ĐIỀU KIỆN** HR đang nhập địa chỉ và liên hệ ở bước 3.
   - **KHI** HR chọn Tỉnh/Thành phố rồi chọn Xã/Phường thuộc tỉnh đó.
   - **THÌ** form lưu hai mã lựa chọn riêng; đổi Tỉnh/Thành phố sẽ xóa Xã/Phường đã chọn trước đó.
   - Backend chỉ chấp nhận mã tỉnh và mã xã/phường hợp lệ, đồng thời xác minh xã/phường thuộc tỉnh đã gửi.
@@ -55,12 +61,12 @@ graph TD
   - Không hiển thị màn hình rỗng chỉ có câu "Đang chờ phê duyệt" mà không có thông tin rõ ràng.
 
 - **Kịch bản 3: Validation lỗi trực tiếp (Inline Validation)**
-  - **VỚI ĐIỀU KIỆN** người dùng bỏ trống trường bắt buộc hoặc nhập sai định dạng (vd: mật khẩu yếu, email sai định dạng, số điện thoại không hợp lệ).
-  - **KHI** người dùng chuyển bước (Next) hoặc nhấn "Đăng ký".
+  - **VỚI ĐIỀU KIỆN** người dùng bỏ trống trường bắt buộc hoặc nhập sai định dạng (vd: mật khẩu yếu, email sai định dạng, MST/năm thành lập không hợp lệ); trường tùy chọn có thể để trống nhưng nếu được nhập thì vẫn phải đúng định dạng.
+  - **KHI** người dùng chuyển bước hoặc nhấn "Hoàn tất Đăng ký" ở bước 3.
   - **THÌ** form hiển thị lỗi màu đỏ tại từng trường bị sai và chặn không cho sang bước tiếp theo hoặc không cho submit.
 
 - **Kịch bản 4: Xử lý lỗi dữ liệu trùng lặp (Email / MST / Subdomain)**
-  - **VỚI ĐIỀU KIỆN** Email HR, Mã số thuế, hoặc Subdomain đã tồn tại trên hệ thống.
+  - **VỚI ĐIỀU KIỆN** Email HR, Mã số thuế, hoặc alias Subdomain do client legacy gửi đã tồn tại trên hệ thống. Form mới không yêu cầu/không tự sinh alias.
   - **KHI** người dùng nhấn "Đăng ký".
   - **THÌ** hệ thống hiển thị thông báo lỗi rõ ràng tương ứng:
     - _"Email này đã được sử dụng. Vui lòng đăng nhập hoặc dùng email khác."_
@@ -86,7 +92,7 @@ graph TD
 - Khi Admin reject: Company = REJECTED, User = PENDING (restricted).
 
 ### Auto-fill & Gợi ý dữ liệu
-- Subdomain có thể tự động tạo (auto-suggest) dựa trên Tên công ty khi người dùng nhập xong tên, HR vẫn có thể chỉnh sửa lại.
+- Chốt 21/10/2026: slug do backend cấp là định danh public chuẩn. Request đăng ký mới bỏ subdomain; client cũ có gửi alias vẫn được kiểm tra format/unique. Không đổi hoặc xóa alias legacy khi bỏ field khỏi request gửi lại hồ sơ. Slug hiện có không đổi khi sửa tên công ty.
 - Email liên hệ của công ty nếu để trống sẽ tự động lấy Email đăng nhập của HR.
 
 ### Approval & Resubmit Trigger Rule

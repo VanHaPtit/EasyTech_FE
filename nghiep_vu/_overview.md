@@ -74,7 +74,7 @@ Trạng thái doanh nghiệp trong quá trình đăng ký và sử dụng.
 | `PENDING` | Đã đăng ký, chờ Admin duyệt | Sau đăng ký |
 | `ACTIVE` | Được Admin phê duyệt, có quyền sử dụng | Sau Admin approve |
 | `REJECTED` | Bị Admin từ chối, có lý do | Sau Admin reject |
-| `BLOCKED` | Bị khóa — **[Future Enhancement]** không implement trong MVP | Admin thao tác thủ công |
+| `BLOCKED` | Bị khóa, không được dùng workspace hoặc nhận đơn public | Admin khóa/mở khóa theo US-06 |
 
 ### User Status
 Trạng thái tài khoản cá nhân, độc lập với Company Status.
@@ -91,7 +91,7 @@ Trạng thái tài khoản cá nhân, độc lập với Company Status.
 ### Job Status
 | Status | Ý nghĩa | Khi thay đổi |
 |--------|---------|---------|
-| `DRAFT` | Nháp, chưa publish | Khi tạo job mới |
+| `INACTIVE` | Nháp, chưa publish; không có enum DRAFT trong DB/API | Khi tạo job mới |
 | `ACTIVE` | Đã publish, đang nhận hồ sơ | HR click Publish |
 | `CLOSED` | Tạm dừng nhận hồ sơ | HR click Close |
 

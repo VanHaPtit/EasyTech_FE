@@ -1,6 +1,16 @@
 # 📋 User Story 06: Admin Duyệt Doanh Nghiệp (Approve Company Registrations)
 
 ## 1. MÔ TẢ USER STORY
+
+- Quy mô khi sửa hồ sơ dùng lựa chọn chuẩn US-30 (`1-10`, `11-50`, `51-200`, `201-500`, `501-1000`, `1001+`). Admin được gửi lại đúng giá trị legacy hiện tại hoặc xóa trường tùy chọn, không đổi sang khoảng legacy khác. Không tự chuyển dữ liệu cũ.
+
+### Đồng bộ email hệ thống ngày 21/10/2026
+
+- Nội dung platform được quản lý tại catalog `SystemEmailTemplates`, không dùng template tuyển dụng do tenant sửa. Catalog trả plaintext; `enqueueSystem` escape HTML đúng một lần khi tạo snapshot. Tên công ty/lý do từ chối không trở thành HTML thực thi; link trả lại hồ sơ dùng `APP_PUBLIC_BASE_URL` tuyệt đối. Không đổi template code, số retry hoặc trạng thái outbox hiện có.
+
+- Đăng ký, duyệt, từ chối, gửi lại và mở khóa Company ghi snapshot email hệ thống vào `email_logs` với `delivery_channel=SYSTEM` trong cùng transaction. Rollback nghiệp vụ cũng rollback email chờ.
+- Worker chỉ xử lý sau commit, gửi bằng SMTP nền tảng, không dùng Gmail công ty chưa onboarding. Tối đa 4 lần tổng cộng (1 lần đầu + 3 retry); lỗi SMTP không rollback quyết định. OTP khôi phục mật khẩu vẫn gửi đồng bộ và báo lỗi gửi thật, không đổi sang queue.
+- Email hệ thống, kể cả thông báo gửi Admin, không xuất hiện trong API email log ứng viên của HR và không được HR retry qua API đó. Nội dung tên/lý do từ chối phải escape trước gửi HTML.
 - **Là** Quản trị viên Hệ thống (System Admin),
 - **Tôi muốn** xem danh sách doanh nghiệp mới đăng ký và quyết định Approve hoặc Reject,
 - **Để** chỉ những doanh nghiệp hợp lệ mới được cấp quyền sử dụng hệ thống và HR không bị rơi vào dead-end khi đơn bị từ chối.
@@ -55,6 +65,7 @@ graph TD
   - **KHI** Admin chỉnh sửa và lưu các trường hồ sơ doanh nghiệp hoặc nội dung hiển thị Career Site.
   - **THÌ** hệ thống gọi `PATCH /api/v1/admin/companies/{companyId}`, kiểm tra subdomain và mã số thuế legacy còn thiếu, cập nhật trong đúng company và ghi Audit Log.
   - Mã số thuế đã được lưu và năm thành lập không được Admin sửa; hai trường này cố định từ lúc đăng ký, không phụ thuộc trạng thái duyệt hoặc lý do từ chối.
+  - `profile.contactEmail` chỉ đọc với mọi vai trò, kể cả Admin. Backend lấy từ email tài khoản đăng ký khi thiếu, giữ giá trị legacy đã có; không cho client đổi, xóa hoặc tự bổ sung. Đây không phải email doanh nghiệp `company.email` hay tài khoản SMTP.
   - Trạng thái company, slug, thông tin người đăng ký, người duyệt và thời điểm duyệt vẫn chỉ đọc; Admin không được dùng API này để tự phê duyệt hoặc thay đổi quyền truy cập.
 
 ## 3. BUSINESS RULES
@@ -64,6 +75,8 @@ graph TD
 - **Từ chối:** Company = REJECTED, User = PENDING (restricted)
 - HR thuộc company PENDING/REJECTED vẫn có thể đăng nhập, nhưng bị chặn truy cập workspace.
 - Khi HR resubmit hồ sơ đăng ký đã bị reject: Company = PENDING, User = PENDING và hồ sơ quay lại danh sách Admin xem xét.
+- Mở khóa BLOCKED → ACTIVE khác duyệt đăng ký lần đầu: giữ approved_by/approved_at và trạng thái từng thành viên (không kích hoạt tài khoản đã bị khóa riêng), ghi UNBLOCK_COMPANY, gửi nội dung thông báo mở khóa. UI có xác nhận Mở khóa.
+- Resubmit trim trường văn bản và kiểm tra tỉnh/xã cùng cặp như đăng ký mới; không nối địa giới vào địa chỉ chi tiết. Email từ chối phải có URL tuyệt đối tới trang cập nhật hồ sơ, không dùng href tương đối.
 
 ### Rejection Policy
 - Reject phải đi kèm lý do cụ thế, không để HR hiểu nhầm.
@@ -82,4 +95,4 @@ graph TD
 
 ## 4. NGOÀI PHẠM VI
 - **KHÔNG** tích hợp API quốc gia để tự động xác thực Mã số thuế.
-- Admin được phép cập nhật trực tiếp hồ sơ company từ Company Detail theo quyết định sản phẩm đã chốt, ngoại trừ MST/năm thành lập đã cố định. Việc cập nhật không thay đổi status và không kích hoạt lại tài khoản HR.
+- Admin được phép cập nhật trực tiếp hồ sơ company từ Company Detail theo quyết định sản phẩm đã chốt, ngoại trừ MST/năm thành lập đã cố định và `contactEmail` do backend quản lý. Việc cập nhật không thay đổi status và không kích hoạt lại tài khoản HR.

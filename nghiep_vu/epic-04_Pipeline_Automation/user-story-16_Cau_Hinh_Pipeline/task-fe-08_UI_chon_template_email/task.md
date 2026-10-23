@@ -38,4 +38,5 @@ Xác định phạm vi frontend cho task 'UI chon template email' trong US-16 Ca
 
 ## API dependency cụ thể
 - `GET /api/v1/jobs/{jobId}/rounds`, `POST /api/v1/jobs/{jobId}/rounds`, `PUT /api/v1/jobs/{jobId}/rounds/{roundId}`, `DELETE /api/v1/jobs/{jobId}/rounds/{roundId}`, `PUT /api/v1/jobs/{jobId}/rounds/reorder`.
-- US-16 chưa tự tạo danh sách template email. Khi US-29 chưa có API/database thật, UI không được hiển thị template mock hoặc gửi các ID mẫu; chỉ giữ ID đã lưu (nếu có) hoặc để `null`. Sau khi US-29 hoàn tất, dropdown phải lấy template theo `company_id` hiện tại.
+- Dropdown lấy template active theo loại PASS/FAIL từ API US-29 trong company hiện tại. Cả hai lựa chọn bắt buộc khi tạo Job, thêm/sửa round hoặc lưu pipeline tổng hợp. Không có lựa chọn “Không gửi email”; placeholder “Chọn mẫu email” không phải giá trị hợp lệ.
+- Loading/error không tự chọn template đầu tiên. Nếu không có mẫu phù hợp, HR cần tạo hoặc bật lại template trong Cài đặt; giữ nguyên dữ liệu form khi lỗi. Round cũ có ID null phải được cấu hình lại trước khi đánh giá.

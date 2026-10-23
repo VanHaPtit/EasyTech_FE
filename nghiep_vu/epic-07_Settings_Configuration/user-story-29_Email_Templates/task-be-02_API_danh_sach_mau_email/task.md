@@ -18,6 +18,13 @@ Xác định phạm vi backend cho task 'API danh sach mau email' trong US-29 Em
 
 ## API contract
 
+### Đồng bộ ngày 21/10/2026 — ưu tiên contract triển khai
+
+- Giữ `GET /api/v1/email-templates`, `page` từ 1, `size` 1..100, `keyword,type,activeOnly`. Response `data` là Spring Page: `content,totalElements,totalPages,number,size`; `number` zero-based. Không dùng wrapper `items/total/page` hoặc enum REJECT/INVITE của tài liệu legacy.
+- Enum: APPLICATION_RECEIVED/PASS/FAIL/INTERVIEW_INVITE/OFFER/AI_MATCH_INVITE. ID là BIGINT/Long. Sắp xếp `createdAt DESC,id DESC` để tránh lệch trang khi bằng timestamp.
+- Màn Settings phân trang phía server, 10 mẫu/trang, tìm kiếm reset trang 1; xóa phần tử cuối trang chuyển về trang trước. Không tự tải toàn bộ mẫu để dựng danh sách Settings. Các dropdown chọn template có thể dùng hàm lấy đủ trang riêng, không cắt ở 100 mẫu.
+- UI giữ draft khi lỗi, xác nhận trước bỏ phần chỉnh sửa khi chuyển trang/tìm kiếm; loading/empty/error có Thử lại.
+
 ### GET /api/v1/email-templates
 - Mục đích: lấy danh sách Email Template của company hiện tại.
 - Request: query params `keyword`, `type`, `page`, `size` nếu cần.
@@ -42,9 +49,9 @@ Xác định phạm vi backend cho task 'API danh sach mau email' trong US-29 Em
 
 ### Request Parameters
 - `page` (int, default=1)
-- `size` (int, default=10)
+- `size` (int, default=50; UI Settings gửi 10)
 - `keyword` (string, optional)
-- `type` (string, optional, enum: PASS, REJECT, INVITE, ...)
+- `type` (string, optional, enum: APPLICATION_RECEIVED, PASS, FAIL, INTERVIEW_INVITE, OFFER, AI_MATCH_INVITE)
 
 ### Response (200 OK)
 ```json
@@ -52,19 +59,19 @@ Xác định phạm vi backend cho task 'API danh sach mau email' trong US-29 Em
   "status": 1,
   "message": "Lấy danh sách Email Template thành công",
   "data": {
-    "items": [
+    "content": [
       {
         "id": 501,
         "templateName": "Default Pass Template",
         "type": "PASS",
-        "subject": "Chúc mừng {{candidateName}}",
+        "subject": "Chúc mừng {{Candidate.name}}",
         "isActive": true,
         "createdAt": "2026-08-31T10:00:00"
       }
     ],
-    "total": 1,
-    "page": 1,
-    "size": 10,
+    "totalElements": 1,
+    "number": 0,
+    "size": 50,
     "totalPages": 1
   }
 }

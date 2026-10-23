@@ -28,7 +28,8 @@ Xác định phạm vi backend cho task 'API sua vong' trong US-16 Cau Hinh Pipe
 
 ## Request
 - `name` bắt buộc, tối đa 255 ký tự.
-- Có thể cập nhật `description`, `passEmailTemplateId`, `failEmailTemplateId`, `testLink` và `isFinalRound`.
+- `passEmailTemplateId` và `failEmailTemplateId` bắt buộc trong mỗi lần lưu; template phải đúng loại PASS/FAIL, active, chưa xóa và thuộc đúng company.
+- Có thể cập nhật `description`, `testLink`; không cập nhật `isFinalRound`. Backend tự tính cờ từ thứ tự vòng chưa xóa, response chỉ đọc.
 - Không cập nhật `orderIndex` ở endpoint này; dùng endpoint reorder riêng.
 
 ## Validation
@@ -68,8 +69,7 @@ Thành công ghi audit log `UPDATE_HIRING_ROUND`; round đang được applicati
   "description": "Đánh giá chuyên môn",
   "passEmailTemplateId": 301,
   "failEmailTemplateId": 302,
-  "testLink": null,
-  "isFinalRound": false
+  "testLink": null
 }
 ```
 

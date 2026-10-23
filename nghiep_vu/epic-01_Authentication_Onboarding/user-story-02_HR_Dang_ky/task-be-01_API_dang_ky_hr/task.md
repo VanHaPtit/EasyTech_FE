@@ -30,13 +30,16 @@ Xác định phạm vi backend cho task 'API dang ky hr' trong US-02 HR Dang ky,
 - Chỉ mở public cho các request `GET` nêu trên; các method/endpoint khác vẫn theo quy tắc authentication hiện hành.
 
 ## Request
-- Thông tin HR (Họ tên, email, password) và Thông tin công ty (Tên công ty, Mã số thuế, Năm thành lập, Số điện thoại, Địa chỉ chi tiết, `provinceCode`, `wardCode`, Subdomain).
+- Thông tin HR (`fullName`, `email`, `password`) và thông tin công ty. Bắt buộc: `companyName`, `taxCode`, `foundedYear`. Tùy chọn trên form: `phone`, `address`, `provinceCode`, `wardCode`, `website`, `industry`, `businessType`, `companySize`, `slogan`, `description`.
+- `subdomain` optional chỉ để tương thích client cũ, nếu gửi phải đúng format và unique; request mới bỏ field này. Backend cấp `companies.slug` unique làm URL public chuẩn. Resubmit bỏ alias không xóa alias đã có.
+- `logoUrl` vẫn được DTO nhận như trường tùy chọn tương thích với contract API hiện có, nhưng form đăng ký không thu thập/gửi trường này. `bannerUrls` không thuộc API đăng ký. Logo và ảnh bìa được cấu hình trong Cài đặt sau khi công ty được duyệt.
 
 ## Validation
 - Validate trường bắt buộc, format, độ dài và enum/status trực tiếp liên quan đến task.
 - Không nhận trạng thái nhạy cảm từ client nếu trạng thái phải do hệ thống quyết định.
 - Backend là nguồn chuẩn; Frontend validation chỉ hỗ trợ UX.
-- `provinceCode` và `wardCode` là bắt buộc ở API đăng ký; backend kiểm tra mã tỉnh hợp lệ và mã xã/phường thuộc tỉnh đã chọn.
+- `provinceCode` và `wardCode` có thể cùng vắng mặt hoặc để trống; nếu chỉ truyền một trong hai thì trả lỗi validation. Nếu truyền đủ, backend kiểm tra mã tỉnh hợp lệ và mã xã/phường thuộc tỉnh đã chọn.
+- Các trường hồ sơ tùy chọn trên form có thể để trống; nếu có giá trị thì backend vẫn kiểm tra định dạng/độ dài. Nếu client tương thích cũ gửi `logoUrl`, backend chấp nhận URL HTTP/HTTPS.
 - `taxCode` và `foundedYear` là bắt buộc ở API đăng ký, được xác thực phía backend và cố định sau khi hồ sơ được tạo.
 - API gửi lại hồ sơ bị từ chối không được thay đổi `taxCode` hoặc `foundedYear` đã có, kể cả khi lý do từ chối yêu cầu sửa. Với bản ghi lịch sử có một trong hai trường còn null, backend có thể nhận giá trị để hoàn thiện dữ liệu một lần; sau đó giá trị cũng bất biến.
 - Lưu địa chỉ chi tiết vào `companies.address`, mã tỉnh vào `companies.province_code`, mã xã/phường vào `companies.ward_code`; không ghép tên địa giới vào `address`. Các cột đã tồn tại nên không cần migration.
@@ -75,14 +78,15 @@ Xác định phạm vi backend cho task 'API dang ky hr' trong US-02 HR Dang ky,
   "address": "Số 10, ngõ 167 Nguyễn Văn Trỗi",
   "provinceCode": "01",
   "wardCode": "001",
-  "subdomain": "techa",
   "website": "https://techa.com",
   "industry": "IT - Software",
+  "businessType": "Software outsourcing",
   "companySize": "50-100",
-  "description": "TechA Solutions is a leading tech company...",
-  "logoUrl": "https://s3.techa.com/logo.png"
+  "slogan": "Building the future",
+  "description": "TechA Solutions is a leading tech company..."
 }
 ```
+Các trường tùy chọn trong ví dụ có thể bỏ khỏi request; DTO cũng chấp nhận `null` hoặc chuỗi rỗng với những trường có quy tắc tương ứng. `logoUrl` không được gửi bởi form đăng ký hiện tại; `bannerUrls` không thuộc request đăng ký. Khi không nhập `provinceCode`/`wardCode`, địa chỉ chi tiết vẫn được lưu riêng, không tự ghép địa giới vào `address`.
 ### Response (201 Created)
 ```json
 {

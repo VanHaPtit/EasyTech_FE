@@ -39,6 +39,13 @@ graph TD
   - **KHI** trang được load lại.
   - **THÌ** form hiển thị API key dưới dạng che khuất một phần (ví dụ: `sk-proj-****abc`). Không hiển thị full key để bảo mật. HR chỉ có thể ghi đè (overwrite) bằng key mới.
 
-## 3. NGOÀI PHẠM VI
+## 3. NGUỒN MODEL — CHỐT 22/10/2026
+
+- Provider được chọn theo thứ tự custom ACTIVE của công ty → system default → lỗi khi không khả dụng.
+- Model `SYSTEM_DEFAULT` lấy từ cấu hình runtime `GEMINI_MODEL`, không lấy `model_name` cũ của bản ghi seed. Custom provider vẫn dùng model riêng; nếu model riêng vắng mặt thì dùng model runtime.
+- Cấu hình Gemini được bind chung qua `GeminiProperties`; không sửa lịch sử migration, không công khai API key và không tự ghi đè JD của HR.
+
+## 4. NGOÀI PHẠM VI
+
 - **KHÔNG** theo dõi hoặc hiển thị chi phí/lượng token đã tiêu thụ (Billing tracking) tại Dashboard này. Quản lý quota do phía hệ thống Provider (OpenAI platform) đảm nhận.
 - **KHÔNG** hỗ trợ cấu hình các model nội bộ tự host (chỉ hỗ trợ cloud providers lớn).

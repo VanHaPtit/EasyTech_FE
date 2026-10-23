@@ -16,7 +16,8 @@ Xác định phạm vi backend cho task 'API lich su email' trong US-17 Email Au
 
 ## Xử lý
 - Xử lý gửi/lưu email theo template và trạng thái gửi thực tế.
-- Xử lý gửi/lưu email theo template và trạng thái gửi thực tế.
+- Contract queue/log và sendEmail theo task-be-01 cùng US: PENDING/SUCCESS/FAILED/SKIPPED; queue và quyết định cùng transaction, SMTP sau commit. Worker tối đa 1 lần đầu + 3 retry; không hứa exactly-once SMTP.
+- GET /api/v1/email-logs hỗ trợ status/templateCode/page/limit; detail và POST /{id}/retry kiểm tra tenant và workspace HR ACTIVE. Retry chỉ FAILED có người nhận/nội dung; lỗi SMTP trả 503 nhưng attempt_count/retried_at/error_message vẫn commit.
 - Thực hiện nghiệp vụ chính theo domain hiện tại, không tự thêm feature ngoài phạm vi story.
 - Kiểm tra quyền theo workspace authorization, không trộn với authentication.
 

@@ -21,9 +21,9 @@ graph TD
 
 ### Phân định dữ liệu với US-30
 - `company_profiles.industry`, `business_type`, `company_size`, `slogan`, `description`, `logo_url` và `banner_urls` là dữ liệu hồ sơ doanh nghiệp dùng chung; General Settings (US-30) cho phép HR Admin chỉnh sửa các field này sau onboarding.
-- Career Site đọc các thông tin profile dùng chung thay vì duy trì bản sao riêng. Logo được đồng bộ sang `career_sites.logo_url`; ảnh bìa đầu tiên được đồng bộ sang `career_sites.hero_image_url` khi US-30 lưu danh sách ảnh.
+- Chốt 21/10/2026: Career Site giữ cấu hình riêng; US-30 chỉ sửa profile, không sao chép logo/hero vào site. Dữ liệu site legacy giữ nguyên như override hiện hữu; không tự suy đoán và xóa bản sao cũ.
 - `company_profiles.slogan` và `career_sites.tagline` là hai field riêng trong schema hiện tại. US-30 chỉ sửa slogan doanh nghiệp; tagline là nội dung riêng của Career Site.
-- `career_sites.hero_image_url` có thể override ảnh bìa profile khi hiển thị. Khi lưu danh sách ảnh bìa ở US-30, ảnh đầu tiên được đồng bộ vào hero và thay giá trị hero trước đó.
+- Logo public: site.logo_url → profile.logo_url. Hero site đứng đầu bannerUrls, sau đó gallery profile không trùng; thiếu hero dùng gallery profile. Tagline: site.tagline → profile.slogan. Tiêu đề: site.site_title → companies.name. Primary lấy profile.primary_color; accent: site.accent_color → profile.primary_color → mặc định #2563eb. Cấu hình rỗng/trắng được coi là thiếu; GET chỉ resolve fallback, không ghi DB.
 
 - **Kịch bản 1: HR cấu hình thông tin cơ bản Career Site**
   - **VỚI ĐIỀU KIỆN** HR đang đăng nhập và truy cập `/dashboard/career-site`.
@@ -39,8 +39,8 @@ graph TD
 
 - **Kịch bản 3: HR tùy chỉnh Banner ảnh bìa**
   - **VỚI ĐIỀU KIỆN** HR đang ở section "Hình ảnh thương hiệu".
-  - **KHI** HR upload ảnh banner (JPEG/PNG, tối đa 5MB, khuyến nghị 1200x400px).
-  - **THÌ** hệ thống upload và lưu URL vào `company_profiles.banner_url`; `career_sites.hero_image_url` có thể override ảnh hero public.
+  - **KHI** HR upload ảnh bìa hồ sơ theo image-rules hiện hành (JPG/JPEG/PNG, tối đa 5MB, tỷ lệ16:9, từ1280x720 đến3840x2160; tối đa5 ảnh).
+  - **THÌ** hệ thống lưu danh sách có thứ tự vào `company_profiles.banner_urls`; `career_sites.hero_image_url` giữ override hero riêng. Không tạo lại cột singular `banner_url` đã được thay thế bằng gallery.
   - Trang Career Site công khai cập nhật banner mới ngay sau khi HR lưu (không cần deploy lại).
 
 - **Kịch bản 4: HR tùy chỉnh màu chủ đạo thương hiệu**
@@ -53,7 +53,7 @@ graph TD
 - **Kịch bản 5: Career Site chưa được cấu hình hiển thị trạng thái mặc định**
   - **VỚI ĐIỀU KIỆN** công ty mới đăng ký, chưa cấu hình bất kỳ thông tin Career Site nào.
   - **KHI** ứng viên truy cập URL Career Site của công ty đó: `/careers/{company_slug}`.
-  - **THÌ** trang vẫn hiển thị được với dữ liệu mặc định: tên công ty (từ bảng `companies`), không có banner, màu mặc định của hệ thống (primary: #4F46E5), không có mô tả.
+  - **THÌ** trang hiển thị dữ liệu profile/company làm fallback; khi cả hai thiếu dùng màu mặc định hiện hành #2563eb, không có ảnh hoặc nội dung giả. Chỉ public nếu Company ACTIVE và site published.
 
 - **Kịch bản 6: HR bật/tắt Career Site công khai**
   - **VỚI ĐIỀU KIỆN** HR đang ở trang cấu hình Career Site.

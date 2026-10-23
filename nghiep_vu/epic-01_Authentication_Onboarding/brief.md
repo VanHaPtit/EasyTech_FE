@@ -59,7 +59,11 @@ graph TD
   - User = INACTIVE/BLOCKED → access denied, login rejected
 
 ### Registration & Approval Flow
-- Khi đăng ký, HR BẮT BUỘC cung cấp đầy đủ thông tin doanh nghiệp, gồm Mã số thuế và Năm thành lập để Admin có cơ sở kiểm chứng.
+- Khi đăng ký, HR bắt buộc cung cấp thông tin tài khoản, tên pháp lý công ty, Mã số thuế và Năm thành lập để Admin có cơ sở kiểm chứng.
+- Các trường hồ sơ công ty được phép chỉnh sửa trong Cài đặt cũng có mặt ở form đăng ký nhưng là tùy chọn: điện thoại, website, địa chỉ chi tiết, tỉnh/xã, lĩnh vực hoạt động, ngành nghề chính, quy mô, slogan và giới thiệu. Để trống không bị xem là lỗi; trường tùy chọn không có dấu `*`. HR có thể bổ sung hoặc cập nhật chúng sau khi công ty được duyệt.
+- Tỉnh/xã có thể cùng để trống; nếu nhập địa giới thì phải chọn đủ cặp hợp lệ. Địa chỉ chi tiết chỉ chứa số nhà/đường/ngõ và không ghép tên tỉnh/xã vào đó.
+- Subdomain được tự đề xuất từ tên công ty trong giao diện đăng ký.
+- Logo và ảnh bìa không thuộc form đăng ký; HR tiếp tục cấu hình hoặc tải lên tại Cài đặt sau khi công ty được duyệt.
 - Mã số thuế và Năm thành lập là thông tin cố định: sau khi tạo hồ sơ đăng ký, HR không được thay đổi, kể cả khi hồ sơ bị từ chối; lý do từ chối không làm phát sinh quyền sửa hai trường này.
 - Khi gửi lại hồ sơ bị từ chối, HR chỉ sửa các thông tin được phép. Riêng bản ghi lịch sử chưa có MST hoặc Năm thành lập thì được bổ sung giá trị còn thiếu một lần để tương thích dữ liệu cũ; sau khi lưu, giá trị đó cũng cố định.
 - HR không được truy cập workspace nếu `company.status = PENDING`, `company.status = REJECTED` hoặc `user.status = INACTIVE/BLOCKED`.
@@ -69,7 +73,7 @@ graph TD
 
 ### Onboarding
 - Onboarding không được bắt user nhập lại dữ liệu đã biết từ bước đăng ký.
-- Nếu HR bỏ qua onboarding, hệ thống lưu `onboardingCompleted = true` nhưng vẫn hiển thị nhắc nhở và progress indicator.
+- Quyết định 21/10/2026: onboarding không hỗ trợ Skip. HR_ADMIN phải có lĩnh vực và cấu hình SMTP hợp lệ; backend tự set `onboardingCompleted` sau lưu thành công. `contactEmail` do backend lấy từ tài khoản đăng ký khi thiếu, client không được sửa; không đồng nghĩa email gửi SMTP. Các trường hồ sơ tùy chọn vẫn có thể để trống.
 - Google OAuth chỉ là phương thức đăng nhập bổ sung, không thay đổi luồng duyệt của Admin.
 
 ## 6. Ngoài phạm vi và cải tiến trong tương lai

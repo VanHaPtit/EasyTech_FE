@@ -13,7 +13,7 @@ Xác định phạm vi backend cho task 'API cap nhat ho so cong ty' trong US-03
 - US-03 - HR Onboarding.
 
 ## Điều kiện tiên quyết
-- HR đã đăng nhập.
+- HR_ADMIN đã đăng nhập; HR thành viên không được ghi cấu hình công ty.
 - `Company.status = ACTIVE`.
 - `User.status = ACTIVE`.
 - Dữ liệu cập nhật phải thuộc đúng `company_id` của HR hiện tại.
@@ -27,7 +27,9 @@ Xác định phạm vi backend cho task 'API cap nhat ho so cong ty' trong US-03
 ## Request
 - Thông tin bổ sung cho hồ sơ công ty ở bước 1 và bước 3 của onboarding.
 - Không nhận các trạng thái do hệ thống quản lý như `company.status`, `user.status`.
-- `onboardingCompleted` chỉ được set `true` khi HR nhấn "Hoàn tất Onboarding" hoặc "Bỏ qua, thiết lập sau".
+- Không nhận `onboardingCompleted` hoặc `contactEmail`; gửi các trường này trả 400. Backend tự hoàn tất sau khi kiểm tra lĩnh vực và SMTP lần đầu; không có Skip.
+- `contactEmail` do backend lấy từ email tài khoản đăng ký khi thiếu; giữ dữ liệu legacy đã có. Không đồng nghĩa `mailEmail`/email gửi SMTP.
+- Lần đầu cần lĩnh vực và cặp `mailEmail`/`mailPassword` hợp lệ. Sau onboarding, đổi SMTP qua `PUT /api/v1/company-profiles/me/mail-settings`, không qua PATCH profile.
 
 ## Validation
 - `website`: nếu có thì phải đúng định dạng URL.
@@ -42,7 +44,7 @@ Xác định phạm vi backend cho task 'API cap nhat ho so cong ty' trong US-03
 - Thất bại: trả về `BaseResponse(status = 0, message, data = null)` với message rõ nguyên nhân.
 
 ## State Transition
-- Nếu request đánh dấu hoàn tất hoặc skip onboarding thì set `onboardingCompleted = true`.
+- Backend chỉ set `onboardingCompleted = true` sau lần cập nhật đầu đã validate lĩnh vực và SMTP thành công; không phụ thuộc cờ client.
 - Không đổi `Company.status`.
 - Không reset `onboardingCompleted` về `false` khi HR chỉnh sửa thông tin sau này.
 
@@ -72,8 +74,8 @@ Xác định phạm vi backend cho task 'API cap nhat ho so cong ty' trong US-03
   "primaryColor": "#47b1de",
   "benefits": "BHXH, làm việc hybrid",
   "businessType": "Software",
-  "contactEmail": "hr@techa.com",
-  "onboardingCompleted": true
+  "mailEmail": "hr.techa@gmail.com",
+  "mailPassword": "<app-password-test-only>"
 }
 ```
 
@@ -108,6 +110,8 @@ Xác định phạm vi backend cho task 'API cap nhat ho so cong ty' trong US-03
 ```
 
 ### Response lỗi
+
+SMTP credential không hợp lệ/không kết nối được trả lỗi theo service SMTP, không set onboarding hoàn tất; mật khẩu không được trả lại response. Mọi ví dụ credential chỉ là placeholder, không dùng dữ liệu thật trong tài liệu.
 ```json
 {
   "status": 0,

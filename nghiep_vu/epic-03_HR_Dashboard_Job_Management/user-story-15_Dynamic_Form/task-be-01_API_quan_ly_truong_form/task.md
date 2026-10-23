@@ -61,7 +61,7 @@ Job ở `INACTIVE` hoặc `ACTIVE` được chỉnh sửa form. Job `CLOSED` kh�
 
 ### Quy tắc dữ liệu
 
-- `fieldType` chỉ nhận `TEXT`, `TEXTAREA`, `URL`, `FILE`, `SELECT`.
+- `fieldType` chỉ nhận `TEXT`, `TEXTAREA`, `URL`, `SELECT`. FILE legacy không được tạo/cấu hình mới, trả400; upload CV thuộc US-26.
 - `fieldName` là tùy chọn khi tạo; nếu bỏ qua, backend sinh tên snake_case ổn định từ `label`. Tên đang hiệu lực phải duy nhất trong một Job.
 - `options` chỉ được gửi cho `SELECT`, phải có ít nhất một lựa chọn không trống và không trùng nhau. Các loại khác phải gửi mảng rỗng hoặc bỏ qua.
 - `displayOrder` là số nguyên không âm. Endpoint reorder phải nhận đúng toàn bộ ID field đang hiệu lực, không trùng và không thiếu ID.

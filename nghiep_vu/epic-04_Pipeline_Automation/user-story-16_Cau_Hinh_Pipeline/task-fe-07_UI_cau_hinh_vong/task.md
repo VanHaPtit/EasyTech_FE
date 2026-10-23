@@ -23,7 +23,7 @@ Xác định phạm vi frontend cho task 'UI cau hinh vong' trong US-16 Cau Hinh
 - Vô hiệu hóa nút submit/save/action trong lúc request đang chạy để tránh gửi lặp.
 - Với hành động có ảnh hưởng trực tiếp của task, hiển thị xác nhận khi cần.
 - Khi xóa một round đã lưu, UI phải xác nhận trước; nếu round đang có ứng viên, giữ nguyên dữ liệu và hiển thị thông báo backend trả về.
-- Form tạo/sửa phải cho phép chọn `isFinalRound`; khi tải danh sách thất bại phải có CTA `Thử lại`.
+- Form tạo/sửa không có lựa chọn `isFinalRound`; vòng cuối được backend xác định theo thứ tự. UI chỉ hiển thị cờ từ response, khi tải danh sách thất bại có CTA `Thử lại`.
 
 ## Validation
 - Validate trường bắt buộc ngay trên FE để cải thiện UX.

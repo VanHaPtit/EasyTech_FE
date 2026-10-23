@@ -26,13 +26,13 @@ graph TD
     - Tiêu đề email (subject)
     - Loại email (template_name: Xác nhận nộp đơn, Mời phỏng vấn, Kết quả,...)
     - Thời gian gửi (`sent_at`)
-    - Trạng thái gửi: `SUCCESS` (✅) hoặc `FAILED` (❌)
+    - Trạng thái: `PENDING` (đang chờ/thử lại), `SUCCESS` (SMTP đã nhận), `FAILED` (gửi lỗi/hết retry hoặc thiếu cấu hình), `SKIPPED` (HR bỏ gửi).
 
 - **Kịch bản 2: HR xem lịch sử email toàn bộ hệ thống (Email Logs)**
   - **VỚI ĐIỀU KIỆN** HR truy cập trang `/dashboard/email-logs`.
   - **KHI** trang được tải.
   - **THÌ** hệ thống hiển thị bảng danh sách tất cả email đã gửi của company (giới hạn 50 bản ghi gần nhất mặc định) với các cột: Người nhận, Tiêu đề, Template sử dụng, Thời gian gửi, Trạng thái.
-  - HR có thể lọc theo khoảng thời gian, theo trạng thái (SUCCESS / FAILED), theo loại template.
+  - Bộ lọc đã triển khai: trạng thái PENDING/SUCCESS/FAILED/SKIPPED, loại template và pagination page/limit (tối đa 100). Lọc khoảng thời gian vẫn chưa triển khai.
 
 - **Kịch bản 3: Gửi lại email thất bại**
   - **VỚI ĐIỀU KIỆN** một bản ghi email trong danh sách có trạng thái `FAILED`.
@@ -40,6 +40,7 @@ graph TD
   - **THÌ** hệ thống thực hiện gửi lại email sử dụng cùng template và nội dung gốc.
   - Nếu gửi lại thành công: cập nhật trạng thái thành `SUCCESS` và ghi nhận thời gian gửi lại.
   - Nếu gửi lại thất bại (lần 2): hiển thị thông báo lỗi cụ thể (ví dụ: _"Email ứng viên không tồn tại"_, _"Dịch vụ SMTP không khả dụng"_).
+  - Retry chỉ FAILED trong company hiện tại; SMTP lỗi trả 503 nhưng vẫn lưu số lần gửi/thời điểm/lỗi để truy vết. PENDING và SKIPPED không cho gửi lại; bản ghi thiếu người nhận/nội dung trả 400 và yêu cầu sửa cấu hình.
 
 - **Kịch bản 4: Xem nội dung email đã gửi**
   - **VỚI ĐIỀU KIỆN** HR muốn kiểm tra nội dung cụ thể của một email đã gửi.

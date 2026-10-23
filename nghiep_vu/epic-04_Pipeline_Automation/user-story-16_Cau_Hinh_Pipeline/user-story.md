@@ -9,16 +9,23 @@
 ### Contract đang áp dụng
 - Bảng triển khai là `hiring_rounds`; khóa `id`, `job_id` và `company_id` dùng `BIGINT` ở database, tương ứng `Long` trong backend và `number` ở frontend.
 - Round đang hiệu lực được xác định bởi `is_deleted = false`; thao tác xóa là xóa mềm và không làm mất dữ liệu lịch sử ứng viên.
-- Schema hiện tại không có field `type` hoặc `is_required` cho `hiring_rounds`. Contract sử dụng các field đã có trong code/database: `name`, `description`, `passEmailTemplateId`, `failEmailTemplateId`, `testLink` và `isFinalRound`.
+- Schema hiện tại không có field `type` hoặc `is_required` cho `hiring_rounds`. Request cấu hình dùng `name`, `description`, `passEmailTemplateId`, `failEmailTemplateId`, `testLink`. `isFinalRound` là trường chỉ đọc trong response, backend tự tính theo thứ tự; không phải lựa chọn của HR.
 - `jobs.round_count` luôn được đồng bộ với số round có `is_deleted = false`. Job không cần phỏng vấn được phép có pipeline rỗng và `roundCount = 0`.
-- Job `CLOSED` chỉ được xem; không được tạo, sửa, xóa hoặc sắp xếp round.
+- Job `CLOSED` không được tạo, sửa, xóa hoặc sắp xếp round. HR vẫn được đánh giá, từ chối và tuyển các hồ sơ đã nhận (US-17/US-24); đóng Job chỉ dừng nhận đơn mới.
 - Mọi endpoint của US-16 đều re-check user thuộc đúng `company_id`, có role `HR`/`HR_ADMIN`, user và company đang `ACTIVE`; token hoặc frontend không được xem là nguồn xác thực cuối cùng.
 - Các thao tác tạo, sửa, xóa mềm và sắp xếp round ghi audit log theo actor hiện tại. Đọc danh sách không tạo side effect.
-- `passEmailTemplateId` và `failEmailTemplateId` là `Long` nullable; nếu truyền thì phải là số dương. US-16 chỉ lưu liên kết ID theo schema hiện tại; kiểm tra tồn tại và tenant của email template sẽ thuộc US-29. Không dùng ID hoặc tên template mock trên UI khi US-29 chưa có API/database triển khai.
+- `passEmailTemplateId` và `failEmailTemplateId` bắt buộc trong request tạo/sửa round, kể cả tạo Job và lưu pipeline tổng hợp. ID là `BIGINT`/`Long`, số dương; template phải tồn tại, active, chưa xóa, đúng loại PASS/FAIL và đúng company. Dropdown dùng API US-29, không có lựa chọn “Không gửi email”. Cột DB vẫn nullable để tương thích dữ liệu cũ; không tự gán template cho round cũ, HR cần cấu hình trước khi đánh giá.
 - Luồng chỉnh sửa tổng hợp hiện có của US-13 (`PUT /api/v1/jobs/{jobId}/pipeline`) vẫn được giữ để lưu Job + toàn bộ pipeline trong một transaction; endpoint này phải áp dụng cùng rule của US-16 về `CLOSED`, tenant, workspace ACTIVE, `roundCount` và audit.
 - Nếu request aggregate có truyền `job.roundCount`, giá trị đó phải bằng số phần tử `rounds`; backend vẫn tính lại và lưu `jobs.round_count` từ danh sách round thực tế. Danh sách rỗng và `roundCount = 0` là hợp lệ.
+- Đồng bộ 21/10/2026: CRUD round, tạo Job kèm round và lưu pipeline aggregate dùng chung cấu hình/validation PASS/FAIL, mapping name/description/testLink và PipelineRules. Request không được ghi identity/ownership/final flag qua mapper. Tất cả mutation khóa Job cùng một thứ tự trước kiểm tra trạng thái; đọc không khóa hoặc tự sửa cấu hình.
 
 ## SƠ ĐỒ LUỒNG NGHIỆP VỤ (Business Flow)
+
+### Đồng bộ ngày 21/10/2026
+
+- Pipeline rỗng hợp lệ. Pipeline có vòng phải có đúng một vòng cuối, chính là vòng chưa xóa đứng cuối thứ tự. CRUD/reorder/tạo Job/lưu tổng hợp dùng cùng validator và chuẩn hóa `orderIndex` liên tục từ 0 khi ghi.
+- Không tự sửa pipeline khi đọc. Dữ liệu legacy sai thứ tự/cờ vòng cuối phải được cấu hình lại; quyết định bị chặn 409, không đánh giá nhầm hoặc tự tuyển. V52 chuẩn hóa cờ vòng cuối dữ liệu cũ theo thứ tự đã lưu.
+- Đạt vòng cuối vẫn ACTIVE; HR thực hiện Tuyển riêng. `roundCount=0` không tự HIRED. Khi bỏ gửi email ở quyết định, không cần resolve template; yêu cầu chọn PASS/FAIL khi cấu hình vòng vẫn giữ nguyên.
 
 ```mermaid
 graph TD
@@ -57,8 +64,8 @@ graph TD
 
   - **VỚI ĐIỀU KIỆN** một vòng tuyển dụng đang tồn tại trong Job và HR đang ở bước 2.
   - **KHI** HR nhấn nút "Xóa" trên vòng đó, vòng chỉ bị đánh dấu xóa trong trạng thái tạm thời.
-  - **THÌ** khi HR nhấn "Lưu tất cả thay đổi", nếu vòng **chưa có ứng viên nào** hệ thống xóa mềm vòng và chuẩn hóa lại `order_index` trong cùng transaction.
-  - Nếu vòng **đã có ứng viên**: hệ thống từ chối toàn bộ lần lưu và hiển thị cảnh báo: _"Vòng này đang có ứng viên. Bạn cần chuyển họ sang vòng khác trước khi xóa."_ Dữ liệu đang nhập trên frontend được giữ nguyên.
+  - **THÌ** khi HR nhấn "Lưu tất cả thay đổi", nếu **không có hồ sơ đang trỏ đến vòng** hệ thống xóa mềm vòng và chuẩn hóa lại `order_index` trong cùng transaction. Kết quả đánh giá lịch sử vẫn được giữ.
+  - Nếu **có hồ sơ đang ở vòng**: hệ thống từ chối toàn bộ lần lưu và hiển thị cảnh báo: _"Vòng này đang có ứng viên. Bạn cần chuyển họ sang vòng khác trước khi xóa."_ Dữ liệu đang nhập trên frontend được giữ nguyên.
 
 
 - **Kịch bản 5: Job được publish mà không có vòng nào**

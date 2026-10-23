@@ -75,7 +75,7 @@ Không có request body.
       "passEmailTemplateId": 301,
       "failEmailTemplateId": 302,
       "testLink": null,
-      "isFinalRound": false,
+      "isFinalRound": true,
       "createdAt": "2026-08-31T10:00:00",
       "updatedAt": "2026-08-31T10:00:00"
     }

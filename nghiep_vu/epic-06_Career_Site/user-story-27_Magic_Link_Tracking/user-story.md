@@ -22,9 +22,9 @@ graph TD
 
 - **Kịch bản 1: Ứng viên truy cập bằng Magic Link hợp lệ**
   - **VỚI ĐIỀU KIỆN** ứng viên đã nộp đơn ứng tuyển thành công và hệ thống đã tạo một `secure_token` hợp lệ với thời gian hiệu lực được cấu hình.
-  - **KHI** ứng viên nhấp vào đường dẫn trong email xác nhận: `/careers/applications/track?token={secure_token}`.
+  - **KHI** ứng viên nhấp vào đường dẫn trong email xác nhận: `/careers/{companySlug}/applications/track?token={rawToken}`.
   - **THÌ** Backend xác minh `secure_token` trong database:
-    - Nếu token hợp lệ và còn hiệu lực: hệ thống trả về trang tra cứu `/careers/applications/status` với thông tin trạng thái đơn ứng tuyển.
+    - Sau khi xác minh đúng token và email, hệ thống mở `/careers/{companySlug}/applications/status`, không giữ token/email trên URL trang trạng thái.
     - Trang hiển thị: tên ứng viên, tên Job, tên công ty, trạng thái hiện tại, và lịch phỏng vấn nếu có.
 
 - **Kịch bản 2: Magic Link đã hết hạn**
@@ -51,7 +51,11 @@ graph TD
 ## 3. BUSINESS RULES
 - **Magic Link TTL: 30 ngày (Đã chốt — xem `_overview.md §8`).** Hết hạn → Candidate sử dụng trang Recovery Portal `/careers/{company_slug}/track-request` để nhận lại link mới.
 - Magic Link không cấp quyền đăng nhập vào hệ thống HR Dashboard.
-- **Recovery API Endpoint:** `POST /api/v1/public/applications/magic-link/request` với payload `{"email": "candidate@email.com", "company_slug": "techa"}`.
+- **Recovery API Endpoint:** `POST /api/v1/public/applications/magic-link/request` với payload `{"email": "candidate@email.com", "companySlug": "techa"}`. Phản hồi chung, không tiết lộ email có hồ sơ hay không; email recovery vào durable queue.
+- Database chỉ lưu SHA-256 hex của raw token trong applications.secure_token. V50 hash token cũ; link email cũ vẫn dùng raw token cũ và server hash trước lookup.
+- `POST /api/v1/candidates/verify-magic-link` hoặc POST `/api/v1/candidates/application-status` nhận `{token,email}`, xác minh rồi cấp cookie HttpOnly/SameSite=Lax candidate_tracking_session, path=/api/v1/candidates, TTL mặc định 900 giây. GET application-status đọc cookie, không cần query token/email; response no-store. Mỗi lần đọc vẫn kiểm tra token bị xoay/hết hạn. Secure cookie phải bật khi triển khai HTTPS.
+- Không nhận token/email trên query của `GET /api/v1/candidates/application-status`: nếu có một trong hai tham số (kể cả giá trị rỗng), trả `400`, ngay cả khi request có cookie phiên hợp lệ. Client phải xác minh bằng POST body rồi dùng GET với cookie; không còn chế độ tương thích GET query cũ (chốt ngày 22/10/2026).
+- Token trong email/link đầu vào và snapshot email vẫn là dữ liệu nhạy cảm; hash DB không thay thế việc bảo vệ email/log/Redis. Redis session giữ thông tin xác minh trong TTL, không cấp quyền HR.
 
 ## 4. NGOÀI PHẠM VI
 - Ứng viên **KHÔNG** được chỉnh sửa thông tin cá nhân, thay đổi file CV hoặc rút đơn ứng tuyển từ trang tra cứu (Chỉ đọc).

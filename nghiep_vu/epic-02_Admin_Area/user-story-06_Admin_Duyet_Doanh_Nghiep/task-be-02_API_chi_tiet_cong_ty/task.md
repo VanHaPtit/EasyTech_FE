@@ -44,7 +44,8 @@ Xác định phạm vi backend cho task 'API chi tiet cong ty' trong US-06 Admin
 
 - Chỉ role `ADMIN` đang `ACTIVE` được gọi API.
 - Request có thể chứa các field nullable của company, `companyProfile` và Career Site; field không truyền được giữ nguyên.
-- Cho phép cập nhật: `name`, `subdomain`, `phone`, `email`, `website`, `address`, `industry`, `companySize`, `businessType`, `contactEmail`, `description`, `benefits`, `socialLinks`, `bannerUrls`, `primaryColor`, `siteTitle`, `tagline`, `heroImageUrl`, `accentColor`, `fontFamily`, `showCompanyDescription`, `showBenefits`, `footerText`.
+- Cho phép cập nhật: `name`, `subdomain`, `phone`, `email`, `website`, `address`, `industry`, `companySize`, `businessType`, `description`, `benefits`, `socialLinks`, `bannerUrls`, `primaryColor`, `siteTitle`, `tagline`, `heroImageUrl`, `accentColor`, `fontFamily`, `showCompanyDescription`, `showBenefits`, `footerText`.
+- Chốt 21/10/2026: `contactEmail` do backend quản lý, chỉ đọc với mọi vai trò kể cả Admin. Bỏ field khỏi request mới; tương thích client cũ bằng cách chấp nhận giá trị không đổi sau trim/lowercase nhưng không ghi lại. Đổi giá trị, xóa bằng chuỗi rỗng/`null` hoặc điền mới khi chưa có đều trả `400`; toàn bộ PATCH rollback, không ghi audit thành công. Email doanh nghiệp `email` vẫn là trường độc lập được sửa.
 - `taxCode` chỉ được nhận để hoàn thiện bản ghi lịch sử còn thiếu giá trị (`null`) một lần; nếu đã có MST thì request gửi MST khác phải bị từ chối với `400`. `foundedYear` không thuộc request Admin và không được sửa bởi bất kỳ role nào sau khi hồ sơ được tạo.
 - Không cho cập nhật qua API này: `id`, `slug`, `status`, `approvedBy`, `approvedAt`, `rejectedReason`, `registrant`, `isPublished` và các token/password.
 - Backend kiểm tra unique `subdomain` và, khi hoàn thiện MST legacy còn thiếu, kiểm tra unique `taxCode`; giữ tenant theo `companyId` và ghi action `UPDATE_COMPANY` vào Audit Log.

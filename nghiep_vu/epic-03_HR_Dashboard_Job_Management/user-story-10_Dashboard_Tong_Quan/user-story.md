@@ -27,7 +27,7 @@ graph TD
   - **THÌ** hệ thống hiển thị 4 thẻ số liệu của công ty (theo bộ lọc thời gian mặc định: 30 ngày qua):
     1. Tổng số ứng viên (kèm % thay đổi)
     2. Đang xử lý (số lượng và % so với tổng)
-    3. Đạt (số lượng và % so với tổng)
+    3. Đã tuyển (Application HIRED, không phải chỉ PASSED một vòng)
     4. Không đạt (số lượng và % so với tổng)
 
 - **Kịch bản 2: HR xem biểu đồ xu hướng ứng tuyển**
@@ -50,3 +50,10 @@ graph TD
 ## 3. NGOÀI PHẠM VI
 - **KHÔNG** hỗ trợ HR tự custom giao diện Dashboard (kéo thả các widget) trong phiên bản này.
 - **KHÔNG** hiển thị dữ liệu của công ty khác (bảo đảm multi-tenant).
+
+## Contract số liệu ngày 20/10/2026
+
+- range hỗ trợ 7d/30d/this_month/this_year/6m. Các range ngắn biểu diễn ngày; this_year/6m biểu diễn tháng và năm, không giả định luôn 6 điểm trên frontend.
+- Dashboard dùng aggregate query scoped company và created_at trong range, không tải toàn bộ Application để đếm tại Java. Top Jobs dùng LEFT JOIN nên Job chưa có đơn vẫn có count=0.
+- averageHiringDays = trung bình (hired_at - applied_at) của hồ sơ HIRED có hired_at hợp lệ trong cohort. Không có dữ liệu trả null, hiển thị —, không bịa 0 ngày.
+- Chưa có dữ liệu offer acceptance thì trả null và ẩn thẻ; không gắn nhãn Featured giả cho dòng đầu. Giữ conversionRate/hireRate tương thích hiện hành, chưa đổi nghĩa hay loại bỏ trường trong đợt sửa này.

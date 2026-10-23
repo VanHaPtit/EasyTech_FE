@@ -89,8 +89,8 @@ Lưu thông tin doanh nghiệp/tenant.
 | --- | --- | --- | --- |
 | `id` | BIGINT | PK | ID doanh nghiệp. |
 | `name` | VARCHAR(255) | NOT NULL | Tên doanh nghiệp. |
-| `slug` | VARCHAR(255) | UNIQUE, NOT NULL | Slug dùng cho Career Site. |
-| `subdomain` | VARCHAR(255) | UNIQUE, nullable | Subdomain, ví dụ `techa`. |
+| `slug` | VARCHAR(255) | UNIQUE, NOT NULL | Backend cấp slug unique làm định danh Career Site public chuẩn; không đổi theo cập nhật tên. |
+| `subdomain` | VARCHAR(255) | UNIQUE, nullable | Alias legacy tương thích, không phải URL public chuẩn; FE đăng ký mới không tự sinh/gửi. |
 | `tax_code` | VARCHAR(100) | nullable | Mã số thuế bắt buộc khi đăng ký mới và bất biến sau khi tạo hồ sơ; nullable chỉ để tương thích bản ghi lịch sử còn thiếu. |
 | `phone` | VARCHAR(50) | nullable | Số điện thoại. |
 | `email` | VARCHAR(255) | nullable | Email liên hệ. |
@@ -124,8 +124,8 @@ Lưu branding và nội dung hiển thị cho Career Site.
 | `business_type` | VARCHAR(255) | nullable | Ngành nghề chính/loại hình theo field hiện có; không có `primaryIndustry` riêng. Đồng bộ độ dài bằng V32. |
 | `company_size` | VARCHAR(255) | nullable | Quy mô công ty; đồng bộ độ dài bằng V32. |
 | `founded_year` | VARCHAR(4) | nullable | Năm thành lập bắt buộc khi đăng ký mới và bất biến sau khi tạo hồ sơ; nullable chỉ để tương thích bản ghi lịch sử còn thiếu. |
-| `contact_email` | VARCHAR(255) | nullable | Email liên hệ hồ sơ. |
-| `onboarding_completed` | BOOLEAN | NOT NULL, default false | Đã hoàn tất onboarding. |
+| `contact_email` | VARCHAR(255) | nullable | Backend lấy email tài khoản đăng ký khi thiếu; giữ dữ liệu legacy đã có. Chỉ đọc với mọi role, kể cả Admin; client không đổi/xóa/tự bổ sung. Không đồng nghĩa `companies.email` hoặc email gửi SMTP `companies.mail_email`. Chốt 21/10/2026. |
+| `onboarding_completed` | BOOLEAN | NOT NULL, default false | Backend set sau validate lĩnh vực và SMTP lần đầu; không nhận cờ client, không có Skip. Settings không reset false. |
 | `profile_completed` | BOOLEAN | NOT NULL, default false | Cột legacy thêm trong V2, không được entity hiện tại quản lý. |
 | `primary_color` | VARCHAR(20) | nullable | Màu thương hiệu (hex). |
 | `description` | TEXT | nullable | Mô tả công ty. |
@@ -158,7 +158,7 @@ Lưu cấu hình giao diện Career Site riêng cho từng doanh nghiệp.
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
-`company_profiles.slogan` khác với `career_sites.tagline`. Logo và ảnh bìa được đồng bộ theo US-30.
+`company_profiles.slogan` khác với `career_sites.tagline`. Chốt 21/10/2026: US-30 chỉ ghi profile, không đồng bộ ghi đè logo/hero site; cấu hình site riêng được ưu tiên, profile làm fallback. Dữ liệu legacy giữ nguyên, không migration xóa override.
 
 *Lưu ý Fallback:* `site_title` và `logo_url` của `career_sites` có thể kế thừa lần lượt từ
 `companies.name` và `company_profiles.logo_url`. Banner và mô tả nằm ở
@@ -287,7 +287,7 @@ Lưu pipeline/vòng tuyển dụng của từng job.
 | `pass_email_template_id` | BIGINT | FK -> email_templates.id, nullable | Template khi Pass. |
 | `fail_email_template_id` | BIGINT | FK -> email_templates.id, nullable | Template khi Fail. |
 | `test_link` | TEXT | nullable | Link bài test Online nếu có. |
-| `is_final_round` | BOOLEAN | default false | Vòng cuối cùng (Offer). |
+| `is_final_round` | BOOLEAN | default false | Cờ backend tự tính từ thứ tự vòng chưa xóa; pipeline có vòng luôn chỉ có một cờ true ở vòng cuối (V52). Read-only trong API; PASSED tại đây chưa đồng nghĩa HIRED. |
 | `is_deleted` | BOOLEAN | default false | Đánh dấu xóa mềm. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
@@ -381,16 +381,19 @@ Lưu đơn ứng tuyển của Candidate vào Job.
 | `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp nhận hồ sơ. |
 | `job_id` | BIGINT | FK, NOT NULL | Job ứng tuyển. |
 | `candidate_id` | BIGINT | FK, NOT NULL | Ứng viên. |
+| `applicant_full_name` | VARCHAR(255) | nullable (V49) | Snapshot tên tại lúc nộp; legacy null dùng Candidate làm fallback. |
+| `applicant_phone` | VARCHAR(50) | nullable (V49) | Snapshot điện thoại; null hợp lệ nếu form không thu thập/không nhập. |
 | `current_round_id` | BIGINT | FK -> hiring_rounds.id, nullable | Vòng hiện tại đang ở (hiring_rounds). |
 | `current_step` | INT | default 0 | Index vòng hiện tại (0-based). |
 | `cv_url` | TEXT | nullable trong schema hiện tại | Private storage key của file CV (service US-26 bắt buộc file hợp lệ trước khi tạo Application; không expose public URL). |
 | `cover_letter` | TEXT | nullable | Thư giới thiệu/ghi chú. |
 | `status` | VARCHAR(50) | NOT NULL | `ACTIVE`, `REJECTED`, `HIRED`. |
 | `source` | VARCHAR(100) | default `CAREER_SITE` | Nguồn ứng tuyển: `CAREER_SITE`, `MANUAL`, `REFERRAL`. |
-| `secure_token` | VARCHAR(255) | UNIQUE, nullable | Token bảo mật để ứng viên tra cứu hồ sơ (Magic Link). |
+| `secure_token` | VARCHAR(255) | UNIQUE, nullable | SHA-256 hex (64 ký tự) của raw Magic Link token từ V50; không lưu raw token tại cột này. |
 | `consent_accepted` | BOOLEAN | NOT NULL, default true cho dữ liệu legacy | Candidate đã đồng ý xử lý dữ liệu cá nhân; Application mới chỉ được tạo khi request gửi `true`. |
 | `consent_accepted_at` | TIMESTAMP | nullable | Thời điểm ghi nhận consent. |
 | `applied_at` | TIMESTAMP | NOT NULL | Thời điểm ứng tuyển. |
+| `hired_at` | TIMESTAMP | nullable (V51) | Ghi khi HR xác nhận Tuyển; lịch sử chưa biết giữ null, không suy diễn từ updated_at. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
@@ -422,6 +425,9 @@ Implementation hiện tại dùng `BIGSERIAL`/`BIGINT` và Java `Long`, không d
 ### 3.14 `application_progress`
 
 Lưu lịch sử ứng viên đi qua từng vòng.
+
+Triển khai V46 (20/10/2026): tạo bảng theo các cột id, application_id, round_id, status, evaluated_by, evaluated_at, note, created_at, updated_at. Chỉ tạo record khi đánh giá; evaluated_at bắt buộc cho record đã lưu. Các cột score/evaluation_details dưới đây thuộc thiết kế US-19, chưa được triển khai trong migration V46.
+Không backfill kết quả PASSED/FAILED cho dữ liệu cũ từ vị trí vòng. Final PASSED không đổi applications.status; chỉ hành động Tuyển riêng mới đặt HIRED. Tenant được kiểm tra qua application.company_id và round thuộc đúng Job/company trước khi ghi.
 
 | Column | Type | Constraint | Mô tả |
 | --- | --- | --- | --- |
@@ -519,6 +525,10 @@ Biến hỗ trợ trong `subject` và `body`:
 
 ### 3.18 `email_logs`
 
+Đồng bộ 21/10/2026: V53 bổ sung `delivery_channel VARCHAR(20) NOT NULL DEFAULT 'COMPANY'`, CHECK COMPANY/SYSTEM. COMPANY là email ứng viên theo SMTP tenant; SYSTEM là thông báo Company qua SMTP nền tảng. Hai loại dùng chung durable outbox và retry nhưng API email log/retry của HR chỉ truy cập COMPANY, không lộ thông báo gửi Admin. SYSTEM không có application_id, vẫn có company_id để gắn transaction và truy vết. Snapshot và nghiệp vụ rollback cùng nhau; worker gửi sau commit.
+
+V54 bổ sung những unique index/default/FK Chatwoot bị thiếu trên database legacy, không sửa V33–V35 hoặc tự chèn lịch sử. Quy trình đối soát/khôi phục metadata riêng được kiểm thử trên DB COPY; schema tương đương không chứng minh thời điểm DDL lịch sử đã chạy. Ngày 21/10/2026, sau backup và xác nhận riêng, local `easytech` đã phục hồi metadata V33–V35 rồi chạy V52–V54 bằng Flyway strict; không xóa database hoặc sửa checksum cũ. Đây không phải xác nhận đã rollout môi trường của thành viên khác/production.
+
 Lưu lịch sử gửi email.
 
 | Column | Type | Constraint | Mô tả |
@@ -526,18 +536,22 @@ Lưu lịch sử gửi email.
 | `id` | BIGINT | PK | ID log. |
 | `company_id` | BIGINT | FK, NOT NULL | Doanh nghiệp. |
 | `application_id` | BIGINT | FK, nullable | Hồ sơ liên quan. |
-| `email_template_id` | BIGINT | FK, nullable | Template đã dùng. |
+| `template_code` | VARCHAR(80) | NOT NULL | Loại/template code đã dùng; nội dung lưu snapshot. |
 | `recipient_email` | VARCHAR(255) | NOT NULL | Email người nhận. |
 | `subject` | VARCHAR(255) | NOT NULL | Tiêu đề đã gửi. |
-| `body` | TEXT | NOT NULL | Nội dung đã render (sau khi thay biến). |
-| `status` | VARCHAR(50) | NOT NULL | `PENDING`, `SENT`, `FAILED`, `RETRYING`. |
-| `provider` | VARCHAR(100) | nullable | SMTP / SendGrid / Mailtrap. |
+| `body_html` | TEXT | NOT NULL | Nội dung đã render; thiếu template ghi chuỗi rỗng và FAILED, không dựng nội dung giả. |
+| `status` | VARCHAR(20) | NOT NULL | `PENDING`, `SUCCESS`, `FAILED`, `SKIPPED`. |
+| `attempt_count` | INT | NOT NULL, >=0 | Queue/skip bắt đầu 0, tăng sau từng lần gọi SMTP. |
+| `next_attempt_at` | TIMESTAMP | nullable (V48) | Thời điểm worker có thể lấy email PENDING; null khi terminal. |
 | `error_message` | TEXT | nullable | Lỗi gửi email. |
 | `sent_at` | TIMESTAMP | nullable | Thời điểm gửi thành công. |
+| `retried_at` | TIMESTAMP | nullable | Thời điểm thử lại gần nhất, vẫn lưu khi SMTP trả lỗi. |
 | `created_at` | TIMESTAMP | NOT NULL | Ngày tạo. |
 | `updated_at` | TIMESTAMP | NOT NULL | Ngày cập nhật. |
 
 Index: `idx_email_logs_company_id`, `idx_email_logs_application_id`, `idx_email_logs_status`
+
+V48 bổ sung partial index `idx_email_logs_pending_delivery(next_attempt_at,id) WHERE status='PENDING'`. Queue snapshot tham gia transaction nghiệp vụ, worker gửi sau commit; mặc định 1 lần đầu + 3 retry. Cơ chế at-least-once, không bảo đảm exactly-once SMTP.
 
 ---
 
@@ -618,7 +632,7 @@ Lưu cấu hình AI provider theo doanh nghiệp.
 | `provider_name` | VARCHAR(100) | NOT NULL | OpenAI, Google, Anthropic... |
 | `provider_code` | VARCHAR(100) | NOT NULL | `OPENAI`, `GOOGLE_GEMINI`, `ANTHROPIC`. |
 | `api_key_encrypted` | TEXT | nullable | API key đã mã hóa AES-256. |
-| `model_name` | VARCHAR(100) | nullable | Model sử dụng, ví dụ `gpt-4o`, `gemini-2.0-flash`. |
+  | `model_name` | VARCHAR(100) | nullable | Model riêng của custom provider. Chốt 22/10/2026: SYSTEM_DEFAULT lấy model runtime từ GEMINI_MODEL, bỏ qua giá trị model seed cũ; không sửa migration hoặc xóa dữ liệu lịch sử. |
 | `max_daily_requests` | INT | default 100 | Giới hạn số lần gọi API AI mỗi ngày cho DN. |
 | `max_reruns_per_candidate` | INT | default 3 | Giới hạn số lần rerun AI trên 1 bộ hồ sơ. |
 | `daily_token_budget` | INT | default 200000 | Hạn ngạch token tối đa cho phép mỗi ngày. |

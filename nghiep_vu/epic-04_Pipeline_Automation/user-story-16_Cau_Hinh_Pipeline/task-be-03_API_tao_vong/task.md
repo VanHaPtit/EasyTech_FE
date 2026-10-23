@@ -28,7 +28,8 @@ Xác định phạm vi backend cho task 'API tao vong' trong US-16 Cau Hinh Pipe
 
 ## Request
 - `name` bắt buộc, tối đa 255 ký tự.
-- `description`, `passEmailTemplateId`, `failEmailTemplateId`, `testLink` và `isFinalRound` là tùy chọn.
+- `passEmailTemplateId` và `failEmailTemplateId` bắt buộc, là ID số dương của template PASS/FAIL active, chưa xóa và thuộc đúng company.
+- `description`, `testLink` là tùy chọn. `isFinalRound` chỉ đọc trong response, backend tự suy ra từ thứ tự và bỏ cờ client legacy; round mới thêm vào cuối trở thành vòng cuối.
 - Backend tự gán `orderIndex` ở cuối danh sách; client không truyền thứ tự trong API tạo vòng.
 
 ## Validation
@@ -53,7 +54,7 @@ Xác định phạm vi backend cho task 'API tao vong' trong US-16 Cau Hinh Pipe
 - 404: không tìm thấy tài nguyên trong phạm vi company hiện tại.
 - 409: conflict như duplicate, trạng thái hiện tại không cho phép chuyển tiếp.
 
-Thành công ghi audit log `CREATE_HIRING_ROUND`; `passEmailTemplateId`/`failEmailTemplateId` là `Long` nullable và không được nhận ID mock từ frontend.
+Thành công ghi audit log `CREATE_HIRING_ROUND`; các ID template dùng `BIGINT`/`Long`, không nhận ID mock. DB giữ nullable cho dữ liệu cũ, không có nghĩa request được bỏ trống.
 
 
 ## 3. API JSON Contract
@@ -65,8 +66,7 @@ Thành công ghi audit log `CREATE_HIRING_ROUND`; `passEmailTemplateId`/`failEma
   "description": "Phỏng vấn với HR",
   "passEmailTemplateId": 301,
   "failEmailTemplateId": 302,
-  "testLink": null,
-  "isFinalRound": false
+  "testLink": null
 }
 ```
 ### Response (200 OK)
@@ -82,7 +82,7 @@ Thành công ghi audit log `CREATE_HIRING_ROUND`; `passEmailTemplateId`/`failEma
     "passEmailTemplateId": 301,
     "failEmailTemplateId": 302,
     "testLink": null,
-    "isFinalRound": false,
+    "isFinalRound": true,
     "createdAt": "2026-08-31T10:00:00",
     "updatedAt": "2026-08-31T10:00:00"
   }

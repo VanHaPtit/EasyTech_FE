@@ -75,7 +75,16 @@ Xác định phạm vi backend cho task 'API JD Writer Proxy' trong US-12 Tao Jo
     "suggestedRequirements": "Yêu cầu ứng viên do AI đề xuất...",
     "suggestedBenefits": "Phúc lợi đề xuất...",
     "provider": "SYSTEM_DEFAULT",
-    "model": "gpt-or-gemini"
+    "model": "gemini-runtime-model"
   }
 }
 ```
+
+## Chốt nguồn cấu hình model — 22/10/2026
+
+- Thứ tự provider giữ nguyên: custom ACTIVE của doanh nghiệp → system default → lỗi rõ ràng khi không có provider khả dụng.
+- `SYSTEM_DEFAULT` luôn lấy model từ `GEMINI_MODEL` (cấu hình `gemini.model`), không ưu tiên `model_name` của bản ghi seed trong DB.
+- Custom provider ACTIVE tiếp tục dùng `model_name` riêng; nếu chưa có model riêng thì lấy model runtime làm dự phòng.
+- `GEMINI_API_KEY`, `GEMINI_MODEL`, `GEMINI_FALLBACK_MODEL`, `GEMINI_BASE_URL` được bind tập trung qua `GeminiProperties`. Giá trị mặc định chỉ định nghĩa trong `application.yml`; không sửa migration cũ để đồng bộ model.
+- Retry có giới hạn, fallback model và lỗi provider giữ nguyên. Không ghi API key/nội dung CV vào log; không đảm bảo provider luôn trả kết quả.
+- Quy tắc này áp dụng chung cho AI JD và CV scoring dùng resolver; embedding vẫn dùng model embedding riêng, không dùng model text làm fallback.
